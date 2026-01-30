@@ -13,6 +13,22 @@ import type {
 } from '../types/database';
 
 // =====================================================
+// Hilfsfunktionen
+// =====================================================
+
+/**
+ * Formatiert ein Date-Objekt als YYYY-MM-DD String
+ * OHNE Timezone-Konvertierung (verwendet lokale Zeit)
+ * Verhindert Off-by-One Fehler bei Datumsauswahl
+ */
+function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+// =====================================================
 // Basis-Hooks
 // =====================================================
 
@@ -166,7 +182,7 @@ export function usePractitioners(specialtyId: string | null) {
       setLoading(true);
       setError(null);
       try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = formatLocalDate(new Date());
 
         // 1. Lade alle aktiven Behandler des Fachgebiets
         const { data: practitioners, error: practError } = await supabase
@@ -257,8 +273,8 @@ export function useAvailableDates(month: Date) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const startDate = startOfMonth < today ? today.toISOString().split('T')[0] : startOfMonth.toISOString().split('T')[0];
-        const endDate = endOfMonth.toISOString().split('T')[0];
+        const startDate = startOfMonth < today ? formatLocalDate(today) : formatLocalDate(startOfMonth);
+        const endDate = formatLocalDate(endOfMonth);
 
         const { data, error } = await supabase
           .from('time_slots')

@@ -18,12 +18,15 @@ const STEP_LABELS = [
 export function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicatorProps) {
   return (
     <div className={styles.container}>
+      {/* Fortschrittsbalken */}
       <div className={styles.progressBar}>
         <div
           className={styles.progressFill}
           style={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
         />
       </div>
+
+      {/* Desktop: Alle Schritte */}
       <div className={styles.steps}>
         {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
           <div
@@ -43,8 +46,16 @@ export function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicator
           </div>
         ))}
       </div>
+
+      {/* Mobile: Kompakte Anzeige */}
       <div className={styles.mobileIndicator}>
-        Schritt {currentStep} von {totalSteps}: {STEP_LABELS[currentStep - 1]}
+        <span className={styles.mobileStep}>
+          Schritt {currentStep}/{totalSteps}
+        </span>
+        <span className={styles.mobileDivider}>|</span>
+        <span className={styles.mobileLabel}>
+          {STEP_LABELS[currentStep - 1]}
+        </span>
       </div>
     </div>
   );

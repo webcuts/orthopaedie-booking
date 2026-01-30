@@ -1,6 +1,14 @@
+/* =====================================================
+   ProgressIndicator - Responsive Schrittanzeige
+   ===================================================== */
+
 .container {
   margin-bottom: var(--spacing-lg);
 }
+
+/* =====================================================
+   Fortschrittsbalken (immer sichtbar)
+   ===================================================== */
 
 .progressBar {
   height: 4px;
@@ -17,6 +25,10 @@
   transition: width 0.3s ease;
 }
 
+/* =====================================================
+   Schritt-Indikatoren (Desktop)
+   ===================================================== */
+
 .steps {
   display: none;
   justify-content: space-between;
@@ -27,6 +39,8 @@
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-xs);
+  flex: 1;
+  max-width: 80px;
 }
 
 .stepNumber {
@@ -41,11 +55,13 @@
   font-size: var(--font-size-sm);
   font-weight: 500;
   transition: all var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .step.active .stepNumber {
   background: var(--color-primary);
   color: white;
+  transform: scale(1.1);
 }
 
 .step.completed .stepNumber {
@@ -59,34 +75,88 @@
 }
 
 .stepLabel {
-  font-size: var(--font-size-xs);
+  font-size: 0.625rem;
   color: var(--color-text-muted);
   text-align: center;
-  max-width: 60px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .step.active .stepLabel {
   color: var(--color-primary);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .step.completed .stepLabel {
   color: var(--color-text-secondary);
 }
 
+/* =====================================================
+   Mobile Indikator (< 768px)
+   ===================================================== */
+
 .mobileIndicator {
-  text-align: center;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-accent-light);
+  border-radius: var(--radius-md);
 }
 
-/* Desktop: Show full steps */
-@media (min-width: 640px) {
+.mobileStep {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.mobileDivider {
+  color: var(--color-border);
+}
+
+.mobileLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* =====================================================
+   Tablet (768px - 1024px): Kompakte Schritte
+   ===================================================== */
+
+@media (min-width: 768px) {
   .steps {
     display: flex;
   }
 
   .mobileIndicator {
     display: none;
+  }
+
+  .stepLabel {
+    font-size: 0.6875rem;
+  }
+}
+
+/* =====================================================
+   Desktop (> 1024px): Volle Schritte
+   ===================================================== */
+
+@media (min-width: 1024px) {
+  .step {
+    max-width: 100px;
+  }
+
+  .stepNumber {
+    width: 32px;
+    height: 32px;
+  }
+
+  .stepLabel {
+    font-size: var(--font-size-xs);
   }
 }

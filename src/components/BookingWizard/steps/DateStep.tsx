@@ -11,6 +11,17 @@ interface DateStepProps {
 
 const WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
+/**
+ * Formatiert ein Date-Objekt als YYYY-MM-DD String
+ * OHNE Timezone-Konvertierung (verwendet lokale Zeit)
+ */
+function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 export function DateStep({ selectedDate, onSelect, onBack }: DateStepProps) {
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const { data: availableDates, loading, error } = useAvailableDates(currentMonth);
@@ -55,7 +66,7 @@ export function DateStep({ selectedDate, onSelect, onBack }: DateStepProps) {
   }, []);
 
   const isDateAvailable = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = formatLocalDate(date);
     return availableDates.includes(dateStr);
   };
 
@@ -136,7 +147,7 @@ export function DateStep({ selectedDate, onSelect, onBack }: DateStepProps) {
                 return <div key={`empty-${index}`} className={dateStyles.emptyDay} />;
               }
 
-              const dateStr = date.toISOString().split('T')[0];
+              const dateStr = formatLocalDate(date);
               const isSelected = selectedDate === dateStr;
               const isSelectable = isDateSelectable(date);
               const isToday = date.getTime() === today.getTime();
