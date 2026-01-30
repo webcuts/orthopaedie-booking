@@ -1,0 +1,155 @@
+.calendar {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 140px);
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #E5E7EB;
+  flex-shrink: 0;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.navButton:hover {
+  background: #F3F4F6;
+}
+
+.navButton svg {
+  width: 20px;
+  height: 20px;
+  color: #374151;
+}
+
+.todayButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.todayButton:hover {
+  background: #F3F4F6;
+}
+
+.dateHeader {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.viewSwitch {
+  display: flex;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.viewButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: white;
+  color: #6B7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.viewButton:not(:last-child) {
+  border-right: 1px solid #E5E7EB;
+}
+
+.viewButton:hover {
+  background: #F3F4F6;
+}
+
+.viewButton.active {
+  background: #2674BB;
+  color: white;
+}
+
+.viewContainer {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #6B7280;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.error button {
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #DC2626;
+  border-radius: 6px;
+  color: #DC2626;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .dateHeader {
+    order: -1;
+    width: 100%;
+    text-align: center;
+  }
+
+  .navigation {
+    flex: 1;
+  }
+
+  .viewSwitch {
+    flex: 1;
+    justify-content: flex-end;
+  }
+}

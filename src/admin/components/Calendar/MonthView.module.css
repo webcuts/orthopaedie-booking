@@ -1,0 +1,130 @@
+.monthView {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.weekday {
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  flex: 1;
+}
+
+.cell {
+  border-right: 1px solid #E5E7EB;
+  border-bottom: 1px solid #E5E7EB;
+  padding: 0.5rem;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cell:nth-child(7n) {
+  border-right: none;
+}
+
+.emptyCell {
+  background: #FAFAFA;
+  border-right: 1px solid #E5E7EB;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.emptyCell:nth-child(7n) {
+  border-right: none;
+}
+
+.today {
+  background: #EBF5FF;
+}
+
+.dayNumber {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.today .dayNumber {
+  color: #2674BB;
+  font-weight: 700;
+}
+
+.appointments {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.appointment {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: white;
+  border-left: 3px solid;
+  border-radius: 2px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: background 0.2s;
+}
+
+.appointment:hover {
+  background: #F3F4F6;
+}
+
+.time {
+  color: #6B7280;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.name {
+  color: #374151;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.more {
+  font-size: 0.75rem;
+  color: #6B7280;
+  padding: 0.25rem 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .cell {
+    min-height: 80px;
+    padding: 0.25rem;
+  }
+
+  .dayNumber {
+    font-size: 0.75rem;
+  }
+
+  .appointment {
+    padding: 0.125rem 0.25rem;
+    font-size: 0.625rem;
+  }
+
+  .name {
+    display: none;
+  }
+}

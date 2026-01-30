@@ -1,0 +1,27 @@
+.container {
+  width: 100%;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+
+.centered {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Sizes */
+.sm {
+  max-width: 480px;
+}
+
+.md {
+  max-width: 640px;
+}
+
+.lg {
+  max-width: 960px;
+}
+
+.full {
+  max-width: 100%;
+}

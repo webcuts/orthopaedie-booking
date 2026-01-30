@@ -1,0 +1,119 @@
+.weekView {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 720px;
+}
+
+.header {
+  display: flex;
+  border-bottom: 1px solid #E5E7EB;
+  flex-shrink: 0;
+}
+
+.timeHeader {
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.dayHeader {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  border-left: 1px solid #E5E7EB;
+}
+
+.dayHeader.today {
+  background: #EBF5FF;
+}
+
+.weekday {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6B7280;
+  text-transform: uppercase;
+}
+
+.dayNumber {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.today .dayNumber {
+  color: #2674BB;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.timeColumn {
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.timeSlot {
+  height: 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-right: 0.5rem;
+  transform: translateY(-8px);
+}
+
+.time {
+  font-size: 0.625rem;
+  color: #9CA3AF;
+  font-weight: 500;
+}
+
+.dayColumn {
+  flex: 1;
+  position: relative;
+  border-left: 1px solid #E5E7EB;
+}
+
+.todayColumn {
+  background: rgba(38, 116, 187, 0.02);
+}
+
+.hourCell {
+  height: 60px;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.appointments {
+  position: absolute;
+  top: 0;
+  left: 2px;
+  right: 2px;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.appointmentWrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 1px;
+  pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+  .timeColumn {
+    width: 40px;
+  }
+
+  .weekday {
+    font-size: 0.625rem;
+  }
+
+  .dayNumber {
+    font-size: 1rem;
+  }
+}

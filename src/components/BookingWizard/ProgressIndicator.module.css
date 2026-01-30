@@ -1,0 +1,92 @@
+.container {
+  margin-bottom: var(--spacing-lg);
+}
+
+.progressBar {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--spacing-md);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+.steps {
+  display: none;
+  justify-content: space-between;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.stepNumber {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+  border-radius: 50%;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.step.active .stepNumber {
+  background: var(--color-primary);
+  color: white;
+}
+
+.step.completed .stepNumber {
+  background: var(--color-primary);
+  color: white;
+}
+
+.checkIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.stepLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+  max-width: 60px;
+}
+
+.step.active .stepLabel {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.step.completed .stepLabel {
+  color: var(--color-text-secondary);
+}
+
+.mobileIndicator {
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Desktop: Show full steps */
+@media (min-width: 640px) {
+  .steps {
+    display: flex;
+  }
+
+  .mobileIndicator {
+    display: none;
+  }
+}

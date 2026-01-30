@@ -1,0 +1,153 @@
+// =====================================================
+// TypeScript-Typen für Datenbank-Entitäten
+// Orthopädie Terminbuchungssystem
+// =====================================================
+
+export type AppointmentStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type ReminderType = '24h_before' | '6h_before';
+
+// =====================================================
+// Basis-Entitäten
+// =====================================================
+
+export interface InsuranceType {
+  id: string;
+  name: string;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface Patient {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  insurance_type_id: string;
+  created_at: string;
+}
+
+export interface TreatmentType {
+  id: string;
+  name: string;
+  duration_minutes: number;
+  description: string | null;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface TimeSlot {
+  id: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  is_available: boolean;
+  created_at: string;
+}
+
+// =====================================================
+// Neue Entitäten (ORTHO-004)
+// =====================================================
+
+export interface Specialty {
+  id: string;
+  name: string;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface Practitioner {
+  id: string;
+  title: string | null;
+  first_name: string;
+  last_name: string;
+  specialty_id: string | null;
+  is_active: boolean;
+  available_from: string | null;
+  created_at: string;
+}
+
+export interface PracticeHours {
+  id: string;
+  day_of_week: number; // 0 = Montag, 6 = Sonntag
+  open_time: string;
+  close_time: string;
+  is_closed: boolean;
+  created_at: string;
+}
+
+export interface EmailReminder {
+  id: string;
+  appointment_id: string;
+  reminder_type: ReminderType;
+  scheduled_for: string;
+  sent_at: string | null;
+  created_at: string;
+}
+
+// =====================================================
+// Appointment (erweitert)
+// =====================================================
+
+export interface Appointment {
+  id: string;
+  patient_id: string;
+  treatment_type_id: string;
+  time_slot_id: string;
+  practitioner_id: string | null;
+  status: AppointmentStatus;
+  notes: string | null;
+  cancellation_deadline: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// =====================================================
+// Typen für Formulareingaben
+// =====================================================
+
+export interface PatientInput {
+  name: string;
+  email: string;
+  phone?: string;
+  insurance_type_id: string;
+}
+
+export interface AppointmentInput {
+  patient_id: string;
+  treatment_type_id: string;
+  time_slot_id: string;
+  practitioner_id?: string;
+  notes?: string;
+}
+
+// =====================================================
+// Erweiterte Typen mit Relationen
+// =====================================================
+
+export interface PractitionerWithSpecialty extends Practitioner {
+  specialty?: Specialty;
+}
+
+export interface AppointmentWithDetails extends Appointment {
+  patient?: Patient;
+  treatment_type?: TreatmentType;
+  time_slot?: TimeSlot;
+  practitioner?: Practitioner;
+}
+
+// =====================================================
+// Hilfsfunktionen
+// =====================================================
+
+export function getPractitionerFullName(practitioner: Practitioner): string {
+  const parts = [];
+  if (practitioner.title) parts.push(practitioner.title);
+  parts.push(practitioner.first_name);
+  parts.push(practitioner.last_name);
+  return parts.join(' ');
+}
+
+export function getDayName(dayOfWeek: number): string {
+  const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+  return days[dayOfWeek] || '';
+}
