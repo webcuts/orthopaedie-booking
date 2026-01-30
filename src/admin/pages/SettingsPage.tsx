@@ -1,4 +1,4 @@
-import { SlotGenerator, TreatmentTypes } from '../components';
+import { SlotGenerator, TreatmentTypes, AbsenceManager } from '../components';
 import styles from './SettingsPage.module.css';
 
 export function SettingsPage() {
@@ -7,6 +7,7 @@ export function SettingsPage() {
       <h1 className={styles.title}>Einstellungen</h1>
 
       <div className={styles.sections}>
+        <AbsenceManager />
         <SlotGenerator />
         <TreatmentTypes />
       </div>

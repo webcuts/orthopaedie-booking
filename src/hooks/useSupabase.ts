@@ -148,6 +148,7 @@ export function useTreatmentTypes() {
 
 // =====================================================
 // Hook: Behandler gefiltert nach Fachgebiet (Step 4)
+// Filtert automatisch abwesende Behandler aus
 // =====================================================
 
 export function usePractitioners(specialtyId: string | null) {
@@ -167,7 +168,8 @@ export function usePractitioners(specialtyId: string | null) {
       try {
         const today = new Date().toISOString().split('T')[0];
 
-        const { data, error } = await supabase
+        // 1. Lade alle aktiven Behandler des Fachgebiets
+        const { data: practitioners, error: practError } = await supabase
           .from('practitioners')
           .select('*')
           .eq('specialty_id', specialtyId)
@@ -175,8 +177,24 @@ export function usePractitioners(specialtyId: string | null) {
           .or(`available_from.is.null,available_from.lte.${today}`)
           .order('last_name');
 
-        if (error) throw error;
-        setData(data || []);
+        if (practError) throw practError;
+
+        // 2. Lade aktive Abwesenheiten
+        const { data: absences, error: absError } = await supabase
+          .from('practitioner_absences')
+          .select('practitioner_id')
+          .lte('start_date', today)
+          .gte('end_date', today);
+
+        // Ignoriere Fehler bei Abwesenheiten (Tabelle existiert evtl. noch nicht)
+        const absentIds = new Set((absences || []).map(a => a.practitioner_id));
+
+        // 3. Filtere abwesende Behandler aus
+        const availablePractitioners = (practitioners || []).filter(
+          p => !absentIds.has(p.id)
+        );
+
+        setData(availablePractitioners);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Fehler beim Laden der Behandler');
       } finally {
@@ -361,7 +379,7 @@ export function useCreateBooking() {
           time_slot_id: bookingData.timeSlotId,
           practitioner_id: bookingData.practitionerId,
           notes: bookingData.notes || null,
-          status: 'pending'
+          status: 'confirmed'
         })
         .select()
         .single();

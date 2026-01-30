@@ -1,58 +1,122 @@
+/* =====================================================
+   DayView - 15-Minuten-Takt Kalenderansicht
+   ===================================================== */
+
 .dayView {
   display: flex;
   height: 100%;
-  min-height: 720px; /* 12 hours * 60px */
+  min-height: 880px; /* (18-7) * 4 slots * 20px */
+  overflow-y: auto;
 }
 
+/* =====================================================
+   Zeitspalte
+   ===================================================== */
+
 .timeColumn {
-  width: 80px;
+  width: 60px;
   flex-shrink: 0;
   border-right: 1px solid #E5E7EB;
+  background: #FAFAFA;
 }
 
 .timeSlot {
-  height: 60px;
+  height: 20px; /* 15-Minuten-Slot */
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-end;
-  padding-right: 0.75rem;
-  padding-top: 0;
-  transform: translateY(-8px);
+  padding-right: 0.5rem;
+}
+
+.timeSlot.isHour {
+  border-top: 1px solid #E5E7EB;
 }
 
 .time {
-  font-size: 0.75rem;
+  font-size: 0.625rem;
   color: #6B7280;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
+
+.timeSlot.isHour .time {
+  font-size: 0.75rem;
+  color: #374151;
+  font-weight: 600;
+}
+
+/* =====================================================
+   Termine-Spalte
+   ===================================================== */
 
 .appointmentsColumn {
   flex: 1;
   position: relative;
+  min-width: 200px;
 }
 
+/* Hintergrund-Grid */
 .grid {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  pointer-events: none;
 }
 
-.hourRow {
-  height: 60px;
+.gridRow {
+  height: 20px;
   border-bottom: 1px solid #F3F4F6;
 }
 
-.hourRow:nth-child(odd) {
-  background: #FAFAFA;
+.gridRow.hourBorder {
+  border-bottom: 1px solid #E5E7EB;
 }
+
+.gridRow:nth-child(4n+1) {
+  background: rgba(0, 0, 0, 0.01);
+}
+
+/* =====================================================
+   Aktuelle Zeit Indikator
+   ===================================================== */
+
+.currentTime {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.currentTimeDot {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  background: #DC2626;
+  border-radius: 50%;
+}
+
+.currentTimeLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #DC2626;
+}
+
+/* =====================================================
+   Termine
+   ===================================================== */
 
 .appointments {
   position: absolute;
   top: 0;
-  left: 8px;
-  right: 8px;
+  left: 4px;
+  right: 4px;
   bottom: 0;
 }
 
@@ -60,9 +124,76 @@
   position: absolute;
   left: 0;
   right: 0;
-  min-height: 20px;
-  padding: 2px 0;
+  border-left: 3px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  z-index: 5;
 }
+
+.appointmentWrapper:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 6;
+}
+
+.appointmentContent {
+  padding: 4px 8px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.appointmentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.appointmentTime {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: #374151;
+  font-variant-numeric: tabular-nums;
+}
+
+.appointmentDuration {
+  font-size: 0.5rem;
+  color: #6B7280;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.appointmentPatient {
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.appointmentTreatment {
+  font-size: 0.625rem;
+  color: #6B7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.appointmentPractitioner {
+  font-size: 0.5rem;
+  color: #9CA3AF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+/* =====================================================
+   Leerer Zustand
+   ===================================================== */
 
 .empty {
   position: absolute;
@@ -71,14 +202,36 @@
   transform: translate(-50%, -50%);
   color: #9CA3AF;
   font-size: 0.875rem;
+  text-align: center;
 }
+
+/* =====================================================
+   Responsive
+   ===================================================== */
 
 @media (max-width: 768px) {
   .timeColumn {
-    width: 60px;
+    width: 45px;
   }
 
   .time {
+    font-size: 0.5rem;
+  }
+
+  .timeSlot.isHour .time {
     font-size: 0.625rem;
+  }
+
+  .appointmentContent {
+    padding: 2px 4px;
+  }
+
+  .appointmentPatient {
+    font-size: 0.625rem;
+  }
+
+  .appointmentTreatment,
+  .appointmentPractitioner {
+    display: none;
   }
 }

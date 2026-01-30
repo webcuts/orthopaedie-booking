@@ -88,12 +88,12 @@ CREATE POLICY "Anon can view recently created patients"
 -- 4. Appointments (INSERT + eingeschränkter SELECT für anon)
 -- =====================================================
 
--- INSERT: Anonyme können Termine erstellen (nur pending Status)
+-- INSERT: Anonyme können Termine erstellen (nur confirmed Status)
 DROP POLICY IF EXISTS "Anon can create appointments" ON appointments;
 CREATE POLICY "Anon can create appointments"
   ON appointments FOR INSERT
   TO anon
-  WITH CHECK (status = 'pending');
+  WITH CHECK (status = 'confirmed');
 
 -- SELECT: Nur den gerade erstellten Termin (für Bestätigungsseite)
 DROP POLICY IF EXISTS "Anon can view recently created appointments" ON appointments;
@@ -102,7 +102,7 @@ CREATE POLICY "Anon can view recently created appointments"
   TO anon
   USING (
     created_at >= NOW() - INTERVAL '5 minutes'
-    AND status = 'pending'
+    AND status = 'confirmed'
   );
 
 -- =====================================================

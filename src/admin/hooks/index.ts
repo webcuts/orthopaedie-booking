@@ -7,5 +7,6 @@ export {
   useBlockSlot,
   useTreatmentTypes,
   useGenerateSlots,
+  usePractitionerAbsences,
 } from './useAdminData';
-export type { AppointmentWithDetails } from './useAdminData';
+export type { AppointmentWithDetails, PractitionerAbsence, Practitioner } from './useAdminData';

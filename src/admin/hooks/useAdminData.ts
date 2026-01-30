@@ -374,3 +374,117 @@ export function useGenerateSlots() {
 
   return { generateSlots, loading, result, error };
 }
+
+// =====================================================
+// Hook: Behandler-Abwesenheiten
+// =====================================================
+
+export interface PractitionerAbsence {
+  id: string;
+  practitioner_id: string;
+  start_date: string;
+  end_date: string;
+  reason: 'sick' | 'vacation' | 'other';
+  note: string | null;
+  created_at: string;
+  practitioner?: {
+    id: string;
+    title: string | null;
+    first_name: string;
+    last_name: string;
+  };
+}
+
+export interface Practitioner {
+  id: string;
+  title: string | null;
+  first_name: string;
+  last_name: string;
+  specialty_id: string;
+  is_active: boolean;
+}
+
+export function usePractitionerAbsences() {
+  const [absences, setAbsences] = useState<PractitionerAbsence[]>([]);
+  const [practitioners, setPractitioners] = useState<Practitioner[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchAbsences = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Lade aktive und zukünftige Abwesenheiten
+      const { data, error: absError } = await supabase
+        .from('practitioner_absences')
+        .select(`
+          *,
+          practitioner:practitioners(id, title, first_name, last_name)
+        `)
+        .gte('end_date', new Date().toISOString().split('T')[0])
+        .order('start_date');
+
+      if (absError) throw absError;
+      setAbsences(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fehler beim Laden der Abwesenheiten');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchPractitioners = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('practitioners')
+      .select('*')
+      .eq('is_active', true)
+      .order('last_name');
+
+    if (!error && data) {
+      setPractitioners(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAbsences();
+    fetchPractitioners();
+  }, [fetchAbsences, fetchPractitioners]);
+
+  const createAbsence = useCallback(async (data: {
+    practitioner_id: string;
+    start_date: string;
+    end_date: string;
+    reason: 'sick' | 'vacation' | 'other';
+    note?: string;
+  }) => {
+    const { error } = await supabase
+      .from('practitioner_absences')
+      .insert(data);
+
+    if (error) return { success: false, error: error.message };
+    await fetchAbsences();
+    return { success: true };
+  }, [fetchAbsences]);
+
+  const deleteAbsence = useCallback(async (id: string) => {
+    const { error } = await supabase
+      .from('practitioner_absences')
+      .delete()
+      .eq('id', id);
+
+    if (error) return { success: false, error: error.message };
+    await fetchAbsences();
+    return { success: true };
+  }, [fetchAbsences]);
+
+  return {
+    absences,
+    practitioners,
+    loading,
+    error,
+    createAbsence,
+    deleteAbsence,
+    refetch: fetchAbsences,
+  };
+}
