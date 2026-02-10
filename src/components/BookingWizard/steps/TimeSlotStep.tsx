@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useTimeSlots } from '../../../hooks/useSupabase';
 import { useTranslation } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
@@ -20,6 +21,19 @@ const localeMap: Record<string, string> = {
 export function TimeSlotStep({ selectedDate, selectedId, practitionerId, onSelect, onBack }: TimeSlotStepProps) {
   const { data: timeSlots, loading, error } = useTimeSlots(selectedDate, practitionerId);
   const { t, language } = useTranslation();
+
+  // Filter out past slots for today (with 30min buffer)
+  const filteredSlots = useMemo(() => {
+    if (!selectedDate || !timeSlots.length) return timeSlots;
+    const now = new Date();
+    const selected = new Date(selectedDate + 'T00:00:00');
+    const isToday = now.toDateString() === selected.toDateString();
+    if (!isToday) return timeSlots;
+
+    const cutoff = new Date(now.getTime() + 30 * 60 * 1000);
+    const cutoffTime = cutoff.toTimeString().slice(0, 5);
+    return timeSlots.filter(slot => slot.start_time.slice(0, 5) > cutoffTime);
+  }, [timeSlots, selectedDate]);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -62,7 +76,7 @@ export function TimeSlotStep({ selectedDate, selectedId, practitionerId, onSelec
         </p>
       </div>
 
-      {timeSlots.length === 0 ? (
+      {filteredSlots.length === 0 ? (
         <div className={timeStyles.noSlots}>
           <p>{t('time.noSlots')}</p>
           <button
@@ -75,7 +89,7 @@ export function TimeSlotStep({ selectedDate, selectedId, practitionerId, onSelec
         </div>
       ) : (
         <div className={timeStyles.grid}>
-          {timeSlots.map((slot) => (
+          {filteredSlots.map((slot) => (
             <button
               key={slot.id}
               className={`${timeStyles.slot} ${selectedId === slot.id ? timeStyles.selected : ''}`}
