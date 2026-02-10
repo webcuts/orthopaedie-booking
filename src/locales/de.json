@@ -115,5 +115,9 @@
   "cancel.alreadyCancelled": "Dieser Termin wurde bereits storniert.",
   "cancel.invalidToken": "Ungültiger Stornierungslink. Bitte prüfen Sie den Link in Ihrer E-Mail.",
   "cancel.pastAppointment": "Dieser Termin liegt in der Vergangenheit und kann nicht mehr storniert werden.",
-  "cancel.backToBooking": "Neuen Termin buchen"
+  "cancel.backToBooking": "Neuen Termin buchen",
+
+  "nextFreeSlot.today": "Nächster freier Termin: Heute, {time} Uhr",
+  "nextFreeSlot.tomorrow": "Nächster freier Termin: Morgen, {time} Uhr",
+  "nextFreeSlot.date": "Nächster freier Termin: {date}, {time} Uhr"
 }

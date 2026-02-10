@@ -1,0 +1,180 @@
+.container {
+  margin-bottom: 1.5rem;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.kpiCard {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  padding: 1.25rem;
+}
+
+.kpiLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem 0;
+}
+
+.kpiValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  line-height: 1;
+}
+
+.kpiChange {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.kpiUp {
+  color: #059669;
+}
+
+.kpiDown {
+  color: #DC2626;
+}
+
+.kpiNeutral {
+  color: #6B7280;
+}
+
+/* Utilization list in KPI card */
+.utilizationList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.utilizationItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.utilizationItem:last-child {
+  margin-bottom: 0;
+}
+
+.utilizationName {
+  flex: 1;
+  color: #374151;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.utilizationBarBg {
+  flex: 0 0 80px;
+  height: 6px;
+  background: #E5E7EB;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.utilizationBarFill {
+  height: 100%;
+  background: #2674BB;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.utilizationPercent {
+  flex: 0 0 36px;
+  text-align: right;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.75rem;
+}
+
+/* Chart section */
+.chartCard {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  padding: 1.25rem;
+}
+
+.chartTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 1rem 0;
+}
+
+.chartRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.375rem;
+}
+
+.chartLabel {
+  flex: 0 0 42px;
+  font-size: 0.75rem;
+  color: #6B7280;
+  text-align: right;
+}
+
+.chartBarBg {
+  flex: 1;
+  height: 20px;
+  background: #F3F4F6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.chartBarFill {
+  height: 100%;
+  background: #2674BB;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  min-width: 2px;
+}
+
+.chartCount {
+  flex: 0 0 28px;
+  font-size: 0.75rem;
+  color: #6B7280;
+  text-align: right;
+}
+
+/* Loading & error */
+.loading {
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: #6B7280;
+}
+
+.error {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: #DC3545;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+}

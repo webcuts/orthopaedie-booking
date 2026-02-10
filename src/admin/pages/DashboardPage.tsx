@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { CalendarView, AppointmentModal, NewAppointmentModal } from '../components';
+import { AnalyticsWidget } from '../components/Dashboard/AnalyticsWidget';
 import { SystemStatus } from '../components/Dashboard/SystemStatus';
 import { type AppointmentWithDetails } from '../hooks';
 
@@ -34,6 +35,8 @@ export function DashboardPage() {
 
   return (
     <>
+      <AnalyticsWidget />
+
       <CalendarView
         key={refreshKey}
         onAppointmentClick={handleAppointmentClick}

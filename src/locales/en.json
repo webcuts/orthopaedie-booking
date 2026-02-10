@@ -115,5 +115,9 @@
   "cancel.alreadyCancelled": "This appointment has already been cancelled.",
   "cancel.invalidToken": "Invalid cancellation link. Please check the link in your email.",
   "cancel.pastAppointment": "This appointment is in the past and can no longer be cancelled.",
-  "cancel.backToBooking": "Book New Appointment"
+  "cancel.backToBooking": "Book New Appointment",
+
+  "nextFreeSlot.today": "Next available: Today, {time}",
+  "nextFreeSlot.tomorrow": "Next available: Tomorrow, {time}",
+  "nextFreeSlot.date": "Next available: {date}, {time}"
 }

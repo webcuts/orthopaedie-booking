@@ -78,6 +78,7 @@ Deno.serve(async (req) => {
         : null,
       specialtyName,
       cancelToken: appointment.cancel_token || undefined,
+      appointmentId,
     }
 
     // Sprache des Patienten auslesen

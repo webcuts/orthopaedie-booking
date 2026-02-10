@@ -340,6 +340,71 @@ export function useTimeSlots(date: string | null, practitionerId: string | null 
 }
 
 // =====================================================
+// Hook: Nächster freier Termin (ORTHO-023)
+// =====================================================
+
+export function useNextFreeSlot() {
+  const [date, setDate] = useState<string | null>(null);
+  const [startTime, setStartTime] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetch() {
+      setLoading(true);
+      try {
+        const now = new Date();
+        const today = formatLocalDate(now);
+        const maxDate = new Date(now);
+        maxDate.setDate(maxDate.getDate() + 28);
+        const maxDateStr = formatLocalDate(maxDate);
+
+        // Cutoff für heute: jetzt + 30 min
+        const cutoff = new Date(now.getTime() + 30 * 60 * 1000);
+        const cutoffTime = cutoff.toTimeString().slice(0, 5);
+
+        // Verfügbare Slots ab heute, sortiert nach Datum + Uhrzeit
+        const { data: slots, error } = await supabase
+          .from('time_slots')
+          .select('date, start_time')
+          .eq('is_available', true)
+          .gte('date', today)
+          .lte('date', maxDateStr)
+          .order('date', { ascending: true })
+          .order('start_time', { ascending: true })
+          .limit(50);
+
+        if (error || !slots?.length) {
+          setDate(null);
+          setStartTime(null);
+          return;
+        }
+
+        // Finde den ersten Slot, der nicht in der Vergangenheit liegt
+        for (const slot of slots) {
+          if (slot.date === today && slot.start_time.slice(0, 5) <= cutoffTime) {
+            continue;
+          }
+          setDate(slot.date);
+          setStartTime(slot.start_time);
+          return;
+        }
+
+        setDate(null);
+        setStartTime(null);
+      } catch {
+        setDate(null);
+        setStartTime(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetch();
+  }, []);
+
+  return { date, startTime, loading };
+}
+
+// =====================================================
 // Hook: Buchung erstellen (Step 7)
 // =====================================================
 

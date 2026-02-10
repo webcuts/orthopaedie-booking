@@ -12,5 +12,6 @@ export {
   useAdminAvailableSlots,
   useAnonymizePatient,
   useSystemLogs,
+  useAnalytics,
 } from './useAdminData';
-export type { AppointmentWithDetails, PractitionerAbsence, Practitioner, SystemLog } from './useAdminData';
+export type { AppointmentWithDetails, PractitionerAbsence, Practitioner, SystemLog, AnalyticsData } from './useAdminData';

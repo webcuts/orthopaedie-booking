@@ -115,5 +115,9 @@
   "cancel.alreadyCancelled": "Bu randevu zaten iptal edilmiş.",
   "cancel.invalidToken": "Geçersiz iptal bağlantısı. Lütfen e-postanızdaki bağlantıyı kontrol edin.",
   "cancel.pastAppointment": "Bu randevu geçmişte kaldı ve artık iptal edilemez.",
-  "cancel.backToBooking": "Yeni Randevu Al"
+  "cancel.backToBooking": "Yeni Randevu Al",
+
+  "nextFreeSlot.today": "Bir sonraki müsait randevu: Bugün, saat {time}",
+  "nextFreeSlot.tomorrow": "Bir sonraki müsait randevu: Yarın, saat {time}",
+  "nextFreeSlot.date": "Bir sonraki müsait randevu: {date}, saat {time}"
 }

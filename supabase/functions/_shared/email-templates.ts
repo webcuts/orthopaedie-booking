@@ -16,6 +16,7 @@ export interface AppointmentData {
   insuranceType?: string;
   cancellationDeadline?: string;
   cancelToken?: string;
+  appointmentId?: string;
 }
 
 // Site URL für Cancel-Links
@@ -48,6 +49,7 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     hintTitle: 'Bitte beachten Sie:',
     hintText: 'Eine kostenfreie Stornierung ist bis 24 Stunden vor dem Termin möglich. Sie erhalten 24 Stunden und 6 Stunden vor Ihrem Termin eine Erinnerung per E-Mail.',
     cancelLinkText: 'Termin stornieren',
+    addToCalendar: 'Zum Kalender hinzufügen',
     contactText: 'Bei Fragen erreichen Sie uns telefonisch unter',
     contactOr: 'oder per E-Mail an',
     lookForward: 'Wir freuen uns auf Ihren Besuch!',
@@ -77,6 +79,7 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     hintTitle: 'Please note:',
     hintText: 'Free cancellation is possible up to 24 hours before the appointment. You will receive a reminder email 24 hours and 6 hours before your appointment.',
     cancelLinkText: 'Cancel Appointment',
+    addToCalendar: 'Add to Calendar',
     contactText: 'For questions, you can reach us by phone at',
     contactOr: 'or by email at',
     lookForward: 'We look forward to your visit!',
@@ -106,6 +109,7 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     hintTitle: 'Lütfen dikkat:',
     hintText: 'Randevudan 24 saat öncesine kadar ücretsiz iptal mümkündür. Randevunuzdan 24 saat ve 6 saat önce e-posta ile hatırlatma alacaksınız.',
     cancelLinkText: 'Randevuyu İptal Et',
+    addToCalendar: 'Takvime Ekle',
     contactText: 'Sorularınız için bize telefonla ulaşabilirsiniz:',
     contactOr: 'veya e-posta ile:',
     lookForward: 'Ziyaretinizi bekliyoruz!',
@@ -266,6 +270,15 @@ export function generateBookingConfirmationEmail(data: AppointmentData, lang: Em
           ` : ''}
         </table>
       </div>
+
+      ${data.appointmentId ? `
+      <!-- Kalender-Download -->
+      <div style="text-align: center; margin: 24px 0;">
+        <a href="${Deno.env.get('SUPABASE_URL')}/functions/v1/generate-ics?appointment_id=${data.appointmentId}" style="display: inline-block; padding: 12px 24px; background-color: #2674BB; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500;">
+          📅 ${t(lang, 'addToCalendar')}
+        </a>
+      </div>
+      ` : ''}
 
       <!-- Praxisadresse -->
       <div style="${styles.addressBox}">
