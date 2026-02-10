@@ -607,3 +607,77 @@ export function usePractitionerAbsences() {
     refetch: fetchAbsences,
   };
 }
+
+// =====================================================
+// Hook: Patientendaten anonymisieren (DSGVO)
+// =====================================================
+
+export function useAnonymizePatient() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const anonymize = useCallback(async (patientId: string) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { error: rpcError } = await supabase
+        .rpc('anonymize_patient', { p_patient_id: patientId });
+
+      if (rpcError) throw rpcError;
+      return { success: true };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Fehler beim Anonymisieren';
+      setError(message);
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { anonymize, loading, error };
+}
+
+// =====================================================
+// Hook: System-Logs (Monitoring)
+// =====================================================
+
+export interface SystemLog {
+  id: string;
+  event_type: string;
+  message: string;
+  details: Record<string, unknown> | null;
+  created_at: string;
+}
+
+export function useSystemLogs() {
+  const [logs, setLogs] = useState<SystemLog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchLogs = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('system_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (fetchError) throw fetchError;
+      setLogs(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fehler beim Laden der Logs');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLogs();
+  }, [fetchLogs]);
+
+  return { logs, loading, error, refetch: fetchLogs };
+}

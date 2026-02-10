@@ -56,7 +56,9 @@
   "contact.emailPlaceholder": "your.email@example.com",
   "contact.phoneLabel": "Phone (optional)",
   "contact.phonePlaceholder": "+49 511 123456",
-  "contact.cancellationHint": "Cancellation is possible up to 12 hours before the appointment.",
+  "contact.consent": "I consent to the processing of my personal data for appointment scheduling in accordance with GDPR Art. 6/9.",
+  "contact.consentRequired": "Please consent to data processing.",
+  "contact.cancellationHint": "Cancellation is possible up to 24 hours before the appointment via the link in your confirmation email.",
   "contact.bookingError": "Booking Error",
   "contact.chooseOtherTime": "Choose another time",
 
@@ -95,5 +97,23 @@
   "validation.phone.invalid": "Please enter a valid phone number (only digits, +, -, parentheses)",
   "validation.notes.tooLong": "Notes must not exceed {max} characters",
 
-  "rateLimit.error": "You have already booked multiple appointments. Please contact the practice by phone."
+  "rateLimit.error": "You have already booked multiple appointments. Please contact the practice by phone.",
+
+  "cancel.title": "Cancel Appointment",
+  "cancel.loading": "Loading appointment details...",
+  "cancel.appointmentDetails": "Your Appointment Details",
+  "cancel.labelDate": "Date",
+  "cancel.labelTime": "Time",
+  "cancel.labelTreatment": "Treatment",
+  "cancel.labelPractitioner": "Practitioner",
+  "cancel.confirm": "Cancel Appointment",
+  "cancel.confirming": "Cancelling...",
+  "cancel.success": "Your appointment has been successfully cancelled.",
+  "cancel.successTitle": "Appointment Cancelled",
+  "cancel.error": "Error cancelling the appointment. Please contact the practice.",
+  "cancel.deadline": "Cancellation is only possible up to 24 hours before the appointment.",
+  "cancel.alreadyCancelled": "This appointment has already been cancelled.",
+  "cancel.invalidToken": "Invalid cancellation link. Please check the link in your email.",
+  "cancel.pastAppointment": "This appointment is in the past and can no longer be cancelled.",
+  "cancel.backToBooking": "Book New Appointment"
 }

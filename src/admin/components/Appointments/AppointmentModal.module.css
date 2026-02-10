@@ -181,6 +181,90 @@
   background: #1e5a94;
 }
 
+.anonymizeButton {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border: 2px solid #DC3545;
+  border-radius: 8px;
+  background: white;
+  color: #DC3545;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.anonymizeButton:hover {
+  background: #FEF2F2;
+}
+
+.anonymizeConfirm {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.anonymizeWarning {
+  font-size: 0.8125rem;
+  color: #991B1B;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
+}
+
+.anonymizeActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.anonymizeConfirmButton {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #DC3545;
+  color: white;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.anonymizeConfirmButton:hover:not(:disabled) {
+  background: #B91C1C;
+}
+
+.anonymizeConfirmButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.anonymizeCancelButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.anonymizeCancelButton:hover:not(:disabled) {
+  background: #F9FAFB;
+}
+
+.anonymizedBadge {
+  font-size: 0.8125rem;
+  color: #6B7280;
+  background: #F3F4F6;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  font-style: italic;
+}
+
 @media (max-width: 480px) {
   .modal {
     max-height: 100vh;

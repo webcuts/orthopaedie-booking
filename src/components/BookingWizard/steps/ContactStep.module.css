@@ -53,6 +53,39 @@
   margin-bottom: var(--spacing-lg);
 }
 
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  margin-bottom: var(--spacing-sm);
+}
+
+.consentCheckbox {
+  margin-top: 2px;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.consentText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+.consentError {
+  font-size: var(--font-size-sm);
+  color: #DC3545;
+  margin-bottom: var(--spacing-sm);
+  padding-left: var(--spacing-md);
+}
+
 .hint {
   display: flex;
   align-items: center;

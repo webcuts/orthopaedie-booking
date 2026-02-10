@@ -56,7 +56,9 @@
   "contact.emailPlaceholder": "ihre.email@beispiel.de",
   "contact.phoneLabel": "Telefon (optional)",
   "contact.phonePlaceholder": "0511 123456",
-  "contact.cancellationHint": "Stornierung ist bis 12 Stunden vor dem Termin möglich.",
+  "contact.consent": "Ich stimme der Verarbeitung meiner personenbezogenen Daten zur Terminvereinbarung gemäß DSGVO Art. 6/9 zu.",
+  "contact.consentRequired": "Bitte stimmen Sie der Datenverarbeitung zu.",
+  "contact.cancellationHint": "Stornierung ist bis 24 Stunden vor dem Termin über den Link in Ihrer Bestätigungsmail möglich.",
   "contact.bookingError": "Fehler bei der Buchung",
   "contact.chooseOtherTime": "Andere Uhrzeit wählen",
 
@@ -95,5 +97,23 @@
   "validation.phone.invalid": "Bitte geben Sie eine gültige Telefonnummer ein (nur Zahlen, +, -, Klammern)",
   "validation.notes.tooLong": "Notizen dürfen maximal {max} Zeichen lang sein",
 
-  "rateLimit.error": "Sie haben bereits mehrere Termine gebucht. Bitte kontaktieren Sie die Praxis telefonisch."
+  "rateLimit.error": "Sie haben bereits mehrere Termine gebucht. Bitte kontaktieren Sie die Praxis telefonisch.",
+
+  "cancel.title": "Termin stornieren",
+  "cancel.loading": "Termindetails werden geladen...",
+  "cancel.appointmentDetails": "Ihre Termindetails",
+  "cancel.labelDate": "Datum",
+  "cancel.labelTime": "Uhrzeit",
+  "cancel.labelTreatment": "Terminart",
+  "cancel.labelPractitioner": "Behandler",
+  "cancel.confirm": "Termin stornieren",
+  "cancel.confirming": "Wird storniert...",
+  "cancel.success": "Ihr Termin wurde erfolgreich storniert.",
+  "cancel.successTitle": "Termin storniert",
+  "cancel.error": "Fehler bei der Stornierung. Bitte kontaktieren Sie die Praxis.",
+  "cancel.deadline": "Eine Stornierung ist nur bis 24 Stunden vor dem Termin möglich.",
+  "cancel.alreadyCancelled": "Dieser Termin wurde bereits storniert.",
+  "cancel.invalidToken": "Ungültiger Stornierungslink. Bitte prüfen Sie den Link in Ihrer E-Mail.",
+  "cancel.pastAppointment": "Dieser Termin liegt in der Vergangenheit und kann nicht mehr storniert werden.",
+  "cancel.backToBooking": "Neuen Termin buchen"
 }

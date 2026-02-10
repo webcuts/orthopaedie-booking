@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useUpdateAppointmentStatus, type AppointmentWithDetails } from '../../hooks';
+import { useUpdateAppointmentStatus, useAnonymizePatient, type AppointmentWithDetails } from '../../hooks';
 import styles from './AppointmentModal.module.css';
 
 interface AppointmentModalProps {
@@ -21,7 +21,12 @@ export function AppointmentModal({
   onStatusUpdate,
 }: AppointmentModalProps) {
   const [status, setStatus] = useState(appointment.status);
+  const [showAnonymizeConfirm, setShowAnonymizeConfirm] = useState(false);
   const { updateStatus, loading } = useUpdateAppointmentStatus();
+  const { anonymize, loading: anonymizing } = useAnonymizePatient();
+
+  const isAnonymized = appointment.patient?.name === 'Gelöscht';
+  const canAnonymize = (status === 'cancelled' || status === 'completed') && !isAnonymized;
 
   const handleStatusChange = async (newStatus: string) => {
     setStatus(newStatus as typeof status);
@@ -30,6 +35,15 @@ export function AppointmentModal({
       newStatus as 'pending' | 'confirmed' | 'cancelled' | 'completed'
     );
     if (result.success) {
+      onStatusUpdate();
+    }
+  };
+
+  const handleAnonymize = async () => {
+    if (!appointment.patient?.id) return;
+    const result = await anonymize(appointment.patient.id);
+    if (result.success) {
+      setShowAnonymizeConfirm(false);
       onStatusUpdate();
     }
   };
@@ -163,6 +177,51 @@ export function AppointmentModal({
               ))}
             </div>
           </section>
+
+          {/* DSGVO: Anonymize Patient Data */}
+          {canAnonymize && (
+            <section className={styles.section}>
+              <h3 className={styles.sectionTitle}>Datenschutz (DSGVO)</h3>
+              {!showAnonymizeConfirm ? (
+                <button
+                  className={styles.anonymizeButton}
+                  onClick={() => setShowAnonymizeConfirm(true)}
+                >
+                  Patientendaten löschen
+                </button>
+              ) : (
+                <div className={styles.anonymizeConfirm}>
+                  <p className={styles.anonymizeWarning}>
+                    Patientendaten (Name, E-Mail, Telefon) werden unwiderruflich gelöscht. Der Termin bleibt als anonymisierter Eintrag erhalten.
+                  </p>
+                  <div className={styles.anonymizeActions}>
+                    <button
+                      className={styles.anonymizeConfirmButton}
+                      onClick={handleAnonymize}
+                      disabled={anonymizing}
+                    >
+                      {anonymizing ? 'Wird gelöscht...' : 'Unwiderruflich löschen'}
+                    </button>
+                    <button
+                      className={styles.anonymizeCancelButton}
+                      onClick={() => setShowAnonymizeConfirm(false)}
+                      disabled={anonymizing}
+                    >
+                      Abbrechen
+                    </button>
+                  </div>
+                </div>
+              )}
+            </section>
+          )}
+
+          {isAnonymized && (
+            <section className={styles.section}>
+              <div className={styles.anonymizedBadge}>
+                Patientendaten wurden gemäß DSGVO gelöscht
+              </div>
+            </section>
+          )}
 
           {/* Meta Section */}
           <section className={styles.section}>

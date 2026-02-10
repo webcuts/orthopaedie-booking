@@ -32,6 +32,8 @@ const localeMap: Record<string, string> = {
 export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoToStep, wizardStartTime }: ContactStepProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [honeypot, setHoneypot] = useState('');
+  const [consentGiven, setConsentGiven] = useState(false);
+  const [consentError, setConsentError] = useState(false);
   const { createBooking, loading, error: bookingError, clearError } = useCreateBooking();
   const { t, language } = useTranslation();
 
@@ -104,6 +106,11 @@ export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoTo
     if (!validateForm()) return;
     if (!state.insuranceTypeId || !state.treatmentTypeId || !state.timeSlotId) return;
 
+    if (!consentGiven) {
+      setConsentError(true);
+      return;
+    }
+
     clearError();
 
     const result = await createBooking({
@@ -116,7 +123,9 @@ export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoTo
       treatmentTypeId: state.treatmentTypeId,
       timeSlotId: state.timeSlotId,
       practitionerId: state.practitionerId,
-      language
+      language,
+      consent_given: true,
+      consent_timestamp: new Date().toISOString()
     });
 
     if (result) {
@@ -234,6 +243,23 @@ export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoTo
           fullWidth
         />
       </div>
+
+      {/* DSGVO Consent Checkbox */}
+      <label className={contactStyles.consent}>
+        <input
+          type="checkbox"
+          checked={consentGiven}
+          onChange={(e) => {
+            setConsentGiven(e.target.checked);
+            if (e.target.checked) setConsentError(false);
+          }}
+          className={contactStyles.consentCheckbox}
+        />
+        <span className={contactStyles.consentText}>{t('contact.consent')}</span>
+      </label>
+      {consentError && (
+        <div className={contactStyles.consentError}>{t('contact.consentRequired')}</div>
+      )}
 
       <div className={contactStyles.hint}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

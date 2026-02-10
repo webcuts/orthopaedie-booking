@@ -4,6 +4,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { generateReminderEmail, getReminderSubject, type AppointmentData, type EmailLanguage } from '../_shared/email-templates.ts'
 import { sendEmail } from '../_shared/resend.ts'
+import { logEvent } from '../_shared/log-helper.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -83,6 +84,7 @@ Deno.serve(async (req) => {
             status,
             language,
             cancellation_deadline,
+            cancel_token,
             patient:patients(name, email, phone),
             treatment_type:treatment_types(name),
             time_slot:time_slots(date, start_time, end_time),
@@ -148,6 +150,7 @@ Deno.serve(async (req) => {
             ? `${appointment.practitioner.title || ''} ${appointment.practitioner.first_name} ${appointment.practitioner.last_name}`.trim()
             : null,
           cancellationDeadline,
+          cancelToken: appointment.cancel_token || undefined,
         }
 
         // Generiere HTML
@@ -186,6 +189,10 @@ Deno.serve(async (req) => {
     }
 
     console.log(`[process-email-reminders] Completed: ${result.sent} sent, ${result.failed} failed`)
+
+    if (result.sent > 0 || result.failed > 0) {
+      await logEvent('email', `Erinnerungen: ${result.sent} gesendet, ${result.failed} fehlgeschlagen`, { ...result })
+    }
 
     return new Response(
       JSON.stringify({

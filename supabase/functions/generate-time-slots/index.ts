@@ -2,6 +2,7 @@
 // Supabase Edge Function zum Generieren von Zeitslots
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { logEvent } from '../_shared/log-helper.ts'
 
 // CORS Headers für API-Aufrufe
 const corsHeaders = {
@@ -64,6 +65,12 @@ Deno.serve(async (req) => {
     const result = data?.[0] || { success: false, slots_created: 0, period: 'N/A' }
 
     console.log(`[generate-time-slots] Completed: ${result.slots_created} slots created for period ${result.period}`)
+
+    await logEvent('slot_generation', `${result.slots_created} Slots generiert für ${result.period}`, {
+      slots_created: result.slots_created,
+      period: result.period,
+      weeks_ahead: weeksAhead,
+    })
 
     const response: GenerateResponse = {
       success: result.success,

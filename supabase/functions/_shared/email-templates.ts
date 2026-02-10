@@ -15,7 +15,11 @@ export interface AppointmentData {
   specialtyName?: string;
   insuranceType?: string;
   cancellationDeadline?: string;
+  cancelToken?: string;
 }
+
+// Site URL für Cancel-Links
+const SITE_URL = Deno.env.get('SITE_URL') || 'https://orthopaedie-koenigstrasse.de';
 
 // Praxis-Informationen (bleiben immer Deutsch)
 const PRACTICE_INFO = {
@@ -42,7 +46,8 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     noPractitioner: 'Nächster verfügbarer Behandler',
     addressTitle: 'Praxisadresse',
     hintTitle: 'Bitte beachten Sie:',
-    hintText: 'Eine kostenfreie Stornierung ist bis 12 Stunden vor dem Termin möglich. Sie erhalten 24 Stunden und 6 Stunden vor Ihrem Termin eine Erinnerung per E-Mail.',
+    hintText: 'Eine kostenfreie Stornierung ist bis 24 Stunden vor dem Termin möglich. Sie erhalten 24 Stunden und 6 Stunden vor Ihrem Termin eine Erinnerung per E-Mail.',
+    cancelLinkText: 'Termin stornieren',
     contactText: 'Bei Fragen erreichen Sie uns telefonisch unter',
     contactOr: 'oder per E-Mail an',
     lookForward: 'Wir freuen uns auf Ihren Besuch!',
@@ -70,7 +75,8 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     noPractitioner: 'Next available practitioner',
     addressTitle: 'Practice Address',
     hintTitle: 'Please note:',
-    hintText: 'Free cancellation is possible up to 12 hours before the appointment. You will receive a reminder email 24 hours and 6 hours before your appointment.',
+    hintText: 'Free cancellation is possible up to 24 hours before the appointment. You will receive a reminder email 24 hours and 6 hours before your appointment.',
+    cancelLinkText: 'Cancel Appointment',
     contactText: 'For questions, you can reach us by phone at',
     contactOr: 'or by email at',
     lookForward: 'We look forward to your visit!',
@@ -98,7 +104,8 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     noPractitioner: 'Müsait olan doktor',
     addressTitle: 'Muayenehane Adresi',
     hintTitle: 'Lütfen dikkat:',
-    hintText: 'Randevudan 12 saat öncesine kadar ücretsiz iptal mümkündür. Randevunuzdan 24 saat ve 6 saat önce e-posta ile hatırlatma alacaksınız.',
+    hintText: 'Randevudan 24 saat öncesine kadar ücretsiz iptal mümkündür. Randevunuzdan 24 saat ve 6 saat önce e-posta ile hatırlatma alacaksınız.',
+    cancelLinkText: 'Randevuyu İptal Et',
     contactText: 'Sorularınız için bize telefonla ulaşabilirsiniz:',
     contactOr: 'veya e-posta ile:',
     lookForward: 'Ziyaretinizi bekliyoruz!',
@@ -276,6 +283,15 @@ export function generateBookingConfirmationEmail(data: AppointmentData, lang: Em
         <strong>${t(lang, 'hintTitle')}</strong><br>
         ${t(lang, 'hintText')}
       </div>
+
+      ${data.cancelToken ? `
+      <!-- Stornierungslink -->
+      <div style="text-align: center; margin: 24px 0;">
+        <a href="${SITE_URL}/cancel.html?token=${data.cancelToken}" style="display: inline-block; padding: 12px 24px; background-color: #DC3545; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500;">
+          ${t(lang, 'cancelLinkText')}
+        </a>
+      </div>
+      ` : ''}
 
       <p style="${styles.text}">
         ${t(lang, 'contactText')} ${PRACTICE_INFO.phone} ${t(lang, 'contactOr')}
@@ -472,6 +488,15 @@ export function generateReminderEmail(data: AppointmentData, reminderType: '24h_
       ${!isToday && data.cancellationDeadline ? `
       <div style="${styles.hint}">
         <strong>${lang === 'de' ? 'Hinweis:' : lang === 'en' ? 'Note:' : 'Not:'}</strong> ${t(lang, 'cancellationHint')} ${data.cancellationDeadline} ${t(lang, 'cancellationHintSuffix')}
+      </div>
+      ` : ''}
+
+      ${!isToday && data.cancelToken ? `
+      <!-- Stornierungslink -->
+      <div style="text-align: center; margin: 24px 0;">
+        <a href="${SITE_URL}/cancel.html?token=${data.cancelToken}" style="display: inline-block; padding: 12px 24px; background-color: #DC3545; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500;">
+          ${t(lang, 'cancelLinkText')}
+        </a>
       </div>
       ` : ''}
 

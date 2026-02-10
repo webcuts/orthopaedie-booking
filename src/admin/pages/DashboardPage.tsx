@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { CalendarView, AppointmentModal, NewAppointmentModal } from '../components';
+import { SystemStatus } from '../components/Dashboard/SystemStatus';
 import { type AppointmentWithDetails } from '../hooks';
 
 export function DashboardPage() {
@@ -53,6 +54,8 @@ export function DashboardPage() {
           onCreated={handleAppointmentCreated}
         />
       )}
+
+      <SystemStatus />
     </>
   );
 }

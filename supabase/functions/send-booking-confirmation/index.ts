@@ -4,6 +4,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { generateBookingConfirmationEmail, getConfirmationSubject, type AppointmentData, type EmailLanguage } from '../_shared/email-templates.ts'
 import { sendEmail } from '../_shared/resend.ts'
+import { logEvent } from '../_shared/log-helper.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -76,6 +77,7 @@ Deno.serve(async (req) => {
         ? `${appointment.practitioner.title || ''} ${appointment.practitioner.first_name} ${appointment.practitioner.last_name}`.trim()
         : null,
       specialtyName,
+      cancelToken: appointment.cancel_token || undefined,
     }
 
     // Sprache des Patienten auslesen
@@ -93,6 +95,7 @@ Deno.serve(async (req) => {
 
     if (!result.success) {
       console.error(`[send-booking-confirmation] Failed to send email: ${result.error}`)
+      await logEvent('error', `Bestätigungsmail fehlgeschlagen: ${result.error}`, { appointmentId, email: emailData.patientEmail })
       return new Response(
         JSON.stringify({ success: false, error: result.error }),
         {
@@ -103,6 +106,7 @@ Deno.serve(async (req) => {
     }
 
     console.log(`[send-booking-confirmation] Email sent to ${emailData.patientEmail}`)
+    await logEvent('booking', `Bestätigungsmail gesendet an ${emailData.patientEmail}`, { appointmentId })
 
     return new Response(
       JSON.stringify({

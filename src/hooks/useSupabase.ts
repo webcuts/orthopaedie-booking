@@ -350,6 +350,8 @@ interface BookingData {
   practitionerId: string | null;
   notes?: string;
   language?: string;
+  consent_given?: boolean;
+  consent_timestamp?: string;
 }
 
 interface BookingResult {
@@ -397,6 +399,8 @@ export function useCreateBooking() {
           practitioner_id: bookingData.practitionerId,
           notes: bookingData.notes || null,
           language: bookingData.language || 'de',
+          consent_given: bookingData.consent_given || false,
+          consent_timestamp: bookingData.consent_timestamp || null,
           status: 'confirmed'
         })
         .select()

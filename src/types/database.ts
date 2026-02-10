@@ -106,6 +106,9 @@ export interface Appointment {
   notes: string | null;
   language: string | null;
   cancellation_deadline: string | null;
+  consent_given: boolean;
+  consent_timestamp: string | null;
+  cancel_token: string | null;
   created_at: string;
   updated_at: string;
 }

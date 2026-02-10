@@ -56,7 +56,9 @@
   "contact.emailPlaceholder": "e-posta@ornek.com",
   "contact.phoneLabel": "Telefon (isteğe bağlı)",
   "contact.phonePlaceholder": "+49 511 123456",
-  "contact.cancellationHint": "Randevu iptal, randevudan 12 saat öncesine kadar yapılabilir.",
+  "contact.consent": "KVKK/GDPR Madde 6/9 kapsamında randevu planlaması için kişisel verilerimin işlenmesine onay veriyorum.",
+  "contact.consentRequired": "Lütfen veri işleme onayını verin.",
+  "contact.cancellationHint": "Onay e-postanızdaki bağlantı ile randevudan 24 saat öncesine kadar iptal mümkündür.",
   "contact.bookingError": "Randevu Hatası",
   "contact.chooseOtherTime": "Başka bir saat seçin",
 
@@ -95,5 +97,23 @@
   "validation.phone.invalid": "Lütfen geçerli bir telefon numarası girin (sadece rakamlar, +, -, parantezler)",
   "validation.notes.tooLong": "Notlar en fazla {max} karakter olmalıdır",
 
-  "rateLimit.error": "Zaten birden fazla randevu aldınız. Lütfen muayenehaneyi telefonla arayın."
+  "rateLimit.error": "Zaten birden fazla randevu aldınız. Lütfen muayenehaneyi telefonla arayın.",
+
+  "cancel.title": "Randevu İptali",
+  "cancel.loading": "Randevu detayları yükleniyor...",
+  "cancel.appointmentDetails": "Randevu Detaylarınız",
+  "cancel.labelDate": "Tarih",
+  "cancel.labelTime": "Saat",
+  "cancel.labelTreatment": "Tedavi Türü",
+  "cancel.labelPractitioner": "Doktor",
+  "cancel.confirm": "Randevuyu İptal Et",
+  "cancel.confirming": "İptal ediliyor...",
+  "cancel.success": "Randevunuz başarıyla iptal edildi.",
+  "cancel.successTitle": "Randevu İptal Edildi",
+  "cancel.error": "Randevu iptal edilirken hata oluştu. Lütfen muayenehane ile iletişime geçin.",
+  "cancel.deadline": "İptal yalnızca randevudan 24 saat öncesine kadar mümkündür.",
+  "cancel.alreadyCancelled": "Bu randevu zaten iptal edilmiş.",
+  "cancel.invalidToken": "Geçersiz iptal bağlantısı. Lütfen e-postanızdaki bağlantıyı kontrol edin.",
+  "cancel.pastAppointment": "Bu randevu geçmişte kaldı ve artık iptal edilemez.",
+  "cancel.backToBooking": "Yeni Randevu Al"
 }
