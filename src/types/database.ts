@@ -35,6 +35,8 @@ export interface TreatmentType {
   name_tr?: string | null;
   duration_minutes: number;
   description: string | null;
+  description_en?: string | null;
+  description_tr?: string | null;
   is_active: boolean;
   created_at: string;
 }
@@ -55,6 +57,8 @@ export interface TimeSlot {
 export interface Specialty {
   id: string;
   name: string;
+  name_en?: string | null;
+  name_tr?: string | null;
   is_active: boolean;
   created_at: string;
 }

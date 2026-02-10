@@ -1,5 +1,5 @@
 import { useSpecialties } from '../../../hooks/useSupabase';
-import { useTranslation } from '../../../i18n';
+import { useTranslation, getLocalizedName } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 
 interface SpecialtyStepProps {
@@ -9,7 +9,7 @@ interface SpecialtyStepProps {
 
 export function SpecialtyStep({ selectedId, onSelect }: SpecialtyStepProps) {
   const { data: specialties, loading, error, refetch } = useSpecialties();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   if (loading) {
     return (
@@ -57,7 +57,7 @@ export function SpecialtyStep({ selectedId, onSelect }: SpecialtyStepProps) {
             onClick={() => onSelect(specialty.id)}
           >
             <div className={styles.cardContent}>
-              <div className={styles.cardTitle}>{specialty.name}</div>
+              <div className={styles.cardTitle}>{getLocalizedName(specialty, language)}</div>
             </div>
             <svg className={styles.cardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 18l6-6-6-6" />

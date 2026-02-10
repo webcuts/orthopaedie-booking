@@ -1,5 +1,5 @@
 import { useTreatmentTypes } from '../../../hooks/useSupabase';
-import { useTranslation, getLocalizedName } from '../../../i18n';
+import { useTranslation, getLocalizedName, getLocalizedDescription } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 
 interface TreatmentStepProps {
@@ -53,7 +53,7 @@ export function TreatmentStep({ selectedId, onSelect, onBack }: TreatmentStepPro
               <div className={styles.cardTitle}>{getLocalizedName(treatment, language)}</div>
               <div className={styles.cardSubtitle}>
                 {treatment.duration_minutes} {t('common.minutes')}
-                {treatment.description && ` · ${treatment.description}`}
+                {treatment.description && ` · ${getLocalizedDescription(treatment, language) || treatment.description}`}
               </div>
             </div>
             <svg className={styles.cardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

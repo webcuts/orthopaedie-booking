@@ -71,3 +71,13 @@ export function getLocalizedName(
   if (language === 'tr' && item.name_tr) return item.name_tr;
   return item.name;
 }
+
+/** Gibt die lokalisierte Beschreibung eines DB-Eintrags zurück */
+export function getLocalizedDescription(
+  item: { description: string | null; description_en?: string | null; description_tr?: string | null },
+  language: Language
+): string | null {
+  if (language === 'en' && item.description_en) return item.description_en;
+  if (language === 'tr' && item.description_tr) return item.description_tr;
+  return item.description;
+}
