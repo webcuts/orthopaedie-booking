@@ -61,7 +61,7 @@ END $$;
 -- Montag um 02:00 Uhr, 4 Wochen voraus
 -- HINWEIS: pg_cron muss als Extension aktiviert sein
 -- Falls pg_cron nicht verfügbar, kann dieser Block übersprungen werden
-DO $$ BEGIN
+DO $outer$ BEGIN
   IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'pg_cron') THEN
     PERFORM cron.schedule(
       'weekly-slot-generation',
@@ -69,4 +69,4 @@ DO $$ BEGIN
       $$SELECT generate_time_slots_with_log(4, 'cron_job')$$
     );
   END IF;
-END $$;
+END $outer$;
