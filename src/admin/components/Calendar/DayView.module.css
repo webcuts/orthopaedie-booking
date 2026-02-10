@@ -5,7 +5,7 @@
 .dayView {
   display: flex;
   height: 100%;
-  min-height: 880px; /* (18-7) * 4 slots * 20px */
+  min-height: 2112px; /* (18-7) * 4 slots * 48px */
   overflow-y: auto;
 }
 
@@ -14,18 +14,19 @@
    ===================================================== */
 
 .timeColumn {
-  width: 60px;
+  width: 64px;
   flex-shrink: 0;
   border-right: 1px solid #E5E7EB;
   background: #FAFAFA;
 }
 
 .timeSlot {
-  height: 20px; /* 15-Minuten-Slot */
+  height: 48px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-end;
-  padding-right: 0.5rem;
+  padding-right: 0.75rem;
+  padding-top: 2px;
 }
 
 .timeSlot.isHour {
@@ -33,14 +34,14 @@
 }
 
 .time {
-  font-size: 0.625rem;
-  color: #6B7280;
+  font-size: 0.6875rem;
+  color: #9CA3AF;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
 .timeSlot.isHour .time {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: #374151;
   font-weight: 600;
 }
@@ -66,16 +67,12 @@
 }
 
 .gridRow {
-  height: 20px;
+  height: 48px;
   border-bottom: 1px solid #F3F4F6;
 }
 
 .gridRow.hourBorder {
   border-bottom: 1px solid #E5E7EB;
-}
-
-.gridRow:nth-child(4n+1) {
-  background: rgba(0, 0, 0, 0.01);
 }
 
 /* =====================================================
@@ -92,10 +89,10 @@
 
 .currentTimeDot {
   position: absolute;
-  left: -4px;
-  top: -4px;
-  width: 8px;
-  height: 8px;
+  left: -5px;
+  top: -5px;
+  width: 10px;
+  height: 10px;
   background: #DC2626;
   border-radius: 50%;
 }
@@ -122,10 +119,8 @@
 
 .appointmentWrapper {
   position: absolute;
-  left: 0;
-  right: 0;
-  border-left: 3px solid;
-  border-radius: 4px;
+  border-left: 4px solid;
+  border-radius: 6px;
   cursor: pointer;
   overflow: hidden;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
@@ -139,56 +134,37 @@
 }
 
 .appointmentContent {
-  padding: 4px 8px;
+  padding: 2px 8px;
   height: 100%;
   overflow: hidden;
-}
-
-.appointmentHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 2px;
+  gap: 8px;
 }
 
 .appointmentTime {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   color: #374151;
   font-variant-numeric: tabular-nums;
-}
-
-.appointmentDuration {
-  font-size: 0.5rem;
-  color: #6B7280;
-  background: rgba(0, 0, 0, 0.05);
-  padding: 1px 4px;
-  border-radius: 2px;
+  flex-shrink: 0;
 }
 
 .appointmentPatient {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.appointmentTreatment {
-  font-size: 0.625rem;
-  color: #6B7280;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .appointmentPractitioner {
-  font-size: 0.5rem;
-  color: #9CA3AF;
+  font-size: 0.6875rem;
+  color: #6B7280;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 2px;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 /* =====================================================
@@ -211,26 +187,26 @@
 
 @media (max-width: 768px) {
   .timeColumn {
-    width: 45px;
+    width: 48px;
   }
 
   .time {
-    font-size: 0.5rem;
+    font-size: 0.5625rem;
   }
 
   .timeSlot.isHour .time {
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
   }
 
   .appointmentContent {
-    padding: 2px 4px;
+    padding: 2px 6px;
+    gap: 4px;
   }
 
   .appointmentPatient {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
   }
 
-  .appointmentTreatment,
   .appointmentPractitioner {
     display: none;
   }

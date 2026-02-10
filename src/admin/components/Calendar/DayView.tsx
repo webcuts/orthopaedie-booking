@@ -10,8 +10,9 @@ interface DayViewProps {
 // Zeitkonstanten
 const START_HOUR = 7;
 const END_HOUR = 18;
-const SLOT_HEIGHT = 20; // Pixel pro 15 Minuten
+const SLOT_HEIGHT = 48; // Pixel pro 15 Minuten (vorher 20)
 const MINUTES_PER_SLOT = 15;
+const PIXELS_PER_MINUTE = SLOT_HEIGHT / MINUTES_PER_SLOT;
 
 // Generiere 15-Minuten-Slots von 07:00 bis 18:00
 const TIME_SLOTS = Array.from(
@@ -35,6 +36,82 @@ const STATUS_COLORS: Record<string, { bg: string; border: string; text: string }
   completed: { bg: '#F3F4F6', border: '#6B7280', text: '#374151' },
 };
 
+interface LayoutInfo {
+  column: number;
+  totalColumns: number;
+}
+
+/**
+ * Berechnet Spalten für überlappende Termine,
+ * damit sie nebeneinander dargestellt werden.
+ */
+function computeColumns(appointments: AppointmentWithDetails[]): Map<string, LayoutInfo> {
+  const layout = new Map<string, LayoutInfo>();
+  if (appointments.length === 0) return layout;
+
+  // Sortiere nach Startzeit
+  const sorted = [...appointments].sort((a, b) => {
+    return a.time_slot.start_time.localeCompare(b.time_slot.start_time);
+  });
+
+  // Baue Überlappungsgruppen
+  const groups: AppointmentWithDetails[][] = [];
+  let currentGroup: AppointmentWithDetails[] = [];
+  let groupEnd = 0;
+
+  for (const apt of sorted) {
+    const [h, m] = apt.time_slot.start_time.split(':').map(Number);
+    const startMin = h * 60 + m;
+    const duration = apt.treatment_type?.duration_minutes || 10;
+    const endMin = startMin + duration;
+
+    if (currentGroup.length === 0 || startMin < groupEnd) {
+      currentGroup.push(apt);
+      groupEnd = Math.max(groupEnd, endMin);
+    } else {
+      groups.push(currentGroup);
+      currentGroup = [apt];
+      groupEnd = endMin;
+    }
+  }
+  if (currentGroup.length > 0) groups.push(currentGroup);
+
+  // Weise Spalten innerhalb jeder Gruppe zu
+  for (const group of groups) {
+    const columns: AppointmentWithDetails[][] = [];
+
+    for (const apt of group) {
+      const [h, m] = apt.time_slot.start_time.split(':').map(Number);
+      const startMin = h * 60 + m;
+
+      let placed = false;
+      for (let col = 0; col < columns.length; col++) {
+        const lastInCol = columns[col][columns[col].length - 1];
+        const [lh, lm] = lastInCol.time_slot.start_time.split(':').map(Number);
+        const lastEnd = lh * 60 + lm + (lastInCol.treatment_type?.duration_minutes || 10);
+
+        if (startMin >= lastEnd) {
+          columns[col].push(apt);
+          placed = true;
+          break;
+        }
+      }
+      if (!placed) {
+        columns.push([apt]);
+      }
+    }
+
+    const totalColumns = columns.length;
+    columns.forEach((col, colIndex) => {
+      col.forEach(apt => {
+        layout.set(apt.id, { column: colIndex, totalColumns });
+      });
+    });
+  }
+
+  return layout;
+}
+
 export function DayView({ date, appointments, onAppointmentClick }: DayViewProps) {
   const dateStr = date.toISOString().split('T')[0];
 
@@ -43,18 +120,29 @@ export function DayView({ date, appointments, onAppointmentClick }: DayViewProps
     (apt) => apt.time_slot?.date === dateStr && apt.status !== 'cancelled'
   );
 
+  const columnLayout = computeColumns(dayAppointments);
+
   // Get appointment position and height based on time
   const getAppointmentStyle = (apt: AppointmentWithDetails) => {
     const [hours, minutes] = apt.time_slot.start_time.split(':').map(Number);
     const startMinutes = (hours - START_HOUR) * 60 + minutes;
-    const duration = apt.treatment_type?.duration_minutes || 15;
+    const duration = apt.treatment_type?.duration_minutes || 10;
 
-    // Berechne Position: Pixel pro Minute = SLOT_HEIGHT / MINUTES_PER_SLOT
-    const pixelsPerMinute = SLOT_HEIGHT / MINUTES_PER_SLOT;
-    const top = startMinutes * pixelsPerMinute;
-    const height = Math.max(duration * pixelsPerMinute, SLOT_HEIGHT); // Mindesthöhe
+    const top = startMinutes * PIXELS_PER_MINUTE;
+    const height = Math.max(duration * PIXELS_PER_MINUTE, 32); // Mindesthöhe 32px
 
-    return { top: `${top}px`, height: `${height}px` };
+    const info = columnLayout.get(apt.id);
+    const column = info?.column ?? 0;
+    const totalColumns = info?.totalColumns ?? 1;
+    const widthPercent = 100 / totalColumns;
+    const leftPercent = column * widthPercent;
+
+    return {
+      top: `${top}px`,
+      height: `${height}px`,
+      left: `${leftPercent}%`,
+      width: `calc(${widthPercent}% - 4px)`,
+    };
   };
 
   const formatTime = (timeStr: string) => timeStr?.slice(0, 5);
@@ -94,6 +182,9 @@ export function DayView({ date, appointments, onAppointmentClick }: DayViewProps
         <div className={styles.appointments}>
           {dayAppointments.map((apt) => {
             const colors = STATUS_COLORS[apt.status] || STATUS_COLORS.pending;
+            const practName = apt.practitioner
+              ? `${apt.practitioner.title || ''} ${apt.practitioner.last_name}`.trim()
+              : '';
             return (
               <div
                 key={apt.id}
@@ -106,24 +197,16 @@ export function DayView({ date, appointments, onAppointmentClick }: DayViewProps
                 onClick={() => onAppointmentClick(apt)}
               >
                 <div className={styles.appointmentContent}>
-                  <div className={styles.appointmentHeader}>
-                    <span className={styles.appointmentTime}>
-                      {formatTime(apt.time_slot?.start_time)} - {formatTime(apt.time_slot?.end_time)}
-                    </span>
-                    <span className={styles.appointmentDuration}>
-                      {apt.treatment_type?.duration_minutes} Min
-                    </span>
-                  </div>
-                  <div className={styles.appointmentPatient} style={{ color: colors.text }}>
+                  <span className={styles.appointmentTime}>
+                    {formatTime(apt.time_slot?.start_time)}
+                  </span>
+                  <span className={styles.appointmentPatient} style={{ color: colors.text }}>
                     {apt.patient?.name}
-                  </div>
-                  <div className={styles.appointmentTreatment}>
-                    {apt.treatment_type?.name}
-                  </div>
-                  {apt.practitioner && (
-                    <div className={styles.appointmentPractitioner}>
-                      {apt.practitioner.title} {apt.practitioner.first_name} {apt.practitioner.last_name}
-                    </div>
+                  </span>
+                  {practName && (
+                    <span className={styles.appointmentPractitioner}>
+                      {practName}
+                    </span>
                   )}
                 </div>
               </div>
@@ -150,8 +233,7 @@ function CurrentTimeIndicator() {
   // Nur anzeigen wenn innerhalb der Arbeitszeit
   if (hours < START_HOUR || hours >= END_HOUR) return null;
 
-  const pixelsPerMinute = SLOT_HEIGHT / MINUTES_PER_SLOT;
-  const top = ((hours - START_HOUR) * 60 + minutes) * pixelsPerMinute;
+  const top = ((hours - START_HOUR) * 60 + minutes) * PIXELS_PER_MINUTE;
 
   return (
     <div className={styles.currentTime} style={{ top: `${top}px` }}>

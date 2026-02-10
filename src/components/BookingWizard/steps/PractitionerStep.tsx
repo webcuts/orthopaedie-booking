@@ -1,5 +1,6 @@
 import { usePractitioners } from '../../../hooks/useSupabase';
 import { getPractitionerFullName } from '../../../types/database';
+import { useTranslation } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 
 interface PractitionerStepProps {
@@ -11,12 +12,13 @@ interface PractitionerStepProps {
 
 export function PractitionerStep({ specialtyId, selectedId, onSelect, onBack }: PractitionerStepProps) {
   const { data: practitioners, loading, error } = usePractitioners(specialtyId);
+  const { t } = useTranslation();
 
   if (loading) {
     return (
       <div className={styles.loading}>
         <div className={styles.spinner} />
-        <span>Behandler werden geladen...</span>
+        <span>{t('practitioner.loading')}</span>
       </div>
     );
   }
@@ -24,7 +26,7 @@ export function PractitionerStep({ specialtyId, selectedId, onSelect, onBack }: 
   if (error) {
     return (
       <div className={styles.error}>
-        <div className={styles.errorTitle}>Fehler beim Laden</div>
+        <div className={styles.errorTitle}>{t('common.error')}</div>
         <p>{error}</p>
       </div>
     );
@@ -33,9 +35,9 @@ export function PractitionerStep({ specialtyId, selectedId, onSelect, onBack }: 
   return (
     <div>
       <div className={styles.stepHeader}>
-        <h2 className={styles.stepTitle}>Behandler wählen</h2>
+        <h2 className={styles.stepTitle}>{t('practitioner.title')}</h2>
         <p className={styles.stepDescription}>
-          Bei welchem Behandler möchten Sie einen Termin?
+          {t('practitioner.description')}
         </p>
       </div>
 
@@ -46,8 +48,8 @@ export function PractitionerStep({ specialtyId, selectedId, onSelect, onBack }: 
           onClick={() => onSelect(null)}
         >
           <div className={styles.cardContent}>
-            <div className={styles.cardTitle}>Ich habe keine Präferenz</div>
-            <div className={styles.cardSubtitle}>Nächster verfügbarer Behandler</div>
+            <div className={styles.cardTitle}>{t('practitioner.noPreference')}</div>
+            <div className={styles.cardSubtitle}>{t('practitioner.noPreferenceSubtitle')}</div>
           </div>
           <svg className={styles.cardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M9 18l6-6-6-6" />
@@ -78,7 +80,7 @@ export function PractitionerStep({ specialtyId, selectedId, onSelect, onBack }: 
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M15 18l-6-6 6-6" />
           </svg>
-          Zurück
+          {t('common.back')}
         </button>
       </div>
     </div>

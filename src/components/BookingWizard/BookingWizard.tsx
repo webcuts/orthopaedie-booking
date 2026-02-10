@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Container, Card } from '../';
+import { LanguageProvider, LanguageSelector, useTranslation } from '../../i18n';
 import { ProgressIndicator } from './ProgressIndicator';
 import { SpecialtyStep } from './steps/SpecialtyStep';
 import { InsuranceStep } from './steps/InsuranceStep';
@@ -20,6 +21,7 @@ export interface BookingState {
   practitionerId: string | null;
   selectedDate: string | null;
   timeSlotId: string | null;
+  selectedStartTime: string | null;
   contactData: {
     name: string;
     email: string;
@@ -39,6 +41,7 @@ const initialState: BookingState = {
   practitionerId: null,
   selectedDate: null,
   timeSlotId: null,
+  selectedStartTime: null,
   contactData: {
     name: '',
     email: '',
@@ -48,8 +51,10 @@ const initialState: BookingState = {
   appointmentId: null
 };
 
-export function BookingWizard() {
+function BookingWizardInner() {
+  const { t } = useTranslation();
   const [state, setState] = useState<BookingState>(initialState);
+  const [wizardStartTime] = useState(() => Date.now());
 
   // Iframe-Höhe dynamisch anpassen bei Step-Wechsel
   useIframeResize([state.currentStep, state.bookingComplete]);
@@ -94,7 +99,7 @@ export function BookingWizard() {
   // Success Screen
   if (state.bookingComplete) {
     return (
-      <Container size="sm" className={styles.container}>
+      <Container size="lg" className={styles.container}>
         <Card variant="elevated" padding="lg">
           <SuccessStep
             state={state}
@@ -106,11 +111,16 @@ export function BookingWizard() {
   }
 
   return (
-    <Container size="sm" className={styles.container}>
+    <Container size="lg" className={styles.container}>
       <Card variant="elevated" padding="lg">
         <div className={styles.header}>
-          <h1 className={styles.title}>Termin buchen</h1>
-          <p className={styles.subtitle}>Orthopädie Königstraße, Hannover</p>
+          <div className={styles.headerTop}>
+            <div>
+              <h1 className={styles.title}>{t('title')}</h1>
+              <p className={styles.subtitle}>Orthopädie Königstraße, Hannover</p>
+            </div>
+            <LanguageSelector />
+          </div>
         </div>
 
         <ProgressIndicator
@@ -166,6 +176,7 @@ export function BookingWizard() {
           {state.currentStep === 5 && (
             <DateStep
               selectedDate={state.selectedDate}
+              practitionerId={state.practitionerId}
               onSelect={(date) => {
                 updateState({ selectedDate: date, timeSlotId: null });
                 nextStep();
@@ -178,8 +189,9 @@ export function BookingWizard() {
             <TimeSlotStep
               selectedDate={state.selectedDate}
               selectedId={state.timeSlotId}
-              onSelect={(id) => {
-                updateState({ timeSlotId: id });
+              practitionerId={state.practitionerId}
+              onSelect={(id, startTime) => {
+                updateState({ timeSlotId: id, selectedStartTime: startTime });
                 nextStep();
               }}
               onBack={prevStep}
@@ -193,10 +205,19 @@ export function BookingWizard() {
               onComplete={setBookingComplete}
               onBack={prevStep}
               onGoToStep={goToStep}
+              wizardStartTime={wizardStartTime}
             />
           )}
         </div>
       </Card>
     </Container>
+  );
+}
+
+export function BookingWizard() {
+  return (
+    <LanguageProvider>
+      <BookingWizardInner />
+    </LanguageProvider>
   );
 }

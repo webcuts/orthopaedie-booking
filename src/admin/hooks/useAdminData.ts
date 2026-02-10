@@ -404,6 +404,125 @@ export interface Practitioner {
   is_active: boolean;
 }
 
+// Hook: Admin-Buchung erstellen
+export function useAdminCreateBooking() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const createBooking = useCallback(async (data: {
+    practitionerId: string;
+    timeSlotId: string;
+    treatmentTypeId: string;
+    insuranceTypeId: string;
+    patientName: string;
+    patientEmail?: string;
+    patientPhone?: string;
+    notes?: string;
+  }) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // 1. Create patient
+      const { data: patient, error: patientError } = await supabase
+        .from('patients')
+        .insert({
+          name: data.patientName,
+          email: data.patientEmail || null,
+          phone: data.patientPhone || null,
+          insurance_type_id: data.insuranceTypeId,
+        })
+        .select()
+        .single();
+
+      if (patientError) throw patientError;
+
+      // 2. Create appointment (UNIQUE constraint prevents double-booking)
+      const { data: appointment, error: appointmentError } = await supabase
+        .from('appointments')
+        .insert({
+          patient_id: patient.id,
+          treatment_type_id: data.treatmentTypeId,
+          time_slot_id: data.timeSlotId,
+          practitioner_id: data.practitionerId,
+          notes: data.notes || null,
+          status: 'confirmed',
+        })
+        .select()
+        .single();
+
+      if (appointmentError) {
+        if (appointmentError.code === '23505') {
+          throw new Error('Dieser Zeitslot ist für den gewählten Behandler bereits vergeben.');
+        }
+        throw appointmentError;
+      }
+
+      // 3. Send confirmation email only if email was provided
+      if (data.patientEmail) {
+        supabase.functions.invoke('send-booking-confirmation', {
+          body: { appointmentId: appointment.id },
+        }).then(({ error }) => {
+          if (error) console.error('Fehler beim Senden der Bestätigung:', error);
+        });
+      }
+
+      // 4. Send practice notification
+      supabase.functions.invoke('send-practice-notification', {
+        body: { appointmentId: appointment.id },
+      }).then(({ error }) => {
+        if (error) console.error('Fehler beim Senden der Praxis-Benachrichtigung:', error);
+      });
+
+      return { success: true, appointmentId: appointment.id };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Fehler bei der Buchung';
+      setError(message);
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const clearError = useCallback(() => setError(null), []);
+
+  return { createBooking, loading, error, clearError };
+}
+
+// Hook: Verfügbare Slots für Admin (per Behandler)
+export function useAdminAvailableSlots(date: string | null, practitionerId: string | null) {
+  const [slots, setSlots] = useState<TimeSlot[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!date || !practitionerId) {
+      setSlots([]);
+      return;
+    }
+
+    async function fetch() {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .rpc('get_available_slots', {
+            p_date: date,
+            p_practitioner_id: practitionerId,
+          });
+
+        if (error) throw error;
+        setSlots(data || []);
+      } catch {
+        setSlots([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetch();
+  }, [date, practitionerId]);
+
+  return { slots, loading };
+}
+
 export function usePractitionerAbsences() {
   const [absences, setAbsences] = useState<PractitionerAbsence[]>([]);
   const [practitioners, setPractitioners] = useState<Practitioner[]>([]);

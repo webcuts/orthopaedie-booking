@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
-import { CalendarView, AppointmentModal } from '../components';
+import { CalendarView, AppointmentModal, NewAppointmentModal } from '../components';
 import { type AppointmentWithDetails } from '../hooks';
 
 export function DashboardPage() {
   const [selectedAppointment, setSelectedAppointment] = useState<AppointmentWithDetails | null>(null);
+  const [showNewAppointment, setShowNewAppointment] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
   const handleAppointmentClick = useCallback((appointment: AppointmentWithDetails) => {
@@ -15,7 +16,18 @@ export function DashboardPage() {
   }, []);
 
   const handleStatusUpdate = useCallback(() => {
-    // Trigger calendar refresh
+    setRefreshKey((k) => k + 1);
+  }, []);
+
+  const handleNewAppointment = useCallback(() => {
+    setShowNewAppointment(true);
+  }, []);
+
+  const handleCloseNewAppointment = useCallback(() => {
+    setShowNewAppointment(false);
+  }, []);
+
+  const handleAppointmentCreated = useCallback(() => {
     setRefreshKey((k) => k + 1);
   }, []);
 
@@ -24,6 +36,7 @@ export function DashboardPage() {
       <CalendarView
         key={refreshKey}
         onAppointmentClick={handleAppointmentClick}
+        onNewAppointment={handleNewAppointment}
       />
 
       {selectedAppointment && (
@@ -31,6 +44,13 @@ export function DashboardPage() {
           appointment={selectedAppointment}
           onClose={handleCloseModal}
           onStatusUpdate={handleStatusUpdate}
+        />
+      )}
+
+      {showNewAppointment && (
+        <NewAppointmentModal
+          onClose={handleCloseNewAppointment}
+          onCreated={handleAppointmentCreated}
         />
       )}
     </>

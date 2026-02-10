@@ -1,21 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
 import { MonthView } from './MonthView';
 import { useAppointments, type AppointmentWithDetails } from '../../hooks';
+import { supabase } from '../../../lib/supabaseClient';
 import styles from './CalendarView.module.css';
 
 type ViewType = 'day' | 'week' | 'month';
 
-interface CalendarViewProps {
-  onAppointmentClick: (appointment: AppointmentWithDetails) => void;
+interface Practitioner {
+  id: string;
+  title: string | null;
+  first_name: string;
+  last_name: string;
 }
 
-export function CalendarView({ onAppointmentClick }: CalendarViewProps) {
+interface CalendarViewProps {
+  onAppointmentClick: (appointment: AppointmentWithDetails) => void;
+  onNewAppointment?: () => void;
+}
+
+export function CalendarView({ onAppointmentClick, onNewAppointment }: CalendarViewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<ViewType>('day');
+  const [practitioners, setPractitioners] = useState<Practitioner[]>([]);
+  const [filterPractitionerId, setFilterPractitionerId] = useState<string>('');
 
   const { appointments, loading, error, refetch } = useAppointments(currentDate, view);
+
+  // Load practitioners for filter
+  useEffect(() => {
+    async function load() {
+      const { data } = await supabase
+        .from('practitioners')
+        .select('id, title, first_name, last_name')
+        .eq('is_active', true)
+        .order('last_name');
+      if (data) setPractitioners(data);
+    }
+    load();
+  }, []);
+
+  // Filter appointments by practitioner
+  const filteredAppointments = useMemo(() => {
+    if (!filterPractitionerId) return appointments;
+    return appointments.filter(apt => apt.practitioner_id === filterPractitionerId);
+  }, [appointments, filterPractitionerId]);
 
   const navigateDate = (direction: 'prev' | 'next' | 'today') => {
     if (direction === 'today') {
@@ -82,25 +112,48 @@ export function CalendarView({ onAppointmentClick }: CalendarViewProps) {
 
         <h2 className={styles.dateHeader}>{formatDateHeader()}</h2>
 
-        <div className={styles.viewSwitch}>
-          <button
-            className={`${styles.viewButton} ${view === 'day' ? styles.active : ''}`}
-            onClick={() => setView('day')}
+        <div className={styles.actions}>
+          <select
+            className={styles.filterSelect}
+            value={filterPractitionerId}
+            onChange={(e) => setFilterPractitionerId(e.target.value)}
           >
-            Tag
-          </button>
-          <button
-            className={`${styles.viewButton} ${view === 'week' ? styles.active : ''}`}
-            onClick={() => setView('week')}
-          >
-            Woche
-          </button>
-          <button
-            className={`${styles.viewButton} ${view === 'month' ? styles.active : ''}`}
-            onClick={() => setView('month')}
-          >
-            Monat
-          </button>
+            <option value="">Alle Behandler</option>
+            {practitioners.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.title ? `${p.title} ` : ''}{p.first_name} {p.last_name}
+              </option>
+            ))}
+          </select>
+          {onNewAppointment && (
+            <button onClick={onNewAppointment} className={styles.newButton}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              <span>Neuer Termin</span>
+            </button>
+          )}
+          <div className={styles.viewSwitch}>
+            <button
+              className={`${styles.viewButton} ${view === 'day' ? styles.active : ''}`}
+              onClick={() => setView('day')}
+            >
+              Tag
+            </button>
+            <button
+              className={`${styles.viewButton} ${view === 'week' ? styles.active : ''}`}
+              onClick={() => setView('week')}
+            >
+              Woche
+            </button>
+            <button
+              className={`${styles.viewButton} ${view === 'month' ? styles.active : ''}`}
+              onClick={() => setView('month')}
+            >
+              Monat
+            </button>
+          </div>
         </div>
       </div>
 
@@ -118,21 +171,21 @@ export function CalendarView({ onAppointmentClick }: CalendarViewProps) {
           {view === 'day' && (
             <DayView
               date={currentDate}
-              appointments={appointments}
+              appointments={filteredAppointments}
               onAppointmentClick={onAppointmentClick}
             />
           )}
           {view === 'week' && (
             <WeekView
               date={currentDate}
-              appointments={appointments}
+              appointments={filteredAppointments}
               onAppointmentClick={onAppointmentClick}
             />
           )}
           {view === 'month' && (
             <MonthView
               date={currentDate}
-              appointments={appointments}
+              appointments={filteredAppointments}
               onAppointmentClick={onAppointmentClick}
             />
           )}

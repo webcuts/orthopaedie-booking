@@ -35,19 +35,28 @@ export function AppointmentCard({
     borderLeftColor: colors.border,
   };
 
+  const practitionerShort = appointment.practitioner
+    ? `${appointment.practitioner.title || ''} ${appointment.practitioner.last_name}`.trim()
+    : '';
+
   if (mini) {
     return (
       <div
         className={`${styles.card} ${styles.mini}`}
         style={cardStyle}
         onClick={onClick}
-        title={`${appointment.patient?.name} - ${appointment.treatment_type?.name}`}
+        title={`${appointment.patient?.name} - ${appointment.treatment_type?.name}${practitionerShort ? ` - ${practitionerShort}` : ''}`}
       >
-        <span className={styles.miniTime}>
-          {appointment.time_slot?.start_time?.slice(0, 5)}
-        </span>
+        <div className={styles.miniTop}>
+          <span className={styles.miniTime}>
+            {appointment.time_slot?.start_time?.slice(0, 5)}
+          </span>
+          {practitionerShort && (
+            <span className={styles.miniPractitioner}>{practitionerShort}</span>
+          )}
+        </div>
         <span className={styles.miniName}>
-          {appointment.patient?.name?.split(' ')[0]}
+          {appointment.patient?.name}
         </span>
       </div>
     );

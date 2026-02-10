@@ -1,4 +1,5 @@
 import { useSpecialties } from '../../../hooks/useSupabase';
+import { useTranslation } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 
 interface SpecialtyStepProps {
@@ -8,12 +9,13 @@ interface SpecialtyStepProps {
 
 export function SpecialtyStep({ selectedId, onSelect }: SpecialtyStepProps) {
   const { data: specialties, loading, error, refetch } = useSpecialties();
+  const { t } = useTranslation();
 
   if (loading) {
     return (
       <div className={styles.loading}>
         <div className={styles.spinner} />
-        <span>Fachgebiete werden geladen...</span>
+        <span>{t('specialty.loading')}</span>
       </div>
     );
   }
@@ -21,10 +23,10 @@ export function SpecialtyStep({ selectedId, onSelect }: SpecialtyStepProps) {
   if (error) {
     return (
       <div className={styles.error}>
-        <div className={styles.errorTitle}>Fehler beim Laden</div>
+        <div className={styles.errorTitle}>{t('common.error')}</div>
         <p>{error}</p>
         <button className={styles.retryButton} onClick={refetch}>
-          Erneut versuchen
+          {t('common.retry')}
         </button>
       </div>
     );
@@ -33,7 +35,7 @@ export function SpecialtyStep({ selectedId, onSelect }: SpecialtyStepProps) {
   if (specialties.length === 0) {
     return (
       <div className={styles.emptyState}>
-        <p>Keine Fachgebiete verfügbar.</p>
+        <p>{t('specialty.empty')}</p>
       </div>
     );
   }
@@ -41,9 +43,9 @@ export function SpecialtyStep({ selectedId, onSelect }: SpecialtyStepProps) {
   return (
     <div>
       <div className={styles.stepHeader}>
-        <h2 className={styles.stepTitle}>Fachgebiet wählen</h2>
+        <h2 className={styles.stepTitle}>{t('specialty.title')}</h2>
         <p className={styles.stepDescription}>
-          Welches Fachgebiet benötigen Sie?
+          {t('specialty.description')}
         </p>
       </div>
 

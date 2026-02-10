@@ -2,7 +2,7 @@
 // Wird per Cron-Job alle 5 Minuten aufgerufen
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { generateReminderEmail, type AppointmentData } from '../_shared/email-templates.ts'
+import { generateReminderEmail, getReminderSubject, type AppointmentData, type EmailLanguage } from '../_shared/email-templates.ts'
 import { sendEmail } from '../_shared/resend.ts'
 
 const corsHeaders = {
@@ -81,6 +81,7 @@ Deno.serve(async (req) => {
           .select(`
             id,
             status,
+            language,
             cancellation_deadline,
             patient:patients(name, email, phone),
             treatment_type:treatment_types(name),
@@ -117,17 +118,21 @@ Deno.serve(async (req) => {
           continue
         }
 
+        // Sprache des Patienten auslesen
+        const lang = (appointment.language || 'de') as EmailLanguage
+        const localeMap: Record<string, string> = { de: 'de-DE', en: 'en-US', tr: 'tr-TR' }
+
         // Formatiere Stornierungsfrist
         let cancellationDeadline: string | undefined
         if (appointment.cancellation_deadline) {
           const deadline = new Date(appointment.cancellation_deadline)
-          cancellationDeadline = deadline.toLocaleString('de-DE', {
+          cancellationDeadline = deadline.toLocaleString(localeMap[lang] || 'de-DE', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
-          }) + ' Uhr'
+          }) + (lang === 'de' ? ' Uhr' : '')
         }
 
         // Erstelle E-Mail-Daten
@@ -146,12 +151,10 @@ Deno.serve(async (req) => {
         }
 
         // Generiere HTML
-        const html = generateReminderEmail(emailData, reminder.reminder_type)
+        const html = generateReminderEmail(emailData, reminder.reminder_type, lang)
 
         // Bestimme Betreff
-        const subject = reminder.reminder_type === '24h_before'
-          ? 'Erinnerung: Ihr Termin morgen - Orthopädie Königstraße'
-          : 'Erinnerung: Ihr Termin heute - Orthopädie Königstraße'
+        const subject = getReminderSubject(reminder.reminder_type, lang)
 
         // Sende E-Mail
         const sendResult = await sendEmail({

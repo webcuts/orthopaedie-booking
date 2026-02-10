@@ -8,5 +8,7 @@ export {
   useTreatmentTypes,
   useGenerateSlots,
   usePractitionerAbsences,
+  useAdminCreateBooking,
+  useAdminAvailableSlots,
 } from './useAdminData';
 export type { AppointmentWithDetails, PractitionerAbsence, Practitioner } from './useAdminData';

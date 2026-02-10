@@ -1,3 +1,4 @@
+import { useTranslation } from '../../i18n';
 import styles from './ProgressIndicator.module.css';
 
 interface ProgressIndicatorProps {
@@ -5,17 +6,19 @@ interface ProgressIndicatorProps {
   totalSteps: number;
 }
 
-const STEP_LABELS = [
-  'Fachgebiet',
-  'Versicherung',
-  'Terminart',
-  'Behandler',
-  'Datum',
-  'Uhrzeit',
-  'Kontakt'
+const STEP_KEYS = [
+  'step.specialty',
+  'step.insurance',
+  'step.treatment',
+  'step.practitioner',
+  'step.date',
+  'step.time',
+  'step.contact'
 ];
 
 export function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicatorProps) {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.container}>
       {/* Fortschrittsbalken */}
@@ -42,7 +45,7 @@ export function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicator
                 step
               )}
             </div>
-            <span className={styles.stepLabel}>{STEP_LABELS[step - 1]}</span>
+            <span className={styles.stepLabel}>{t(STEP_KEYS[step - 1])}</span>
           </div>
         ))}
       </div>
@@ -50,11 +53,11 @@ export function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicator
       {/* Mobile: Kompakte Anzeige */}
       <div className={styles.mobileIndicator}>
         <span className={styles.mobileStep}>
-          Schritt {currentStep}/{totalSteps}
+          {t('stepIndicator', { current: currentStep, total: totalSteps })}
         </span>
         <span className={styles.mobileDivider}>|</span>
         <span className={styles.mobileLabel}>
-          {STEP_LABELS[currentStep - 1]}
+          {t(STEP_KEYS[currentStep - 1])}
         </span>
       </div>
     </div>

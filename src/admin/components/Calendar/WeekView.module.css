@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 720px;
+  min-height: 880px; /* 11 hours * 80px */
 }
 
 .header {
@@ -12,7 +12,7 @@
 }
 
 .timeHeader {
-  width: 60px;
+  width: 56px;
   flex-shrink: 0;
 }
 
@@ -21,8 +21,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0.5rem 0.25rem;
   border-left: 1px solid #E5E7EB;
+  min-width: 0;
 }
 
 .dayHeader.today {
@@ -30,20 +31,26 @@
 }
 
 .weekday {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 500;
   color: #6B7280;
   text-transform: uppercase;
 }
 
 .dayNumber {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 600;
   color: #1f2937;
 }
 
 .today .dayNumber {
   color: #2674BB;
+}
+
+.dayCount {
+  font-size: 0.5625rem;
+  color: #9CA3AF;
+  margin-top: 1px;
 }
 
 .body {
@@ -53,29 +60,31 @@
 }
 
 .timeColumn {
-  width: 60px;
+  width: 56px;
   flex-shrink: 0;
 }
 
 .timeSlot {
-  height: 60px;
+  height: 80px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
   padding-right: 0.5rem;
-  transform: translateY(-8px);
+  padding-top: 2px;
 }
 
 .time {
   font-size: 0.625rem;
   color: #9CA3AF;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .dayColumn {
   flex: 1;
   position: relative;
   border-left: 1px solid #E5E7EB;
+  min-width: 0;
 }
 
 .todayColumn {
@@ -83,8 +92,12 @@
 }
 
 .hourCell {
-  height: 60px;
+  height: 80px;
   border-bottom: 1px solid #F3F4F6;
+}
+
+.hourCell:nth-child(2n) {
+  border-bottom-color: #E5E7EB;
 }
 
 .appointments {
@@ -93,15 +106,57 @@
   left: 2px;
   right: 2px;
   bottom: 0;
-  pointer-events: none;
 }
 
 .appointmentWrapper {
   position: absolute;
-  left: 0;
-  right: 0;
-  padding: 1px;
-  pointer-events: auto;
+  border-left: 3px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 2px 4px;
+  transition: box-shadow 0.1s ease;
+  z-index: 5;
+}
+
+.appointmentWrapper:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 6;
+}
+
+.aptLine {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+}
+
+.aptTime {
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: #374151;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.aptPatient {
+  font-size: 0.5625rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.aptPractitioner {
+  font-size: 0.5rem;
+  color: #6B7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 @media (max-width: 768px) {
@@ -110,10 +165,18 @@
   }
 
   .weekday {
-    font-size: 0.625rem;
+    font-size: 0.5625rem;
   }
 
   .dayNumber {
-    font-size: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .dayCount {
+    display: none;
+  }
+
+  .aptPractitioner {
+    display: none;
   }
 }

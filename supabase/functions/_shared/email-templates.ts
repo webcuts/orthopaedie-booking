@@ -1,5 +1,7 @@
-// ORTHO-007: E-Mail Templates
+// ORTHO-007: E-Mail Templates (mehrsprachig)
 // Shared email templates for booking system
+
+export type EmailLanguage = 'de' | 'en' | 'tr';
 
 export interface AppointmentData {
   patientName: string;
@@ -15,7 +17,7 @@ export interface AppointmentData {
   cancellationDeadline?: string;
 }
 
-// Praxis-Informationen
+// Praxis-Informationen (bleiben immer Deutsch)
 const PRACTICE_INFO = {
   name: 'Orthopädie Königstraße',
   address: 'Königstraße 51',
@@ -23,6 +25,94 @@ const PRACTICE_INFO = {
   phone: '0511 123456',
   email: 'praxis@orthopaedie-koenigstrasse.de',
   website: 'https://orthopaedie-koenigstrasse.de',
+};
+
+// Übersetzungen für E-Mail-Texte
+const i18n: Record<EmailLanguage, Record<string, string>> = {
+  de: {
+    confirmationSubtitle: 'Terminbestätigung',
+    greeting: 'Guten Tag',
+    confirmationIntro: 'vielen Dank für Ihre Terminbuchung. Ihr Termin wurde erfolgreich registriert.',
+    detailsTitle: 'Ihre Termindetails',
+    labelDate: 'Datum:',
+    labelTime: 'Uhrzeit:',
+    labelTreatment: 'Terminart:',
+    labelPractitioner: 'Behandler:',
+    labelSpecialty: 'Fachgebiet:',
+    noPractitioner: 'Nächster verfügbarer Behandler',
+    addressTitle: 'Praxisadresse',
+    hintTitle: 'Bitte beachten Sie:',
+    hintText: 'Eine kostenfreie Stornierung ist bis 12 Stunden vor dem Termin möglich. Sie erhalten 24 Stunden und 6 Stunden vor Ihrem Termin eine Erinnerung per E-Mail.',
+    contactText: 'Bei Fragen erreichen Sie uns telefonisch unter',
+    contactOr: 'oder per E-Mail an',
+    lookForward: 'Wir freuen uns auf Ihren Besuch!',
+    regards: 'Mit freundlichen Grüßen',
+    team: 'Ihr Praxisteam',
+    reminderSubtitle: 'Terminerinnerung',
+    reminderTodayTitle: 'Ihr Termin heute',
+    reminderTomorrowTitle: 'Ihr Termin morgen',
+    reminderTodayIntro: 'Wir möchten Sie an Ihren heutigen Termin erinnern.',
+    reminderTomorrowIntro: 'Wir möchten Sie an Ihren morgigen Termin erinnern.',
+    cancellationHint: 'Eine kostenfreie Stornierung ist noch bis',
+    cancellationHintSuffix: 'möglich.',
+    questionsText: 'Bei Fragen erreichen Sie uns telefonisch unter',
+  },
+  en: {
+    confirmationSubtitle: 'Appointment Confirmation',
+    greeting: 'Dear',
+    confirmationIntro: 'Thank you for your appointment booking. Your appointment has been successfully registered.',
+    detailsTitle: 'Your Appointment Details',
+    labelDate: 'Date:',
+    labelTime: 'Time:',
+    labelTreatment: 'Treatment:',
+    labelPractitioner: 'Practitioner:',
+    labelSpecialty: 'Specialty:',
+    noPractitioner: 'Next available practitioner',
+    addressTitle: 'Practice Address',
+    hintTitle: 'Please note:',
+    hintText: 'Free cancellation is possible up to 12 hours before the appointment. You will receive a reminder email 24 hours and 6 hours before your appointment.',
+    contactText: 'For questions, you can reach us by phone at',
+    contactOr: 'or by email at',
+    lookForward: 'We look forward to your visit!',
+    regards: 'Best regards',
+    team: 'Your Practice Team',
+    reminderSubtitle: 'Appointment Reminder',
+    reminderTodayTitle: 'Your Appointment Today',
+    reminderTomorrowTitle: 'Your Appointment Tomorrow',
+    reminderTodayIntro: 'We would like to remind you of your appointment today.',
+    reminderTomorrowIntro: 'We would like to remind you of your appointment tomorrow.',
+    cancellationHint: 'Free cancellation is still possible until',
+    cancellationHintSuffix: '.',
+    questionsText: 'For questions, you can reach us by phone at',
+  },
+  tr: {
+    confirmationSubtitle: 'Randevu Onayı',
+    greeting: 'Sayın',
+    confirmationIntro: 'Randevu kaydınız için teşekkür ederiz. Randevunuz başarıyla oluşturulmuştur.',
+    detailsTitle: 'Randevu Detaylarınız',
+    labelDate: 'Tarih:',
+    labelTime: 'Saat:',
+    labelTreatment: 'Tedavi:',
+    labelPractitioner: 'Doktor:',
+    labelSpecialty: 'Uzmanlık:',
+    noPractitioner: 'Müsait olan doktor',
+    addressTitle: 'Muayenehane Adresi',
+    hintTitle: 'Lütfen dikkat:',
+    hintText: 'Randevudan 12 saat öncesine kadar ücretsiz iptal mümkündür. Randevunuzdan 24 saat ve 6 saat önce e-posta ile hatırlatma alacaksınız.',
+    contactText: 'Sorularınız için bize telefonla ulaşabilirsiniz:',
+    contactOr: 'veya e-posta ile:',
+    lookForward: 'Ziyaretinizi bekliyoruz!',
+    regards: 'Saygılarımızla',
+    team: 'Muayenehane Ekibiniz',
+    reminderSubtitle: 'Randevu Hatırlatması',
+    reminderTodayTitle: 'Bugünkü Randevunuz',
+    reminderTomorrowTitle: 'Yarınki Randevunuz',
+    reminderTodayIntro: 'Bugünkü randevunuzu hatırlatmak isteriz.',
+    reminderTomorrowIntro: 'Yarınki randevunuzu hatırlatmak isteriz.',
+    cancellationHint: 'Ücretsiz iptal hâlâ şu tarihe kadar mümkündür:',
+    cancellationHintSuffix: '.',
+    questionsText: 'Sorularınız için bize telefonla ulaşabilirsiniz:',
+  },
 };
 
 // E-Mail Styles (inline für bessere Kompatibilität)
@@ -49,10 +139,15 @@ const styles = {
   footerLink: 'color: #2674BB; text-decoration: none;',
 };
 
-// Hilfsfunktion für Datum formatieren
-function formatDate(dateStr: string): string {
+const localeMap: Record<EmailLanguage, string> = {
+  de: 'de-DE',
+  en: 'en-US',
+  tr: 'tr-TR',
+};
+
+function formatDate(dateStr: string, lang: EmailLanguage = 'de'): string {
   const date = new Date(dateStr);
-  return date.toLocaleDateString('de-DE', {
+  return date.toLocaleDateString(localeMap[lang], {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -60,64 +155,105 @@ function formatDate(dateStr: string): string {
   });
 }
 
-// Hilfsfunktion für Uhrzeit formatieren
-function formatTime(timeStr: string): string {
-  return timeStr.slice(0, 5) + ' Uhr';
+function formatTime(timeStr: string, lang: EmailLanguage = 'de'): string {
+  const hhmm = timeStr.slice(0, 5);
+  if (lang === 'de') return hhmm + ' Uhr';
+  return hhmm;
+}
+
+function t(lang: EmailLanguage, key: string): string {
+  return i18n[lang]?.[key] ?? i18n.de[key] ?? key;
 }
 
 /**
- * Buchungsbestätigung für Patienten
+ * E-Mail-Betreff für Buchungsbestätigung
  */
-export function generateBookingConfirmationEmail(data: AppointmentData): string {
-  const practitioner = data.practitionerName || 'Nächster verfügbarer Behandler';
+export function getConfirmationSubject(lang: EmailLanguage = 'de'): string {
+  const subjects: Record<EmailLanguage, string> = {
+    de: 'Ihre Terminbestätigung - Orthopädie Königstraße',
+    en: 'Your Appointment Confirmation - Orthopädie Königstraße',
+    tr: 'Randevu Onayınız - Orthopädie Königstraße',
+  };
+  return subjects[lang] ?? subjects.de;
+}
+
+/**
+ * E-Mail-Betreff für Erinnerungen
+ */
+export function getReminderSubject(reminderType: '24h_before' | '6h_before', lang: EmailLanguage = 'de'): string {
+  const isToday = reminderType === '6h_before';
+  const subjects: Record<EmailLanguage, { today: string; tomorrow: string }> = {
+    de: {
+      today: 'Erinnerung: Ihr Termin heute - Orthopädie Königstraße',
+      tomorrow: 'Erinnerung: Ihr Termin morgen - Orthopädie Königstraße',
+    },
+    en: {
+      today: 'Reminder: Your Appointment Today - Orthopädie Königstraße',
+      tomorrow: 'Reminder: Your Appointment Tomorrow - Orthopädie Königstraße',
+    },
+    tr: {
+      today: 'Hatırlatma: Bugünkü Randevunuz - Orthopädie Königstraße',
+      tomorrow: 'Hatırlatma: Yarınki Randevunuz - Orthopädie Königstraße',
+    },
+  };
+  const s = subjects[lang] ?? subjects.de;
+  return isToday ? s.today : s.tomorrow;
+}
+
+/**
+ * Buchungsbestätigung für Patienten (mehrsprachig)
+ */
+export function generateBookingConfirmationEmail(data: AppointmentData, lang: EmailLanguage = 'de'): string {
+  const practitioner = data.practitionerName || t(lang, 'noPractitioner');
+  const htmlLang = lang === 'tr' ? 'tr' : lang === 'en' ? 'en' : 'de';
 
   return `
 <!DOCTYPE html>
-<html lang="de">
+<html lang="${htmlLang}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terminbestätigung</title>
+  <title>${t(lang, 'confirmationSubtitle')}</title>
 </head>
 <body style="${styles.body}">
   <div style="${styles.container}">
     <!-- Header -->
     <div style="${styles.header}">
       <h1 style="${styles.headerTitle}">${PRACTICE_INFO.name}</h1>
-      <p style="${styles.headerSubtitle}">Terminbestätigung</p>
+      <p style="${styles.headerSubtitle}">${t(lang, 'confirmationSubtitle')}</p>
     </div>
 
     <!-- Content -->
     <div style="${styles.content}">
-      <p style="${styles.greeting}">Guten Tag ${data.patientName},</p>
+      <p style="${styles.greeting}">${t(lang, 'greeting')} ${data.patientName},</p>
 
       <p style="${styles.text}">
-        vielen Dank für Ihre Terminbuchung. Ihr Termin wurde erfolgreich registriert.
+        ${t(lang, 'confirmationIntro')}
       </p>
 
       <!-- Termindetails -->
       <div style="${styles.detailsBox}">
-        <h2 style="${styles.detailsTitle}">Ihre Termindetails</h2>
+        <h2 style="${styles.detailsTitle}">${t(lang, 'detailsTitle')}</h2>
         <table style="width: 100%; border-collapse: collapse;">
           <tr>
-            <td style="padding: 6px 0; color: #6B7280; width: 120px;">Datum:</td>
-            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatDate(data.date)}</td>
+            <td style="padding: 6px 0; color: #6B7280; width: 120px;">${t(lang, 'labelDate')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatDate(data.date, lang)}</td>
           </tr>
           <tr>
-            <td style="padding: 6px 0; color: #6B7280;">Uhrzeit:</td>
-            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatTime(data.time)} - ${formatTime(data.endTime)}</td>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelTime')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatTime(data.time, lang)} - ${formatTime(data.endTime, lang)}</td>
           </tr>
           <tr>
-            <td style="padding: 6px 0; color: #6B7280;">Terminart:</td>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelTreatment')}</td>
             <td style="padding: 6px 0; color: #000000; font-weight: 500;">${data.treatmentType}</td>
           </tr>
           <tr>
-            <td style="padding: 6px 0; color: #6B7280;">Behandler:</td>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelPractitioner')}</td>
             <td style="padding: 6px 0; color: #000000; font-weight: 500;">${practitioner}</td>
           </tr>
           ${data.specialtyName ? `
           <tr>
-            <td style="padding: 6px 0; color: #6B7280;">Fachgebiet:</td>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelSpecialty')}</td>
             <td style="padding: 6px 0; color: #000000; font-weight: 500;">${data.specialtyName}</td>
           </tr>
           ` : ''}
@@ -126,7 +262,7 @@ export function generateBookingConfirmationEmail(data: AppointmentData): string 
 
       <!-- Praxisadresse -->
       <div style="${styles.addressBox}">
-        <h3 style="${styles.addressTitle}">Praxisadresse</h3>
+        <h3 style="${styles.addressTitle}">${t(lang, 'addressTitle')}</h3>
         <p style="${styles.addressText}">
           ${PRACTICE_INFO.name}<br>
           ${PRACTICE_INFO.address}<br>
@@ -137,23 +273,22 @@ export function generateBookingConfirmationEmail(data: AppointmentData): string 
 
       <!-- Hinweise -->
       <div style="${styles.hint}">
-        <strong>Bitte beachten Sie:</strong><br>
-        Eine kostenfreie Stornierung ist bis 12 Stunden vor dem Termin möglich.
-        Sie erhalten 24 Stunden und 6 Stunden vor Ihrem Termin eine Erinnerung per E-Mail.
+        <strong>${t(lang, 'hintTitle')}</strong><br>
+        ${t(lang, 'hintText')}
       </div>
 
       <p style="${styles.text}">
-        Bei Fragen erreichen Sie uns telefonisch unter ${PRACTICE_INFO.phone} oder per E-Mail an
+        ${t(lang, 'contactText')} ${PRACTICE_INFO.phone} ${t(lang, 'contactOr')}
         <a href="mailto:${PRACTICE_INFO.email}" style="color: #2674BB;">${PRACTICE_INFO.email}</a>.
       </p>
 
       <p style="${styles.text}">
-        Wir freuen uns auf Ihren Besuch!
+        ${t(lang, 'lookForward')}
       </p>
 
       <p style="${styles.text}">
-        Mit freundlichen Grüßen<br>
-        <strong>Ihr Praxisteam</strong><br>
+        ${t(lang, 'regards')}<br>
+        <strong>${t(lang, 'team')}</strong><br>
         ${PRACTICE_INFO.name}
       </p>
     </div>
@@ -174,7 +309,7 @@ export function generateBookingConfirmationEmail(data: AppointmentData): string 
 }
 
 /**
- * Benachrichtigung für die Praxis
+ * Benachrichtigung für die Praxis (bleibt Deutsch)
  */
 export function generatePracticeNotificationEmail(data: AppointmentData): string {
   const practitioner = data.practitionerName || 'Keine Präferenz';
@@ -269,35 +404,34 @@ export function generatePracticeNotificationEmail(data: AppointmentData): string
 }
 
 /**
- * Erinnerungs-E-Mail (24h oder 6h vor Termin)
+ * Erinnerungs-E-Mail (24h oder 6h vor Termin, mehrsprachig)
  */
-export function generateReminderEmail(data: AppointmentData, reminderType: '24h_before' | '6h_before'): string {
-  const practitioner = data.practitionerName || 'Nächster verfügbarer Behandler';
+export function generateReminderEmail(data: AppointmentData, reminderType: '24h_before' | '6h_before', lang: EmailLanguage = 'de'): string {
+  const practitioner = data.practitionerName || t(lang, 'noPractitioner');
   const isToday = reminderType === '6h_before';
-  const title = isToday ? 'Ihr Termin heute' : 'Ihr Termin morgen';
-  const intro = isToday
-    ? 'Wir möchten Sie an Ihren heutigen Termin erinnern.'
-    : 'Wir möchten Sie an Ihren morgigen Termin erinnern.';
+  const title = isToday ? t(lang, 'reminderTodayTitle') : t(lang, 'reminderTomorrowTitle');
+  const intro = isToday ? t(lang, 'reminderTodayIntro') : t(lang, 'reminderTomorrowIntro');
+  const htmlLang = lang === 'tr' ? 'tr' : lang === 'en' ? 'en' : 'de';
 
   return `
 <!DOCTYPE html>
-<html lang="de">
+<html lang="${htmlLang}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terminerinnerung</title>
+  <title>${t(lang, 'reminderSubtitle')}</title>
 </head>
 <body style="${styles.body}">
   <div style="${styles.container}">
     <!-- Header -->
     <div style="${styles.header}">
       <h1 style="${styles.headerTitle}">${PRACTICE_INFO.name}</h1>
-      <p style="${styles.headerSubtitle}">Terminerinnerung</p>
+      <p style="${styles.headerSubtitle}">${t(lang, 'reminderSubtitle')}</p>
     </div>
 
     <!-- Content -->
     <div style="${styles.content}">
-      <p style="${styles.greeting}">Guten Tag ${data.patientName},</p>
+      <p style="${styles.greeting}">${t(lang, 'greeting')} ${data.patientName},</p>
 
       <p style="${styles.text}">${intro}</p>
 
@@ -306,19 +440,19 @@ export function generateReminderEmail(data: AppointmentData, reminderType: '24h_
         <h2 style="${styles.detailsTitle}">${title}</h2>
         <table style="width: 100%; border-collapse: collapse;">
           <tr>
-            <td style="padding: 6px 0; color: #6B7280; width: 120px;">Datum:</td>
-            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatDate(data.date)}</td>
+            <td style="padding: 6px 0; color: #6B7280; width: 120px;">${t(lang, 'labelDate')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatDate(data.date, lang)}</td>
           </tr>
           <tr>
-            <td style="padding: 6px 0; color: #6B7280;">Uhrzeit:</td>
-            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatTime(data.time)} - ${formatTime(data.endTime)}</td>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelTime')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatTime(data.time, lang)} - ${formatTime(data.endTime, lang)}</td>
           </tr>
           <tr>
-            <td style="padding: 6px 0; color: #6B7280;">Terminart:</td>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelTreatment')}</td>
             <td style="padding: 6px 0; color: #000000; font-weight: 500;">${data.treatmentType}</td>
           </tr>
           <tr>
-            <td style="padding: 6px 0; color: #6B7280;">Behandler:</td>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelPractitioner')}</td>
             <td style="padding: 6px 0; color: #000000; font-weight: 500;">${practitioner}</td>
           </tr>
         </table>
@@ -326,7 +460,7 @@ export function generateReminderEmail(data: AppointmentData, reminderType: '24h_
 
       <!-- Praxisadresse -->
       <div style="${styles.addressBox}">
-        <h3 style="${styles.addressTitle}">Praxisadresse</h3>
+        <h3 style="${styles.addressTitle}">${t(lang, 'addressTitle')}</h3>
         <p style="${styles.addressText}">
           ${PRACTICE_INFO.name}<br>
           ${PRACTICE_INFO.address}<br>
@@ -337,21 +471,21 @@ export function generateReminderEmail(data: AppointmentData, reminderType: '24h_
 
       ${!isToday && data.cancellationDeadline ? `
       <div style="${styles.hint}">
-        <strong>Hinweis:</strong> Eine kostenfreie Stornierung ist noch bis ${data.cancellationDeadline} möglich.
+        <strong>${lang === 'de' ? 'Hinweis:' : lang === 'en' ? 'Note:' : 'Not:'}</strong> ${t(lang, 'cancellationHint')} ${data.cancellationDeadline} ${t(lang, 'cancellationHintSuffix')}
       </div>
       ` : ''}
 
       <p style="${styles.text}">
-        Bei Fragen erreichen Sie uns telefonisch unter ${PRACTICE_INFO.phone}.
+        ${t(lang, 'questionsText')} ${PRACTICE_INFO.phone}.
       </p>
 
       <p style="${styles.text}">
-        Wir freuen uns auf Ihren Besuch!
+        ${t(lang, 'lookForward')}
       </p>
 
       <p style="${styles.text}">
-        Mit freundlichen Grüßen<br>
-        <strong>Ihr Praxisteam</strong><br>
+        ${t(lang, 'regards')}<br>
+        <strong>${t(lang, 'team')}</strong><br>
         ${PRACTICE_INFO.name}
       </p>
     </div>

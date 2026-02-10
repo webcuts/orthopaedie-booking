@@ -4,8 +4,19 @@
 }
 
 .header {
-  text-align: center;
   margin-bottom: var(--spacing-lg);
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.headerTop > div:first-child {
+  flex: 1;
+  text-align: center;
 }
 
 .title {

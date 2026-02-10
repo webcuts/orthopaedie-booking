@@ -13,6 +13,8 @@ export type ReminderType = '24h_before' | '6h_before';
 export interface InsuranceType {
   id: string;
   name: string;
+  name_en?: string | null;
+  name_tr?: string | null;
   is_active: boolean;
   created_at: string;
 }
@@ -29,6 +31,8 @@ export interface Patient {
 export interface TreatmentType {
   id: string;
   name: string;
+  name_en?: string | null;
+  name_tr?: string | null;
   duration_minutes: number;
   description: string | null;
   is_active: boolean;
@@ -96,6 +100,7 @@ export interface Appointment {
   practitioner_id: string | null;
   status: AppointmentStatus;
   notes: string | null;
+  language: string | null;
   cancellation_deadline: string | null;
   created_at: string;
   updated_at: string;

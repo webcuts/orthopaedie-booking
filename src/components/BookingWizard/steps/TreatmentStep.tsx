@@ -1,4 +1,5 @@
 import { useTreatmentTypes } from '../../../hooks/useSupabase';
+import { useTranslation, getLocalizedName } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 
 interface TreatmentStepProps {
@@ -9,12 +10,13 @@ interface TreatmentStepProps {
 
 export function TreatmentStep({ selectedId, onSelect, onBack }: TreatmentStepProps) {
   const { data: treatmentTypes, loading, error, refetch } = useTreatmentTypes();
+  const { t, language } = useTranslation();
 
   if (loading) {
     return (
       <div className={styles.loading}>
         <div className={styles.spinner} />
-        <span>Terminarten werden geladen...</span>
+        <span>{t('treatment.loading')}</span>
       </div>
     );
   }
@@ -22,10 +24,10 @@ export function TreatmentStep({ selectedId, onSelect, onBack }: TreatmentStepPro
   if (error) {
     return (
       <div className={styles.error}>
-        <div className={styles.errorTitle}>Fehler beim Laden</div>
+        <div className={styles.errorTitle}>{t('common.error')}</div>
         <p>{error}</p>
         <button className={styles.retryButton} onClick={refetch}>
-          Erneut versuchen
+          {t('common.retry')}
         </button>
       </div>
     );
@@ -34,9 +36,9 @@ export function TreatmentStep({ selectedId, onSelect, onBack }: TreatmentStepPro
   return (
     <div>
       <div className={styles.stepHeader}>
-        <h2 className={styles.stepTitle}>Terminart wählen</h2>
+        <h2 className={styles.stepTitle}>{t('treatment.title')}</h2>
         <p className={styles.stepDescription}>
-          Welche Art von Termin benötigen Sie?
+          {t('treatment.description')}
         </p>
       </div>
 
@@ -48,9 +50,9 @@ export function TreatmentStep({ selectedId, onSelect, onBack }: TreatmentStepPro
             onClick={() => onSelect(treatment.id)}
           >
             <div className={styles.cardContent}>
-              <div className={styles.cardTitle}>{treatment.name}</div>
+              <div className={styles.cardTitle}>{getLocalizedName(treatment, language)}</div>
               <div className={styles.cardSubtitle}>
-                {treatment.duration_minutes} Minuten
+                {treatment.duration_minutes} {t('common.minutes')}
                 {treatment.description && ` · ${treatment.description}`}
               </div>
             </div>
@@ -66,7 +68,7 @@ export function TreatmentStep({ selectedId, onSelect, onBack }: TreatmentStepPro
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M15 18l-6-6 6-6" />
           </svg>
-          Zurück
+          {t('common.back')}
         </button>
       </div>
     </div>

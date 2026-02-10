@@ -1,4 +1,5 @@
 import { useInsuranceTypes } from '../../../hooks/useSupabase';
+import { useTranslation, getLocalizedName } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 
 interface InsuranceStepProps {
@@ -9,12 +10,13 @@ interface InsuranceStepProps {
 
 export function InsuranceStep({ selectedId, onSelect, onBack }: InsuranceStepProps) {
   const { data: insuranceTypes, loading, error, refetch } = useInsuranceTypes();
+  const { t, language } = useTranslation();
 
   if (loading) {
     return (
       <div className={styles.loading}>
         <div className={styles.spinner} />
-        <span>Versicherungsarten werden geladen...</span>
+        <span>{t('insurance.loading')}</span>
       </div>
     );
   }
@@ -22,10 +24,10 @@ export function InsuranceStep({ selectedId, onSelect, onBack }: InsuranceStepPro
   if (error) {
     return (
       <div className={styles.error}>
-        <div className={styles.errorTitle}>Fehler beim Laden</div>
+        <div className={styles.errorTitle}>{t('common.error')}</div>
         <p>{error}</p>
         <button className={styles.retryButton} onClick={refetch}>
-          Erneut versuchen
+          {t('common.retry')}
         </button>
       </div>
     );
@@ -34,9 +36,9 @@ export function InsuranceStep({ selectedId, onSelect, onBack }: InsuranceStepPro
   return (
     <div>
       <div className={styles.stepHeader}>
-        <h2 className={styles.stepTitle}>Versicherung wählen</h2>
+        <h2 className={styles.stepTitle}>{t('insurance.title')}</h2>
         <p className={styles.stepDescription}>
-          Wie sind Sie versichert?
+          {t('insurance.description')}
         </p>
       </div>
 
@@ -48,7 +50,7 @@ export function InsuranceStep({ selectedId, onSelect, onBack }: InsuranceStepPro
             onClick={() => onSelect(insurance.id)}
           >
             <div className={styles.cardContent}>
-              <div className={styles.cardTitle}>{insurance.name}</div>
+              <div className={styles.cardTitle}>{getLocalizedName(insurance, language)}</div>
             </div>
             <svg className={styles.cardIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 18l6-6-6-6" />
@@ -62,7 +64,7 @@ export function InsuranceStep({ selectedId, onSelect, onBack }: InsuranceStepPro
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M15 18l-6-6 6-6" />
           </svg>
-          Zurück
+          {t('common.back')}
         </button>
       </div>
     </div>

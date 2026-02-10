@@ -3,10 +3,10 @@ import { Button } from '../../';
 import {
   useSpecialties,
   useTreatmentTypes,
-  usePractitioners,
-  useTimeSlots
+  usePractitioners
 } from '../../../hooks/useSupabase';
 import { getPractitionerFullName } from '../../../types/database';
+import { useTranslation, getLocalizedName } from '../../../i18n';
 import type { BookingState } from '../BookingWizard';
 import styles from './SuccessStep.module.css';
 
@@ -15,11 +15,17 @@ interface SuccessStepProps {
   onReset: () => void;
 }
 
+const localeMap: Record<string, string> = {
+  de: 'de-DE',
+  en: 'en-US',
+  tr: 'tr-TR'
+};
+
 export function SuccessStep({ state, onReset }: SuccessStepProps) {
   const { data: specialties } = useSpecialties();
   const { data: treatmentTypes } = useTreatmentTypes();
   const { data: practitioners } = usePractitioners(state.specialtyId);
-  const { data: timeSlots } = useTimeSlots(state.selectedDate);
+  const { t, language } = useTranslation();
 
   const selectedSpecialty = useMemo(() =>
     specialties.find(s => s.id === state.specialtyId),
@@ -36,14 +42,9 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
     [practitioners, state.practitionerId]
   );
 
-  const selectedSlot = useMemo(() =>
-    timeSlots.find(s => s.id === state.timeSlotId),
-    [timeSlots, state.timeSlotId]
-  );
-
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('de-DE', {
+    return date.toLocaleDateString(localeMap[language] || 'de-DE', {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -62,32 +63,33 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
         </svg>
       </div>
 
-      <h1 className={styles.title}>Termin erfolgreich gebucht!</h1>
-      <p className={styles.subtitle}>
-        Wir haben Ihnen eine Bestätigung an <strong>{state.contactData.email}</strong> gesendet.
-      </p>
+      <h1 className={styles.title}>{t('success.title')}</h1>
+      <p
+        className={styles.subtitle}
+        dangerouslySetInnerHTML={{ __html: t('success.subtitle', { email: state.contactData.email }) }}
+      />
 
       <div className={styles.details}>
-        <h2 className={styles.detailsTitle}>Ihre Termindetails</h2>
+        <h2 className={styles.detailsTitle}>{t('success.detailsTitle')}</h2>
 
         <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>Datum & Uhrzeit</span>
+          <span className={styles.detailLabel}>{t('success.labelDateTime')}</span>
           <span className={styles.detailValue}>
             {state.selectedDate && formatDate(state.selectedDate)}
             <br />
-            {selectedSlot && formatTime(selectedSlot.start_time)} Uhr
+            {state.selectedStartTime && formatTime(state.selectedStartTime)} {t('common.clock')}
           </span>
         </div>
 
         <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>Terminart</span>
+          <span className={styles.detailLabel}>{t('success.labelTreatment')}</span>
           <span className={styles.detailValue}>
-            {selectedTreatment?.name}
+            {selectedTreatment ? getLocalizedName(selectedTreatment, language) : ''}
           </span>
         </div>
 
         <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>Fachgebiet</span>
+          <span className={styles.detailLabel}>{t('success.labelSpecialty')}</span>
           <span className={styles.detailValue}>
             {selectedSpecialty?.name}
           </span>
@@ -95,7 +97,7 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
 
         {selectedPractitioner && (
           <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Behandler</span>
+            <span className={styles.detailLabel}>{t('success.labelPractitioner')}</span>
             <span className={styles.detailValue}>
               {getPractitionerFullName(selectedPractitioner)}
             </span>
@@ -103,7 +105,7 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
         )}
 
         <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>Patient</span>
+          <span className={styles.detailLabel}>{t('success.labelPatient')}</span>
           <span className={styles.detailValue}>
             {state.contactData.name}
           </span>
@@ -111,7 +113,7 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
       </div>
 
       <div className={styles.address}>
-        <h3>Praxisadresse</h3>
+        <h3>{t('success.addressTitle')}</h3>
         <p>Orthopädie Königstraße</p>
         <p>Königstraße 51</p>
         <p>30175 Hannover</p>
@@ -122,14 +124,12 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
           <circle cx="12" cy="12" r="10" />
           <polyline points="12 6 12 12 16 14" />
         </svg>
-        <div>
-          <strong>Erinnerung:</strong> Sie erhalten 24 Stunden und 6 Stunden vor dem Termin eine E-Mail-Erinnerung.
-        </div>
+        <div dangerouslySetInnerHTML={{ __html: t('success.reminder') }} />
       </div>
 
       <div className={styles.actions}>
         <Button variant="primary" onClick={onReset}>
-          Weiteren Termin buchen
+          {t('success.bookAnother')}
         </Button>
       </div>
     </div>

@@ -57,7 +57,7 @@ export function useAuth(): UseAuthReturn {
     });
 
     if (error) {
-      return { error: error.message };
+      return { error: 'E-Mail oder Passwort falsch' };
     }
 
     return { error: null };

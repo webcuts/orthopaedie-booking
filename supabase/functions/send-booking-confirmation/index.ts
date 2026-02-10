@@ -2,7 +2,7 @@
 // Wird nach erfolgreicher Buchung vom Frontend aufgerufen
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { generateBookingConfirmationEmail, type AppointmentData } from '../_shared/email-templates.ts'
+import { generateBookingConfirmationEmail, getConfirmationSubject, type AppointmentData, type EmailLanguage } from '../_shared/email-templates.ts'
 import { sendEmail } from '../_shared/resend.ts'
 
 const corsHeaders = {
@@ -78,13 +78,16 @@ Deno.serve(async (req) => {
       specialtyName,
     }
 
+    // Sprache des Patienten auslesen
+    const lang = (appointment.language || 'de') as EmailLanguage
+
     // Generiere HTML
-    const html = generateBookingConfirmationEmail(emailData)
+    const html = generateBookingConfirmationEmail(emailData, lang)
 
     // Sende E-Mail
     const result = await sendEmail({
       to: emailData.patientEmail,
-      subject: 'Ihre Terminbestätigung - Orthopädie Königstraße',
+      subject: getConfirmationSubject(lang),
       html,
     })
 

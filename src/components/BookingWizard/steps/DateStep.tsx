@@ -1,15 +1,21 @@
 import { useState, useMemo } from 'react';
 import { useAvailableDates, usePracticeHours } from '../../../hooks/useSupabase';
+import { useTranslation, useTranslationArray } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 import dateStyles from './DateStep.module.css';
 
 interface DateStepProps {
   selectedDate: string | null;
+  practitionerId: string | null;
   onSelect: (date: string) => void;
   onBack: () => void;
 }
 
-const WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+const localeMap: Record<string, string> = {
+  de: 'de-DE',
+  en: 'en-US',
+  tr: 'tr-TR'
+};
 
 /**
  * Formatiert ein Date-Objekt als YYYY-MM-DD String
@@ -22,10 +28,12 @@ function formatLocalDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export function DateStep({ selectedDate, onSelect, onBack }: DateStepProps) {
+export function DateStep({ selectedDate, practitionerId, onSelect, onBack }: DateStepProps) {
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
-  const { data: availableDates, loading, error } = useAvailableDates(currentMonth);
+  const { data: availableDates, loading, error } = useAvailableDates(currentMonth, practitionerId);
   const { data: practiceHours } = usePracticeHours();
+  const { t, language } = useTranslation();
+  const weekdays = useTranslationArray('date.weekdays');
 
   const closedDays = useMemo(() => {
     return practiceHours
@@ -99,15 +107,15 @@ export function DateStep({ selectedDate, onSelect, onBack }: DateStepProps) {
   }, [currentMonth, today]);
 
   const formatMonth = (date: Date) => {
-    return date.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+    return date.toLocaleDateString(localeMap[language] || 'de-DE', { month: 'long', year: 'numeric' });
   };
 
   return (
     <div>
       <div className={styles.stepHeader}>
-        <h2 className={styles.stepTitle}>Datum wählen</h2>
+        <h2 className={styles.stepTitle}>{t('date.title')}</h2>
         <p className={styles.stepDescription}>
-          Wählen Sie Ihren Wunschtermin
+          {t('date.description')}
         </p>
       </div>
 
@@ -131,7 +139,7 @@ export function DateStep({ selectedDate, onSelect, onBack }: DateStepProps) {
         </div>
 
         <div className={dateStyles.weekdays}>
-          {WEEKDAYS.map(day => (
+          {weekdays.map(day => (
             <div key={day} className={dateStyles.weekday}>{day}</div>
           ))}
         </div>
@@ -175,8 +183,8 @@ export function DateStep({ selectedDate, onSelect, onBack }: DateStepProps) {
 
       {!loading && availableDates.length === 0 && (
         <div className={dateStyles.noSlots}>
-          <p>In diesem Monat sind leider keine Termine verfügbar.</p>
-          <p>Bitte wählen Sie einen anderen Monat.</p>
+          <p>{t('date.noSlots')}</p>
+          <p>{t('date.noSlotsHint')}</p>
         </div>
       )}
 
@@ -185,7 +193,7 @@ export function DateStep({ selectedDate, onSelect, onBack }: DateStepProps) {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M15 18l-6-6 6-6" />
           </svg>
-          Zurück
+          {t('common.back')}
         </button>
       </div>
     </div>

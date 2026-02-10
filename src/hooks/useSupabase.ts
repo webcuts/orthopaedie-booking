@@ -196,7 +196,7 @@ export function usePractitioners(specialtyId: string | null) {
         if (practError) throw practError;
 
         // 2. Lade aktive Abwesenheiten
-        const { data: absences, error: absError } = await supabase
+        const { data: absences } = await supabase
           .from('practitioner_absences')
           .select('practitioner_id')
           .lte('start_date', today)
@@ -256,9 +256,10 @@ export function usePracticeHours() {
 
 // =====================================================
 // Hook: Verfügbare Tage mit Slots (Step 5)
+// Nutzt RPC get_available_dates für Behandler-Filterung
 // =====================================================
 
-export function useAvailableDates(month: Date) {
+export function useAvailableDates(month: Date, practitionerId: string | null = null) {
   const [data, setData] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -277,16 +278,15 @@ export function useAvailableDates(month: Date) {
         const endDate = formatLocalDate(endOfMonth);
 
         const { data, error } = await supabase
-          .from('time_slots')
-          .select('date')
-          .eq('is_available', true)
-          .gte('date', startDate)
-          .lte('date', endDate);
+          .rpc('get_available_dates', {
+            p_start_date: startDate,
+            p_end_date: endDate,
+            p_practitioner_id: practitionerId
+          });
 
         if (error) throw error;
 
-        const uniqueDates = [...new Set((data || []).map(slot => slot.date))];
-        setData(uniqueDates);
+        setData((data || []).map((row: { date: string }) => row.date));
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Fehler beim Laden der verfügbaren Tage');
       } finally {
@@ -294,16 +294,17 @@ export function useAvailableDates(month: Date) {
       }
     }
     fetch();
-  }, [month]);
+  }, [month, practitionerId]);
 
   return { data, loading, error };
 }
 
 // =====================================================
 // Hook: Zeitslots für einen Tag (Step 6)
+// Nutzt RPC get_available_slots für Behandler-Filterung
 // =====================================================
 
-export function useTimeSlots(date: string | null) {
+export function useTimeSlots(date: string | null, practitionerId: string | null = null) {
   const [data, setData] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -319,11 +320,10 @@ export function useTimeSlots(date: string | null) {
       setError(null);
       try {
         const { data, error } = await supabase
-          .from('time_slots')
-          .select('*')
-          .eq('date', date)
-          .eq('is_available', true)
-          .order('start_time');
+          .rpc('get_available_slots', {
+            p_date: date,
+            p_practitioner_id: practitionerId
+          });
 
         if (error) throw error;
         setData(data || []);
@@ -334,7 +334,7 @@ export function useTimeSlots(date: string | null) {
       }
     }
     fetch();
-  }, [date]);
+  }, [date, practitionerId]);
 
   return { data, loading, error };
 }
@@ -349,6 +349,7 @@ interface BookingData {
   timeSlotId: string;
   practitionerId: string | null;
   notes?: string;
+  language?: string;
 }
 
 interface BookingResult {
@@ -365,19 +366,17 @@ export function useCreateBooking() {
     setError(null);
 
     try {
-      // 1. Check if slot is still available
-      const { data: slotCheck, error: slotCheckError } = await supabase
-        .from('time_slots')
-        .select('is_available')
-        .eq('id', bookingData.timeSlotId)
-        .single();
+      // 0. Rate Limit prüfen (max 3 Buchungen pro E-Mail in 24h)
+      const { data: allowed, error: rateLimitError } = await supabase
+        .rpc('check_booking_rate_limit', { p_email: bookingData.patientData.email });
 
-      if (slotCheckError) throw slotCheckError;
-      if (!slotCheck?.is_available) {
-        throw new Error('Dieser Zeitslot wurde leider gerade vergeben. Bitte wählen Sie einen anderen.');
+      if (rateLimitError) {
+        console.error('Rate limit check failed:', rateLimitError);
+      } else if (allowed === false) {
+        throw new Error('Sie haben bereits mehrere Termine gebucht. Bitte kontaktieren Sie die Praxis telefonisch.');
       }
 
-      // 2. Create patient
+      // 1. Create patient
       const { data: patient, error: patientError } = await supabase
         .from('patients')
         .insert(bookingData.patientData)
@@ -386,7 +385,9 @@ export function useCreateBooking() {
 
       if (patientError) throw patientError;
 
-      // 3. Create appointment
+      // 2. Create appointment
+      // Verfügbarkeit wird durch UNIQUE Index (time_slot_id, practitioner_id)
+      // auf DB-Ebene sichergestellt — Doppelbuchungen sind unmöglich
       const { data: appointment, error: appointmentError } = await supabase
         .from('appointments')
         .insert({
@@ -395,22 +396,21 @@ export function useCreateBooking() {
           time_slot_id: bookingData.timeSlotId,
           practitioner_id: bookingData.practitionerId,
           notes: bookingData.notes || null,
+          language: bookingData.language || 'de',
           status: 'confirmed'
         })
         .select()
         .single();
 
-      if (appointmentError) throw appointmentError;
+      if (appointmentError) {
+        // UNIQUE constraint violation = Slot bereits vergeben
+        if (appointmentError.code === '23505') {
+          throw new Error('Dieser Zeitslot wurde leider gerade vergeben. Bitte wählen Sie einen anderen.');
+        }
+        throw appointmentError;
+      }
 
-      // 4. Mark time slot as unavailable
-      const { error: slotUpdateError } = await supabase
-        .from('time_slots')
-        .update({ is_available: false })
-        .eq('id', bookingData.timeSlotId);
-
-      if (slotUpdateError) throw slotUpdateError;
-
-      // 5. Send confirmation emails (non-blocking)
+      // 3. Send confirmation emails (non-blocking)
       // Bestätigung an Patient
       supabase.functions.invoke('send-booking-confirmation', {
         body: { appointmentId: appointment.id }

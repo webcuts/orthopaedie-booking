@@ -26,7 +26,7 @@
 }
 
 /* =====================================================
-   Schritt-Indikatoren (Desktop)
+   Schritt-Indikatoren (Desktop/Tablet)
    ===================================================== */
 
 .steps {
@@ -38,14 +38,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: 2px;
   flex: 1;
-  max-width: 80px;
+  min-width: 0;
 }
 
 .stepNumber {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -75,14 +75,11 @@
 }
 
 .stepLabel {
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
   color: var(--color-text-muted);
   text-align: center;
   line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
+  display: none;
 }
 
 .step.active .stepLabel {
@@ -95,7 +92,7 @@
 }
 
 /* =====================================================
-   Mobile Indikator (< 768px)
+   Mobile Indikator (< 640px)
    ===================================================== */
 
 .mobileIndicator {
@@ -125,10 +122,10 @@
 }
 
 /* =====================================================
-   Tablet (768px - 1024px): Kompakte Schritte
+   Tablet (640px+): Step-Dots + nur aktives Label
    ===================================================== */
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
   .steps {
     display: flex;
   }
@@ -137,26 +134,20 @@
     display: none;
   }
 
-  .stepLabel {
-    font-size: 0.6875rem;
+  /* Nur aktiver Step zeigt Label */
+  .step.active .stepLabel {
+    display: block;
+    font-size: 0.625rem;
   }
 }
 
 /* =====================================================
-   Desktop (> 1024px): Volle Schritte
+   Desktop (> 1024px): Alle Labels sichtbar
    ===================================================== */
 
 @media (min-width: 1024px) {
-  .step {
-    max-width: 100px;
-  }
-
   .stepNumber {
-    width: 32px;
-    height: 32px;
-  }
-
-  .stepLabel {
-    font-size: var(--font-size-xs);
+    width: 30px;
+    height: 30px;
   }
 }
