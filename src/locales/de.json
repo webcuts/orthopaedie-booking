@@ -128,8 +128,8 @@
   "bookingType.description": "Wählen Sie die Art Ihres Termins",
   "bookingType.doctor": "Ärztlicher Termin",
   "bookingType.doctorDescription": "Termin bei einem Arzt",
-  "bookingType.mfa": "Praxisleistung (ohne Arzt)",
-  "bookingType.mfaDescription": "Rezepte, Überweisungen, PRP, Hyaluronsäure u.a.",
+  "bookingType.mfa": "Praxisleistung",
+  "bookingType.mfaDescription": "Rezepte, Überweisungen u.a.",
 
   "mfaTreatment.title": "Leistung wählen",
   "mfaTreatment.description": "Welche Praxisleistung benötigen Sie?",

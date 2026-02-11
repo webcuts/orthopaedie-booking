@@ -128,8 +128,8 @@
   "bookingType.description": "Choose the type of appointment",
   "bookingType.doctor": "Doctor Appointment",
   "bookingType.doctorDescription": "Appointment with a doctor",
-  "bookingType.mfa": "Practice Service (without Doctor)",
-  "bookingType.mfaDescription": "Prescriptions, referrals, PRP, hyaluronic acid etc.",
+  "bookingType.mfa": "Practice Service",
+  "bookingType.mfaDescription": "Prescriptions, referrals etc.",
 
   "mfaTreatment.title": "Choose Service",
   "mfaTreatment.description": "Which practice service do you need?",

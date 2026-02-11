@@ -22,11 +22,7 @@ COMMENT ON TABLE mfa_treatment_types IS 'MFA-Leistungen (Praxisleistungen ohne A
 -- Seed-Daten
 INSERT INTO mfa_treatment_types (name, name_en, name_tr, duration_minutes, sort_order) VALUES
     ('Rezeptvergabe', 'Prescription', 'Reçete', 5, 1),
-    ('Medikamente', 'Medication', 'İlaç', 5, 2),
-    ('Physiotherapie-Überweisung', 'Physiotherapy Referral', 'Fizyoterapi Sevki', 5, 3),
-    ('PRP-Behandlung', 'PRP Treatment', 'PRP Tedavisi', 10, 4),
-    ('Hyaluronsäure-Behandlung', 'Hyaluronic Acid Treatment', 'Hyalüronik Asit Tedavisi', 10, 5),
-    ('Knochendichte-Messung', 'Bone Density Measurement', 'Kemik Yoğunluğu Ölçümü', 10, 6);
+    ('Medikamente', 'Medication', 'İlaç', 5, 2);
 
 -- =====================================================
 -- 2. Neue Tabelle: mfa_time_slots

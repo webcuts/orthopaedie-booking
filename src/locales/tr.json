@@ -128,8 +128,8 @@
   "bookingType.description": "Randevu türünü seçin",
   "bookingType.doctor": "Doktor Randevusu",
   "bookingType.doctorDescription": "Doktor ile randevu",
-  "bookingType.mfa": "Muayenehane Hizmeti (Doktorsuz)",
-  "bookingType.mfaDescription": "Reçete, sevk, PRP, hyalüronik asit vb.",
+  "bookingType.mfa": "Muayenehane Hizmeti",
+  "bookingType.mfaDescription": "Reçete, sevk vb.",
 
   "mfaTreatment.title": "Hizmet Seçin",
   "mfaTreatment.description": "Hangi muayenehane hizmetine ihtiyacınız var?",
