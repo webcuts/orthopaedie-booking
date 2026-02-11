@@ -461,39 +461,18 @@ export function useMfaAvailableDates(month: Date) {
         const startDate = startOfMonth < today ? formatLocalDate(today) : formatLocalDate(startOfMonth);
         const endDate = formatLocalDate(endOfMonth);
 
-        // Lade MFA-Slots mit Buchungszählung
+        // Lade nur die Daten der MFA-Slots (nicht alle IDs)
         const { data: slots, error } = await supabase
           .from('mfa_time_slots')
-          .select('id, date, max_parallel')
+          .select('date')
           .gte('date', startDate)
           .lte('date', endDate);
 
         if (error) throw error;
-        if (!slots?.length) { setData([]); return; }
 
-        // Lade Buchungen für diese Slots
-        const slotIds = slots.map(s => s.id);
-        const { data: bookings } = await supabase
-          .from('mfa_appointments')
-          .select('mfa_time_slot_id')
-          .in('mfa_time_slot_id', slotIds)
-          .neq('status', 'cancelled');
-
-        const bookingCounts = new Map<string, number>();
-        (bookings || []).forEach(b => {
-          bookingCounts.set(b.mfa_time_slot_id, (bookingCounts.get(b.mfa_time_slot_id) || 0) + 1);
-        });
-
-        // Tage mit mindestens einem verfügbaren Slot
-        const availableDates = new Set<string>();
-        slots.forEach(slot => {
-          const count = bookingCounts.get(slot.id) || 0;
-          if (count < slot.max_parallel) {
-            availableDates.add(slot.date);
-          }
-        });
-
-        setData(Array.from(availableDates).sort());
+        // Einzigartige Tage extrahieren
+        const uniqueDates = [...new Set((slots || []).map(s => s.date))].sort();
+        setData(uniqueDates);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Fehler beim Laden der verfügbaren MFA-Tage');
       } finally {
