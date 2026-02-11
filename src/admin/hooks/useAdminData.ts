@@ -869,8 +869,7 @@ export function useMfaAppointments(date: Date, view: CalendarView) {
           mfa_time_slot:mfa_time_slots!inner(id, date, start_time, end_time)
         `)
         .gte('mfa_time_slot.date', startDate)
-        .lte('mfa_time_slot.date', endDate)
-        .order('mfa_time_slot(date)', { ascending: true });
+        .lte('mfa_time_slot.date', endDate);
 
       if (fetchError) throw fetchError;
 
@@ -885,6 +884,14 @@ export function useMfaAppointments(date: Date, view: CalendarView) {
         practitioner_id: null,
         bookingType: 'mfa' as const,
       }));
+
+      // Sort client-side by date+time
+      normalized.sort((a, b) => {
+        const dateA = a.time_slot?.date || '';
+        const dateB = b.time_slot?.date || '';
+        if (dateA !== dateB) return dateA.localeCompare(dateB);
+        return (a.time_slot?.start_time || '').localeCompare(b.time_slot?.start_time || '');
+      });
 
       setAppointments(normalized);
     } catch (err) {

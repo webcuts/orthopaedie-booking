@@ -43,7 +43,7 @@ CREATE TABLE mfa_time_slots (
     date DATE NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
-    max_parallel INTEGER NOT NULL DEFAULT 2,
+    max_parallel INTEGER NOT NULL DEFAULT 1,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT unique_mfa_date_start_time UNIQUE (date, start_time)
 );
@@ -171,7 +171,7 @@ BEGIN
                 END IF;
 
                 INSERT INTO mfa_time_slots (date, start_time, end_time, max_parallel)
-                VALUES (processing_date, slot_start, slot_end, 2)
+                VALUES (processing_date, slot_start, slot_end, 1)
                 ON CONFLICT (date, start_time) DO NOTHING;
 
                 IF FOUND THEN
