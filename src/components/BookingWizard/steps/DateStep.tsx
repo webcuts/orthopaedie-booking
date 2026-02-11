@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useAvailableDates, usePracticeHours } from '../../../hooks/useSupabase';
+import { useAvailableDates, usePracticeHours, useNextFreeSlot } from '../../../hooks/useSupabase';
 import { useTranslation, useTranslationArray } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 import dateStyles from './DateStep.module.css';
@@ -32,8 +32,35 @@ export function DateStep({ selectedDate, practitionerId, onSelect, onBack }: Dat
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const { data: availableDates, loading, error } = useAvailableDates(currentMonth, practitionerId);
   const { data: practiceHours } = usePracticeHours();
+  const { date: nextDate, startTime: nextTime, loading: nextLoading } = useNextFreeSlot();
   const { t, language } = useTranslation();
   const weekdays = useTranslationArray('date.weekdays');
+
+  const nextSlotText = useMemo(() => {
+    if (nextLoading || !nextDate || !nextTime) return null;
+
+    const time = nextTime.slice(0, 5);
+    const now = new Date();
+    const slotDate = new Date(nextDate + 'T00:00:00');
+    const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const tomorrow = new Date(todayDate);
+    tomorrow.setDate(todayDate.getDate() + 1);
+
+    if (slotDate.getTime() === todayDate.getTime()) {
+      return t('nextFreeSlot.today').replace('{time}', time);
+    }
+    if (slotDate.getTime() === tomorrow.getTime()) {
+      return t('nextFreeSlot.tomorrow').replace('{time}', time);
+    }
+
+    const locale = localeMap[language] || 'de-DE';
+    const formatted = slotDate.toLocaleDateString(locale, {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'short',
+    });
+    return t('nextFreeSlot.date').replace('{date}', formatted).replace('{time}', time);
+  }, [nextDate, nextTime, nextLoading, language, t]);
 
   const closedDays = useMemo(() => {
     return practiceHours
@@ -118,6 +145,30 @@ export function DateStep({ selectedDate, practitionerId, onSelect, onBack }: Dat
           {t('date.description')}
         </p>
       </div>
+
+      {nextSlotText && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '10px 14px',
+          marginBottom: '16px',
+          background: '#F0FDF4',
+          borderRadius: '8px',
+          border: '1px solid #BBF7D0',
+          fontSize: '0.875rem',
+          color: '#15803D',
+          fontWeight: 500,
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15803D" strokeWidth="2" style={{ flexShrink: 0 }}>
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          {nextSlotText}
+        </div>
+      )}
 
       <div className={dateStyles.calendar}>
         <div className={dateStyles.header}>
