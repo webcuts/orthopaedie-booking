@@ -104,6 +104,7 @@ export interface MfaTreatmentType {
   duration_minutes: number;
   is_active: boolean;
   sort_order: number;
+  specialty_id?: string | null;
   created_at: string;
 }
 

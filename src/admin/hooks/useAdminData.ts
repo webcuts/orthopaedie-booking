@@ -961,7 +961,7 @@ export function useMfaTreatmentTypesAdmin() {
   }, [fetchTypes]);
 
   const createType = useCallback(async (
-    data: { name: string; name_en?: string; name_tr?: string; duration_minutes: number }
+    data: { name: string; name_en?: string; name_tr?: string; duration_minutes: number; specialty_id?: string | null }
   ) => {
     const maxOrder = treatmentTypes.reduce((max, t) => Math.max(max, t.sort_order), 0);
     const { error } = await supabase

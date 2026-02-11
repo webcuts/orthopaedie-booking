@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useMfaTreatmentTypesAdmin } from '../../hooks';
+import { useSpecialties } from '../../../hooks/useSupabase';
 import type { MfaTreatmentType } from '../../../types/database';
 import styles from './TreatmentTypes.module.css';
 
@@ -9,6 +10,7 @@ interface EditingType {
   name_en: string;
   name_tr: string;
   duration_minutes: number;
+  specialty_id: string;
 }
 
 export function MfaTreatmentTypes() {
@@ -19,9 +21,15 @@ export function MfaTreatmentTypes() {
     createType,
     updateType,
   } = useMfaTreatmentTypesAdmin();
+  const { data: specialties } = useSpecialties();
 
   const [editing, setEditing] = useState<EditingType | null>(null);
   const [saving, setSaving] = useState(false);
+
+  const getSpecialtyName = (specialtyId?: string | null) => {
+    if (!specialtyId) return 'Alle Fachgebiete';
+    return specialties.find(s => s.id === specialtyId)?.name || '—';
+  };
 
   const handleEdit = (type: MfaTreatmentType) => {
     setEditing({
@@ -30,6 +38,7 @@ export function MfaTreatmentTypes() {
       name_en: type.name_en || '',
       name_tr: type.name_tr || '',
       duration_minutes: type.duration_minutes,
+      specialty_id: type.specialty_id || '',
     });
   };
 
@@ -39,6 +48,7 @@ export function MfaTreatmentTypes() {
       name_en: '',
       name_tr: '',
       duration_minutes: 10,
+      specialty_id: '',
     });
   };
 
@@ -53,6 +63,7 @@ export function MfaTreatmentTypes() {
         name_en: editing.name_en || null,
         name_tr: editing.name_tr || null,
         duration_minutes: editing.duration_minutes,
+        specialty_id: editing.specialty_id || null,
       });
     } else {
       await createType({
@@ -60,6 +71,7 @@ export function MfaTreatmentTypes() {
         name_en: editing.name_en || undefined,
         name_tr: editing.name_tr || undefined,
         duration_minutes: editing.duration_minutes,
+        specialty_id: editing.specialty_id || null,
       });
     }
 
@@ -98,6 +110,7 @@ export function MfaTreatmentTypes() {
           <thead>
             <tr>
               <th>Name (DE / EN / TR)</th>
+              <th>Fachgebiet</th>
               <th>Dauer</th>
               <th>Status</th>
               <th>Aktionen</th>
@@ -115,6 +128,9 @@ export function MfaTreatmentTypes() {
                       {type.name_tr && `TR: ${type.name_tr}`}
                     </div>
                   )}
+                </td>
+                <td>
+                  <div className={styles.typeDescription}>{getSpecialtyName(type.specialty_id)}</div>
                 </td>
                 <td>{type.duration_minutes} Min.</td>
                 <td>
@@ -177,6 +193,21 @@ export function MfaTreatmentTypes() {
                 onChange={(e) => setEditing({ ...editing, name_tr: e.target.value })}
                 placeholder="z.B. Reçete"
               />
+            </div>
+
+            <div className={styles.formField}>
+              <label>Fachgebiet (optional)</label>
+              <select
+                value={editing.specialty_id}
+                onChange={(e) =>
+                  setEditing({ ...editing, specialty_id: e.target.value })
+                }
+              >
+                <option value="">Alle Fachgebiete</option>
+                {specialties.map((s) => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
             </div>
 
             <div className={styles.formField}>

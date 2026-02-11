@@ -270,6 +270,7 @@ function BookingWizardInner() {
           {currentStepType === 'mfaTreatment' && (
             <MfaTreatmentStep
               selectedId={state.mfaTreatmentTypeId}
+              specialtyId={state.specialtyId}
               onSelect={(id) => {
                 updateState({ mfaTreatmentTypeId: id });
                 nextStep();

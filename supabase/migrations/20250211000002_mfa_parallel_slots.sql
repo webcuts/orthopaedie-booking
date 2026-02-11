@@ -14,15 +14,26 @@ CREATE TABLE mfa_treatment_types (
     duration_minutes INTEGER NOT NULL DEFAULT 10,
     is_active BOOLEAN NOT NULL DEFAULT true,
     sort_order INTEGER NOT NULL DEFAULT 0,
+    specialty_id UUID REFERENCES specialties(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-COMMENT ON TABLE mfa_treatment_types IS 'MFA-Leistungen (Praxisleistungen ohne Arzt)';
+COMMENT ON TABLE mfa_treatment_types IS 'MFA-Leistungen (Praxisleistungen ohne Arzt). specialty_id NULL = alle Fachgebiete';
 
--- Seed-Daten
+-- Seed-Daten (NULL specialty_id = alle Fachgebiete)
 INSERT INTO mfa_treatment_types (name, name_en, name_tr, duration_minutes, sort_order) VALUES
     ('Rezeptvergabe', 'Prescription', 'Reçete', 5, 1),
     ('Medikamente', 'Medication', 'İlaç', 5, 2);
+
+-- Fachgebiet-spezifische MFA-Leistungen (Physikalische und Rehabilitative Medizin)
+INSERT INTO mfa_treatment_types (name, name_en, name_tr, duration_minutes, sort_order, specialty_id)
+SELECT 'Physiotherapie-Überweisung', 'Physiotherapy Referral', 'Fizyoterapi Sevki', 5, 3, id FROM specialties WHERE name = 'Physikalische und Rehabilitative Medizin'
+UNION ALL
+SELECT 'PRP-Behandlung', 'PRP Treatment', 'PRP Tedavisi', 10, 4, id FROM specialties WHERE name = 'Physikalische und Rehabilitative Medizin'
+UNION ALL
+SELECT 'Hyaluronsäure-Behandlung', 'Hyaluronic Acid Treatment', 'Hyalüronik Asit Tedavisi', 10, 5, id FROM specialties WHERE name = 'Physikalische und Rehabilitative Medizin'
+UNION ALL
+SELECT 'Knochendichte-Messung', 'Bone Density Measurement', 'Kemik Yoğunluğu Ölçümü', 10, 6, id FROM specialties WHERE name = 'Physikalische und Rehabilitative Medizin';
 
 -- =====================================================
 -- 2. Neue Tabelle: mfa_time_slots

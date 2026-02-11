@@ -4,12 +4,13 @@ import styles from '../BookingWizard.module.css';
 
 interface MfaTreatmentStepProps {
   selectedId: string | null;
+  specialtyId: string | null;
   onSelect: (id: string) => void;
   onBack: () => void;
 }
 
-export function MfaTreatmentStep({ selectedId, onSelect, onBack }: MfaTreatmentStepProps) {
-  const { data: treatmentTypes, loading, error, refetch } = useMfaTreatmentTypes();
+export function MfaTreatmentStep({ selectedId, specialtyId, onSelect, onBack }: MfaTreatmentStepProps) {
+  const { data: treatmentTypes, loading, error, refetch } = useMfaTreatmentTypes(specialtyId);
   const { t, language } = useTranslation();
 
   if (loading) {

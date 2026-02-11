@@ -411,7 +411,7 @@ export function useNextFreeSlot() {
 // MFA Hooks (ORTHO-027)
 // =====================================================
 
-export function useMfaTreatmentTypes() {
+export function useMfaTreatmentTypes(specialtyId?: string | null) {
   const [data, setData] = useState<MfaTreatmentType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -424,6 +424,7 @@ export function useMfaTreatmentTypes() {
         .from('mfa_treatment_types')
         .select('*')
         .eq('is_active', true)
+        .or(specialtyId ? `specialty_id.is.null,specialty_id.eq.${specialtyId}` : 'specialty_id.is.null,specialty_id.not.is.null')
         .order('sort_order');
 
       if (error) throw error;
@@ -433,7 +434,7 @@ export function useMfaTreatmentTypes() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [specialtyId]);
 
   useEffect(() => {
     refetch();

@@ -44,6 +44,8 @@
 .selectionCard {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  text-align: left;
   padding: var(--spacing-md);
   background: var(--color-background);
   border: 2px solid var(--color-border);
