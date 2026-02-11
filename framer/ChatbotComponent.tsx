@@ -27,7 +27,7 @@ const quickReplies: QuickReply[] = [
         id: "hours",
         text: "Öffnungszeiten",
         response:
-            "Unsere Sprechzeiten:\n\nMo, Di, Do, Fr: 07:30 - 12:00 Uhr und 13:00 - 16:00 Uhr\nMittwoch: 07:30 - 12:00 Uhr\n\nTelefonisch erreichen Sie uns unter:\n0511 34833-0",
+            "Unsere Sprechzeiten:\n\nMo, Di, Do: 07:45 - 12:30 Uhr & 13:00 - 17:30 Uhr\nMittwoch: 07:30 - 12:30 Uhr\nFreitag: 07:45 - 12:30 Uhr & 13:00 - 16:30 Uhr\n\nTelefonisch erreichen Sie uns unter:\n0511 34833-0",
     },
     {
         id: "address",
@@ -44,7 +44,7 @@ const quickReplies: QuickReply[] = [
     {
         id: "appointment",
         text: "Termin vereinbaren",
-        response: `Sie können Ihren Termin direkt hier auf unserer Website buchen:\n\nKlicken Sie auf den folgenden Link, um zur Online-Terminbuchung zu gelangen:\n\n${BOOKING_URL}\n\nAlternativ erreichen Sie uns telefonisch:\n0511 34833-0\n\nOffene Sprechstunde:\nMo-Fr: 07:30-12:00 Uhr (nach Kapazität, idealerweise mit Überweisung)\n\nPrivatpatienten: Termine nach Vereinbarung.`,
+        response: `Sie können Ihren Termin direkt hier auf unserer Website buchen:\n\nKlicken Sie auf den folgenden Link, um zur Online-Terminbuchung zu gelangen:\n\n${BOOKING_URL}\n\nAlternativ erreichen Sie uns telefonisch:\n0511 34833-0\n\nOffene Sprechstunde:\nMo, Di, Do: 07:45-12:30 Uhr (nach Kapazität, idealerweise mit Überweisung)\nMi: 07:30-12:30 Uhr\nFr: 07:45-12:30 Uhr\n\nPrivatpatienten: Termine nach Vereinbarung.`,
     },
     {
         id: "insurance",
@@ -56,13 +56,13 @@ const quickReplies: QuickReply[] = [
         id: "emergency",
         text: "Notfall",
         response:
-            "Bei einem akuten Notfall wählen Sie bitte den Notruf 112. In unserer offenen Sprechstunde (Mo-Fr 07:30-12:00 Uhr) behandeln wir auch akute Beschwerden nach Kapazität. Außerhalb der Sprechzeiten wenden Sie sich bitte an die nächste Notaufnahme.",
+            "Bei einem akuten Notfall wählen Sie bitte den Notruf 112. In unserer offenen Sprechstunde (Mo, Di, Do: 07:45-12:30 Uhr, Mi: 07:30-12:30 Uhr, Fr: 07:45-12:30 Uhr) behandeln wir auch akute Beschwerden nach Kapazität. Außerhalb der Sprechzeiten wenden Sie sich bitte an die nächste Notaufnahme.",
     },
     {
         id: "contact",
         text: "Kontakt",
         response:
-            "Sie erreichen uns wie folgt:\n\nTelefon: 0511 34833-0\nAdresse: Berliner Allee 14, 30175 Hannover\n\nTelefonische Erreichbarkeit:\nMo, Di, Do, Fr: 07:30-12:00 und 13:00-16:00 Uhr\nMittwoch: 07:30-12:00 Uhr",
+            "Sie erreichen uns wie folgt:\n\nTelefon: 0511 34833-0\nAdresse: Berliner Allee 14, 30175 Hannover\n\nTelefonische Erreichbarkeit:\nMo, Di, Do: 07:45-12:30 & 13:00-17:30 Uhr\nMittwoch: 07:30-12:30 Uhr\nFreitag: 07:45-12:30 & 13:00-16:30 Uhr",
     },
 ]
 
