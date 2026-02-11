@@ -39,6 +39,7 @@ Deno.serve(async (req) => {
 
     const url = new URL(req.url)
     const appointmentId = url.searchParams.get('appointment_id')
+    const bookingType = url.searchParams.get('booking_type') || 'doctor'
 
     if (!appointmentId) {
       return new Response(
@@ -47,35 +48,69 @@ Deno.serve(async (req) => {
       )
     }
 
-    const { data: appointment, error } = await supabase
-      .from('appointments')
-      .select(`
-        id,
-        time_slot:time_slots(date, start_time, end_time),
-        treatment_type:treatment_types(name),
-        practitioner:practitioners(title, first_name, last_name)
-      `)
-      .eq('id', appointmentId)
-      .single()
+    let dtStart: string
+    let dtEnd: string
+    let summary: string
+    let description: string
 
-    if (error || !appointment) {
-      return new Response(
-        JSON.stringify({ error: 'Appointment not found' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 404 }
-      )
+    if (bookingType === 'mfa') {
+      // MFA-Termin
+      const { data: appointment, error } = await supabase
+        .from('mfa_appointments')
+        .select(`
+          id,
+          mfa_time_slot:mfa_time_slots(date, start_time, end_time),
+          mfa_treatment_type:mfa_treatment_types(name)
+        `)
+        .eq('id', appointmentId)
+        .single()
+
+      if (error || !appointment) {
+        return new Response(
+          JSON.stringify({ error: 'MFA appointment not found' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 404 }
+        )
+      }
+
+      const timeSlot = Array.isArray(appointment.mfa_time_slot) ? appointment.mfa_time_slot[0] : appointment.mfa_time_slot
+      const treatmentType = Array.isArray(appointment.mfa_treatment_type) ? appointment.mfa_treatment_type[0] : appointment.mfa_treatment_type
+
+      dtStart = formatIcsDate(timeSlot.date, timeSlot.start_time)
+      dtEnd = formatIcsDate(timeSlot.date, timeSlot.end_time)
+      summary = `Orthopädie - ${treatmentType?.name || 'Praxisleistung'}`
+      description = 'Praxisleistung (MFA)'
+    } else {
+      // Doctor-Termin
+      const { data: appointment, error } = await supabase
+        .from('appointments')
+        .select(`
+          id,
+          time_slot:time_slots(date, start_time, end_time),
+          treatment_type:treatment_types(name),
+          practitioner:practitioners(title, first_name, last_name)
+        `)
+        .eq('id', appointmentId)
+        .single()
+
+      if (error || !appointment) {
+        return new Response(
+          JSON.stringify({ error: 'Appointment not found' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 404 }
+        )
+      }
+
+      const timeSlot = Array.isArray(appointment.time_slot) ? appointment.time_slot[0] : appointment.time_slot
+      const treatmentType = Array.isArray(appointment.treatment_type) ? appointment.treatment_type[0] : appointment.treatment_type
+      const practitioner = Array.isArray(appointment.practitioner) ? appointment.practitioner[0] : appointment.practitioner
+
+      dtStart = formatIcsDate(timeSlot.date, timeSlot.start_time)
+      dtEnd = formatIcsDate(timeSlot.date, timeSlot.end_time)
+      summary = `Orthopädie Termin - ${treatmentType?.name || 'Termin'}`
+      const practitionerName = practitioner
+        ? `${practitioner.title || ''} ${practitioner.first_name} ${practitioner.last_name}`.trim()
+        : ''
+      description = practitionerName ? `Behandler: ${practitionerName}` : ''
     }
-
-    const timeSlot = Array.isArray(appointment.time_slot) ? appointment.time_slot[0] : appointment.time_slot
-    const treatmentType = Array.isArray(appointment.treatment_type) ? appointment.treatment_type[0] : appointment.treatment_type
-    const practitioner = Array.isArray(appointment.practitioner) ? appointment.practitioner[0] : appointment.practitioner
-
-    const dtStart = formatIcsDate(timeSlot.date, timeSlot.start_time)
-    const dtEnd = formatIcsDate(timeSlot.date, timeSlot.end_time)
-    const summary = `Orthopädie Termin - ${treatmentType?.name || 'Termin'}`
-    const practitionerName = practitioner
-      ? `${practitioner.title || ''} ${practitioner.first_name} ${practitioner.last_name}`.trim()
-      : ''
-    const description = practitionerName ? `Behandler: ${practitionerName}` : ''
 
     const now = new Date()
     const dtstamp = `${now.getUTCFullYear()}${pad(now.getUTCMonth() + 1)}${pad(now.getUTCDate())}T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}${pad(now.getUTCSeconds())}Z`

@@ -93,6 +93,46 @@ export interface EmailReminder {
 }
 
 // =====================================================
+// MFA-Entitäten (ORTHO-027)
+// =====================================================
+
+export interface MfaTreatmentType {
+  id: string;
+  name: string;
+  name_en?: string | null;
+  name_tr?: string | null;
+  duration_minutes: number;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+}
+
+export interface MfaTimeSlot {
+  id: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  max_parallel: number;
+  created_at: string;
+}
+
+export interface MfaAppointment {
+  id: string;
+  patient_id: string;
+  mfa_treatment_type_id: string;
+  mfa_time_slot_id: string;
+  status: AppointmentStatus;
+  notes: string | null;
+  cancel_token: string | null;
+  consent_given: boolean;
+  consent_timestamp: string | null;
+  booked_by: string;
+  language: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// =====================================================
 // Appointment (erweitert)
 // =====================================================
 

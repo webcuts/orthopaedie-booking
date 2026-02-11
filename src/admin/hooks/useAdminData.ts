@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import type { Appointment, TimeSlot, TreatmentType } from '../../types/database';
+import type { Appointment, TimeSlot, TreatmentType, MfaTreatmentType } from '../../types/database';
 
 // Extended appointment type with joined data
 export interface AppointmentWithDetails extends Appointment {
@@ -31,6 +31,8 @@ export interface AppointmentWithDetails extends Appointment {
     id: string;
     name: string;
   };
+  // MFA discriminator
+  bookingType?: 'doctor' | 'mfa';
 }
 
 type CalendarView = 'day' | 'week' | 'month';
@@ -820,4 +822,345 @@ export function useAnalytics() {
   }, [fetchAnalytics]);
 
   return { data, loading, error, refetch: fetchAnalytics };
+}
+
+// =====================================================
+// MFA Hooks
+// =====================================================
+
+// Hook: MFA Appointments für Kalenderansicht (normalisiert auf AppointmentWithDetails)
+export function useMfaAppointments(date: Date, view: CalendarView) {
+  const [appointments, setAppointments] = useState<AppointmentWithDetails[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchAppointments = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      let startDate: string;
+      let endDate: string;
+
+      if (view === 'day') {
+        startDate = date.toISOString().split('T')[0];
+        endDate = startDate;
+      } else if (view === 'week') {
+        const dayOfWeek = date.getDay();
+        const monday = new Date(date);
+        monday.setDate(date.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+        const sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+        startDate = monday.toISOString().split('T')[0];
+        endDate = sunday.toISOString().split('T')[0];
+      } else {
+        const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        startDate = firstDay.toISOString().split('T')[0];
+        endDate = lastDay.toISOString().split('T')[0];
+      }
+
+      const { data, error: fetchError } = await supabase
+        .from('mfa_appointments')
+        .select(`
+          *,
+          patient:patients(id, name, email, phone),
+          mfa_treatment_type:mfa_treatment_types(id, name, duration_minutes),
+          mfa_time_slot:mfa_time_slots!inner(id, date, start_time, end_time)
+        `)
+        .gte('mfa_time_slot.date', startDate)
+        .lte('mfa_time_slot.date', endDate)
+        .order('mfa_time_slot(date)', { ascending: true });
+
+      if (fetchError) throw fetchError;
+
+      // Normalize to AppointmentWithDetails shape
+      const normalized: AppointmentWithDetails[] = (data || []).map((mfa: any) => ({
+        ...mfa,
+        treatment_type: mfa.mfa_treatment_type,
+        time_slot: mfa.mfa_time_slot,
+        practitioner: null,
+        time_slot_id: mfa.mfa_time_slot_id,
+        treatment_type_id: mfa.mfa_treatment_type_id,
+        practitioner_id: null,
+        bookingType: 'mfa' as const,
+      }));
+
+      setAppointments(normalized);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fehler beim Laden der MFA-Termine');
+    } finally {
+      setLoading(false);
+    }
+  }, [date, view]);
+
+  useEffect(() => {
+    fetchAppointments();
+  }, [fetchAppointments]);
+
+  return { appointments, loading, error, refetch: fetchAppointments };
+}
+
+// Hook: MFA-Termin-Status ändern
+export function useUpdateMfaAppointmentStatus() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const updateStatus = useCallback(async (
+    appointmentId: string,
+    status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
+  ) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { error: updateError } = await supabase
+        .from('mfa_appointments')
+        .update({ status })
+        .eq('id', appointmentId);
+
+      if (updateError) throw updateError;
+      return { success: true };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Fehler beim Aktualisieren';
+      setError(message);
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { updateStatus, loading, error };
+}
+
+// Hook: MFA-Leistungen CRUD (Admin)
+export function useMfaTreatmentTypesAdmin() {
+  const [treatmentTypes, setTreatmentTypes] = useState<MfaTreatmentType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchTypes = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('mfa_treatment_types')
+        .select('*')
+        .order('sort_order', { ascending: true });
+
+      if (fetchError) throw fetchError;
+      setTreatmentTypes(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fehler');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTypes();
+  }, [fetchTypes]);
+
+  const createType = useCallback(async (
+    data: { name: string; name_en?: string; name_tr?: string; duration_minutes: number }
+  ) => {
+    const maxOrder = treatmentTypes.reduce((max, t) => Math.max(max, t.sort_order), 0);
+    const { error } = await supabase
+      .from('mfa_treatment_types')
+      .insert([{ ...data, is_active: true, sort_order: maxOrder + 1 }]);
+
+    if (error) return { success: false, error: error.message };
+    await fetchTypes();
+    return { success: true };
+  }, [fetchTypes, treatmentTypes]);
+
+  const updateType = useCallback(async (
+    id: string,
+    data: Partial<MfaTreatmentType>
+  ) => {
+    const { error } = await supabase
+      .from('mfa_treatment_types')
+      .update(data)
+      .eq('id', id);
+
+    if (error) return { success: false, error: error.message };
+    await fetchTypes();
+    return { success: true };
+  }, [fetchTypes]);
+
+  return {
+    treatmentTypes,
+    loading,
+    error,
+    createType,
+    updateType,
+    refetch: fetchTypes,
+  };
+}
+
+// Hook: Admin MFA-Buchung erstellen
+export function useAdminCreateMfaBooking() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const createBooking = useCallback(async (data: {
+    mfaTimeSlotId: string;
+    mfaTreatmentTypeId: string;
+    insuranceTypeId: string;
+    patientName: string;
+    patientEmail?: string;
+    patientPhone?: string;
+    notes?: string;
+  }) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // 1. Check capacity
+      const { data: available } = await supabase
+        .rpc('check_mfa_slot_availability', { p_slot_id: data.mfaTimeSlotId });
+
+      if (!available) {
+        throw new Error('Dieser MFA-Zeitslot ist bereits voll belegt.');
+      }
+
+      // 2. Create patient
+      const { data: patient, error: patientError } = await supabase
+        .from('patients')
+        .insert({
+          name: data.patientName,
+          email: data.patientEmail || null,
+          phone: data.patientPhone || null,
+          insurance_type_id: data.insuranceTypeId,
+        })
+        .select()
+        .single();
+
+      if (patientError) throw patientError;
+
+      // 3. Create MFA appointment
+      const { data: appointment, error: appointmentError } = await supabase
+        .from('mfa_appointments')
+        .insert({
+          patient_id: patient.id,
+          mfa_treatment_type_id: data.mfaTreatmentTypeId,
+          mfa_time_slot_id: data.mfaTimeSlotId,
+          notes: data.notes || null,
+          status: 'confirmed',
+          booked_by: 'admin',
+        })
+        .select()
+        .single();
+
+      if (appointmentError) throw appointmentError;
+
+      // 4. Send confirmation email if email provided
+      if (data.patientEmail) {
+        supabase.functions.invoke('send-booking-confirmation', {
+          body: { appointmentId: appointment.id, booking_type: 'mfa' },
+        }).then(({ error }) => {
+          if (error) console.error('Fehler beim Senden der MFA-Bestätigung:', error);
+        });
+      }
+
+      return { success: true, appointmentId: appointment.id };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Fehler bei der MFA-Buchung';
+      setError(message);
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const clearError = useCallback(() => setError(null), []);
+
+  return { createBooking, loading, error, clearError };
+}
+
+// Hook: Verfügbare MFA-Slots für Admin (per Datum)
+export function useAdminMfaAvailableSlots(date: string | null) {
+  const [slots, setSlots] = useState<{ id: string; start_time: string; end_time: string; available: boolean }[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!date) {
+      setSlots([]);
+      return;
+    }
+
+    async function fetch() {
+      setLoading(true);
+      try {
+        // Get all MFA slots for the date
+        const { data: mfaSlots, error: slotsError } = await supabase
+          .from('mfa_time_slots')
+          .select('id, start_time, end_time, max_parallel')
+          .eq('date', date)
+          .order('start_time', { ascending: true });
+
+        if (slotsError) throw slotsError;
+
+        // Get booking counts for those slots
+        const slotIds = (mfaSlots || []).map(s => s.id);
+        const { data: counts } = await supabase
+          .from('mfa_appointments')
+          .select('mfa_time_slot_id')
+          .in('mfa_time_slot_id', slotIds)
+          .neq('status', 'cancelled');
+
+        const countMap = new Map<string, number>();
+        (counts || []).forEach(c => {
+          countMap.set(c.mfa_time_slot_id, (countMap.get(c.mfa_time_slot_id) || 0) + 1);
+        });
+
+        const result = (mfaSlots || []).map(s => ({
+          id: s.id,
+          start_time: s.start_time,
+          end_time: s.end_time,
+          available: (countMap.get(s.id) || 0) < s.max_parallel,
+        }));
+
+        setSlots(result);
+      } catch {
+        setSlots([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetch();
+  }, [date]);
+
+  return { slots, loading };
+}
+
+// Hook: MFA-Slots generieren
+export function useGenerateMfaSlots() {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<{ slots_created: number } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const generateSlots = useCallback(async (weeksAhead: number = 4) => {
+    setLoading(true);
+    setError(null);
+    setResult(null);
+
+    try {
+      const { data, error: rpcError } = await supabase
+        .rpc('generate_mfa_time_slots', { weeks_ahead: weeksAhead });
+
+      if (rpcError) throw rpcError;
+
+      const resultData = data?.[0] || { slots_created: 0 };
+      setResult(resultData);
+      return { success: true, data: resultData };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Fehler bei der MFA-Slot-Generierung';
+      setError(message);
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { generateSlots, loading, result, error };
 }

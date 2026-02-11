@@ -16,6 +16,11 @@ const STATUS_COLORS: Record<string, string> = {
   completed: '#6B7280',
 };
 
+function getBorderColor(apt: AppointmentWithDetails): string {
+  if (apt.bookingType === 'mfa') return '#7C3AED';
+  return STATUS_COLORS[apt.status] || '#6B7280';
+}
+
 export function MonthView({ date, appointments, onAppointmentClick }: MonthViewProps) {
   const year = date.getFullYear();
   const month = date.getMonth();
@@ -89,7 +94,7 @@ export function MonthView({ date, appointments, onAppointmentClick }: MonthViewP
                   <div
                     key={apt.id}
                     className={styles.appointment}
-                    style={{ borderLeftColor: STATUS_COLORS[apt.status] || '#6B7280' }}
+                    style={{ borderLeftColor: getBorderColor(apt) }}
                     onClick={() => onAppointmentClick(apt)}
                     title={`${apt.time_slot.start_time} - ${apt.patient?.name}`}
                   >

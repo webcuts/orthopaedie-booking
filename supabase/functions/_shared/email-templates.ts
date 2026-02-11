@@ -17,6 +17,7 @@ export interface AppointmentData {
   cancellationDeadline?: string;
   cancelToken?: string;
   appointmentId?: string;
+  bookingType?: 'doctor' | 'mfa';
 }
 
 // Site URL für Cancel-Links
@@ -274,7 +275,7 @@ export function generateBookingConfirmationEmail(data: AppointmentData, lang: Em
       ${data.appointmentId ? `
       <!-- Kalender-Download -->
       <div style="text-align: center; margin: 24px 0;">
-        <a href="${Deno.env.get('SUPABASE_URL')}/functions/v1/generate-ics?appointment_id=${data.appointmentId}" style="display: inline-block; padding: 12px 24px; background-color: #2674BB; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500;">
+        <a href="${Deno.env.get('SUPABASE_URL')}/functions/v1/generate-ics?appointment_id=${data.appointmentId}${data.bookingType === 'mfa' ? '&booking_type=mfa' : ''}" style="display: inline-block; padding: 12px 24px; background-color: #2674BB; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500;">
           📅 ${t(lang, 'addToCalendar')}
         </a>
       </div>

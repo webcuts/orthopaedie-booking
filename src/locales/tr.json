@@ -3,8 +3,11 @@
 
   "step.specialty": "Uzmanlık Alanı",
   "step.insurance": "Sigorta",
+  "step.bookingType": "Tür",
   "step.treatment": "Tedavi Türü",
   "step.practitioner": "Doktor",
+  "step.mfaTreatment": "Hizmet",
+  "step.mfaCalendar": "Randevu",
   "step.date": "Tarih",
   "step.time": "Saat",
   "step.contact": "İletişim",
@@ -119,5 +122,23 @@
 
   "nextFreeSlot.today": "Bir sonraki müsait randevu: Bugün, saat {time}",
   "nextFreeSlot.tomorrow": "Bir sonraki müsait randevu: Yarın, saat {time}",
-  "nextFreeSlot.date": "Bir sonraki müsait randevu: {date}, saat {time}"
+  "nextFreeSlot.date": "Bir sonraki müsait randevu: {date}, saat {time}",
+
+  "bookingType.title": "Ne tür randevu almak istersiniz?",
+  "bookingType.description": "Randevu türünü seçin",
+  "bookingType.doctor": "Doktor Randevusu",
+  "bookingType.doctorDescription": "Doktor ile randevu",
+  "bookingType.mfa": "Muayenehane Hizmeti (Doktorsuz)",
+  "bookingType.mfaDescription": "Reçete, sevk, PRP, hyalüronik asit vb.",
+
+  "mfaTreatment.title": "Hizmet Seçin",
+  "mfaTreatment.description": "Hangi muayenehane hizmetine ihtiyacınız var?",
+  "mfaTreatment.loading": "Hizmetler yükleniyor...",
+
+  "mfaCalendar.title": "Randevu Seçin",
+  "mfaCalendar.description": "Tarih ve saat seçin",
+  "mfaCalendar.noSlots": "Maalesef bu gün için randevu mevcut değil.",
+
+  "contact.labelMfaTreatment": "Hizmet",
+  "contact.mfaProvider": "Muayenehane Hizmeti (MFA)"
 }

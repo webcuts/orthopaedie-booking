@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useUpdateAppointmentStatus, useAnonymizePatient, type AppointmentWithDetails } from '../../hooks';
+import { useUpdateAppointmentStatus, useUpdateMfaAppointmentStatus, useAnonymizePatient, type AppointmentWithDetails } from '../../hooks';
 import styles from './AppointmentModal.module.css';
 
 interface AppointmentModalProps {
@@ -22,15 +22,20 @@ export function AppointmentModal({
 }: AppointmentModalProps) {
   const [status, setStatus] = useState(appointment.status);
   const [showAnonymizeConfirm, setShowAnonymizeConfirm] = useState(false);
-  const { updateStatus, loading } = useUpdateAppointmentStatus();
+  const { updateStatus: updateDoctorStatus, loading: doctorLoading } = useUpdateAppointmentStatus();
+  const { updateStatus: updateMfaStatus, loading: mfaLoading } = useUpdateMfaAppointmentStatus();
   const { anonymize, loading: anonymizing } = useAnonymizePatient();
+
+  const isMfa = appointment.bookingType === 'mfa';
+  const loading = isMfa ? mfaLoading : doctorLoading;
 
   const isAnonymized = appointment.patient?.name === 'Gelöscht';
   const canAnonymize = (status === 'cancelled' || status === 'completed') && !isAnonymized;
 
   const handleStatusChange = async (newStatus: string) => {
     setStatus(newStatus as typeof status);
-    const result = await updateStatus(
+    const updateFn = isMfa ? updateMfaStatus : updateDoctorStatus;
+    const result = await updateFn(
       appointment.id,
       newStatus as 'pending' | 'confirmed' | 'cancelled' | 'completed'
     );
@@ -69,15 +74,20 @@ export function AppointmentModal({
     });
   };
 
-  const practitionerName = appointment.practitioner
-    ? `${appointment.practitioner.title || ''} ${appointment.practitioner.first_name} ${appointment.practitioner.last_name}`.trim()
-    : 'Keine Präferenz';
+  const practitionerName = isMfa
+    ? 'MFA / Praxisleistung'
+    : appointment.practitioner
+      ? `${appointment.practitioner.title || ''} ${appointment.practitioner.first_name} ${appointment.practitioner.last_name}`.trim()
+      : 'Keine Präferenz';
 
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Termindetails</h2>
+          <h2 className={styles.title}>
+            Termindetails
+            {isMfa && <span style={{ marginLeft: 8, fontSize: '0.75rem', fontWeight: 500, padding: '2px 8px', borderRadius: 9999, background: '#F3E8FF', color: '#7C3AED' }}>MFA</span>}
+          </h2>
           <button onClick={onClose} className={styles.closeButton}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />

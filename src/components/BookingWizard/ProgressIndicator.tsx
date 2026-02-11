@@ -1,22 +1,15 @@
 import { useTranslation } from '../../i18n';
+import { STEP_LABEL_KEYS } from './BookingWizard';
+import type { StepType } from './BookingWizard';
 import styles from './ProgressIndicator.module.css';
 
 interface ProgressIndicatorProps {
   currentStep: number;
   totalSteps: number;
+  steps: StepType[];
 }
 
-const STEP_KEYS = [
-  'step.specialty',
-  'step.insurance',
-  'step.treatment',
-  'step.practitioner',
-  'step.date',
-  'step.time',
-  'step.contact'
-];
-
-export function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicatorProps) {
+export function ProgressIndicator({ currentStep, totalSteps, steps }: ProgressIndicatorProps) {
   const { t } = useTranslation();
 
   return (
@@ -31,23 +24,26 @@ export function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicator
 
       {/* Desktop: Alle Schritte */}
       <div className={styles.steps}>
-        {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
-          <div
-            key={step}
-            className={`${styles.step} ${step === currentStep ? styles.active : ''} ${step < currentStep ? styles.completed : ''}`}
-          >
-            <div className={styles.stepNumber}>
-              {step < currentStep ? (
-                <svg className={styles.checkIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              ) : (
-                step
-              )}
+        {steps.map((stepType, i) => {
+          const step = i + 1;
+          return (
+            <div
+              key={stepType}
+              className={`${styles.step} ${step === currentStep ? styles.active : ''} ${step < currentStep ? styles.completed : ''}`}
+            >
+              <div className={styles.stepNumber}>
+                {step < currentStep ? (
+                  <svg className={styles.checkIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                ) : (
+                  step
+                )}
+              </div>
+              <span className={styles.stepLabel}>{t(STEP_LABEL_KEYS[stepType])}</span>
             </div>
-            <span className={styles.stepLabel}>{t(STEP_KEYS[step - 1])}</span>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Mobile: Kompakte Anzeige */}
@@ -57,7 +53,7 @@ export function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicator
         </span>
         <span className={styles.mobileDivider}>|</span>
         <span className={styles.mobileLabel}>
-          {t(STEP_KEYS[currentStep - 1])}
+          {t(STEP_LABEL_KEYS[steps[currentStep - 1]])}
         </span>
       </div>
     </div>

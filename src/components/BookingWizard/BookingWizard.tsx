@@ -1,20 +1,36 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Container, Card } from '../';
 import { LanguageProvider, LanguageSelector, useTranslation } from '../../i18n';
 import { ProgressIndicator } from './ProgressIndicator';
 import { SpecialtyStep } from './steps/SpecialtyStep';
 import { InsuranceStep } from './steps/InsuranceStep';
+import { BookingTypeStep } from './steps/BookingTypeStep';
 import { TreatmentStep } from './steps/TreatmentStep';
 import { PractitionerStep } from './steps/PractitionerStep';
 import { DateStep } from './steps/DateStep';
 import { TimeSlotStep } from './steps/TimeSlotStep';
+import { MfaTreatmentStep } from './steps/MfaTreatmentStep';
+import { MfaCalendarStep } from './steps/MfaCalendarStep';
 import { ContactStep } from './steps/ContactStep';
 import { SuccessStep } from './steps/SuccessStep';
 import { useIframeResize } from '../../hooks';
 import styles from './BookingWizard.module.css';
 
+export type StepType =
+  | 'specialty'
+  | 'insurance'
+  | 'bookingType'
+  | 'treatment'
+  | 'practitioner'
+  | 'date'
+  | 'time'
+  | 'mfaTreatment'
+  | 'mfaCalendar'
+  | 'contact';
+
 export interface BookingState {
   currentStep: number;
+  bookingType: 'doctor' | 'mfa' | null;
   specialtyId: string | null;
   insuranceTypeId: string | null;
   treatmentTypeId: string | null;
@@ -22,6 +38,11 @@ export interface BookingState {
   selectedDate: string | null;
   timeSlotId: string | null;
   selectedStartTime: string | null;
+  // MFA-specific
+  mfaTreatmentTypeId: string | null;
+  mfaTimeSlotId: string | null;
+  mfaSelectedDate: string | null;
+  mfaSelectedStartTime: string | null;
   contactData: {
     name: string;
     email: string;
@@ -31,10 +52,32 @@ export interface BookingState {
   appointmentId: string | null;
 }
 
-const TOTAL_STEPS = 7;
+const DOCTOR_STEPS: StepType[] = ['specialty', 'insurance', 'bookingType', 'treatment', 'practitioner', 'date', 'time', 'contact'];
+const MFA_STEPS: StepType[] = ['specialty', 'insurance', 'bookingType', 'mfaTreatment', 'mfaCalendar', 'contact'];
+const SHARED_STEPS: StepType[] = ['specialty', 'insurance', 'bookingType'];
+
+export const STEP_LABEL_KEYS: Record<StepType, string> = {
+  specialty: 'step.specialty',
+  insurance: 'step.insurance',
+  bookingType: 'step.bookingType',
+  treatment: 'step.treatment',
+  practitioner: 'step.practitioner',
+  date: 'step.date',
+  time: 'step.time',
+  mfaTreatment: 'step.mfaTreatment',
+  mfaCalendar: 'step.mfaCalendar',
+  contact: 'step.contact',
+};
+
+export function getSteps(bookingType: 'doctor' | 'mfa' | null): StepType[] {
+  if (bookingType === 'mfa') return MFA_STEPS;
+  if (bookingType === 'doctor') return DOCTOR_STEPS;
+  return SHARED_STEPS;
+}
 
 const initialState: BookingState = {
   currentStep: 1,
+  bookingType: null,
   specialtyId: null,
   insuranceTypeId: null,
   treatmentTypeId: null,
@@ -42,6 +85,10 @@ const initialState: BookingState = {
   selectedDate: null,
   timeSlotId: null,
   selectedStartTime: null,
+  mfaTreatmentTypeId: null,
+  mfaTimeSlotId: null,
+  mfaSelectedDate: null,
+  mfaSelectedStartTime: null,
   contactData: {
     name: '',
     email: '',
@@ -56,6 +103,10 @@ function BookingWizardInner() {
   const [state, setState] = useState<BookingState>(initialState);
   const [wizardStartTime] = useState(() => Date.now());
 
+  const steps = useMemo(() => getSteps(state.bookingType), [state.bookingType]);
+  const totalSteps = steps.length;
+  const currentStepType = steps[state.currentStep - 1] as StepType | undefined;
+
   // Iframe-Höhe dynamisch anpassen bei Step-Wechsel
   useIframeResize([state.currentStep, state.bookingComplete]);
 
@@ -64,10 +115,13 @@ function BookingWizardInner() {
   }, []);
 
   const nextStep = useCallback(() => {
-    setState(prev => ({
-      ...prev,
-      currentStep: Math.min(prev.currentStep + 1, TOTAL_STEPS)
-    }));
+    setState(prev => {
+      const stepsForType = getSteps(prev.bookingType);
+      return {
+        ...prev,
+        currentStep: Math.min(prev.currentStep + 1, stepsForType.length)
+      };
+    });
   }, []);
 
   const prevStep = useCallback(() => {
@@ -78,10 +132,13 @@ function BookingWizardInner() {
   }, []);
 
   const goToStep = useCallback((step: number) => {
-    setState(prev => ({
-      ...prev,
-      currentStep: Math.max(1, Math.min(step, TOTAL_STEPS))
-    }));
+    setState(prev => {
+      const stepsForType = getSteps(prev.bookingType);
+      return {
+        ...prev,
+        currentStep: Math.max(1, Math.min(step, stepsForType.length))
+      };
+    });
   }, []);
 
   const resetBooking = useCallback(() => {
@@ -125,11 +182,12 @@ function BookingWizardInner() {
 
         <ProgressIndicator
           currentStep={state.currentStep}
-          totalSteps={TOTAL_STEPS}
+          totalSteps={totalSteps}
+          steps={steps}
         />
 
         <div className={styles.stepContent}>
-          {state.currentStep === 1 && (
+          {currentStepType === 'specialty' && (
             <SpecialtyStep
               selectedId={state.specialtyId}
               onSelect={(id) => {
@@ -139,7 +197,7 @@ function BookingWizardInner() {
             />
           )}
 
-          {state.currentStep === 2 && (
+          {currentStepType === 'insurance' && (
             <InsuranceStep
               selectedId={state.insuranceTypeId}
               onSelect={(id) => {
@@ -150,7 +208,18 @@ function BookingWizardInner() {
             />
           )}
 
-          {state.currentStep === 3 && (
+          {currentStepType === 'bookingType' && (
+            <BookingTypeStep
+              selectedType={state.bookingType}
+              onSelect={(type) => {
+                updateState({ bookingType: type });
+                nextStep();
+              }}
+              onBack={prevStep}
+            />
+          )}
+
+          {currentStepType === 'treatment' && (
             <TreatmentStep
               selectedId={state.treatmentTypeId}
               onSelect={(id) => {
@@ -161,7 +230,7 @@ function BookingWizardInner() {
             />
           )}
 
-          {state.currentStep === 4 && (
+          {currentStepType === 'practitioner' && (
             <PractitionerStep
               specialtyId={state.specialtyId}
               selectedId={state.practitionerId}
@@ -173,7 +242,7 @@ function BookingWizardInner() {
             />
           )}
 
-          {state.currentStep === 5 && (
+          {currentStepType === 'date' && (
             <DateStep
               selectedDate={state.selectedDate}
               practitionerId={state.practitionerId}
@@ -185,7 +254,7 @@ function BookingWizardInner() {
             />
           )}
 
-          {state.currentStep === 6 && (
+          {currentStepType === 'time' && (
             <TimeSlotStep
               selectedDate={state.selectedDate}
               selectedId={state.timeSlotId}
@@ -198,9 +267,37 @@ function BookingWizardInner() {
             />
           )}
 
-          {state.currentStep === 7 && (
+          {currentStepType === 'mfaTreatment' && (
+            <MfaTreatmentStep
+              selectedId={state.mfaTreatmentTypeId}
+              onSelect={(id) => {
+                updateState({ mfaTreatmentTypeId: id });
+                nextStep();
+              }}
+              onBack={prevStep}
+            />
+          )}
+
+          {currentStepType === 'mfaCalendar' && (
+            <MfaCalendarStep
+              selectedDate={state.mfaSelectedDate}
+              selectedTimeSlotId={state.mfaTimeSlotId}
+              onSelect={(date, slotId, startTime) => {
+                updateState({
+                  mfaSelectedDate: date,
+                  mfaTimeSlotId: slotId,
+                  mfaSelectedStartTime: startTime
+                });
+                nextStep();
+              }}
+              onBack={prevStep}
+            />
+          )}
+
+          {currentStepType === 'contact' && (
             <ContactStep
               state={state}
+              steps={steps}
               onUpdateContact={(contactData) => updateState({ contactData })}
               onComplete={setBookingComplete}
               onBack={prevStep}

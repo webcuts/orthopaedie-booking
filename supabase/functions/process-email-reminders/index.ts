@@ -17,6 +17,7 @@ interface EmailReminder {
   reminder_type: '24h_before' | '6h_before';
   scheduled_for: string;
   sent_at: string | null;
+  booking_type: string;
 }
 
 interface ProcessingResult {
@@ -76,81 +77,146 @@ Deno.serve(async (req) => {
       result.processed++
 
       try {
-        // Prüfe ob Termin nicht storniert wurde
-        const { data: appointment, error: appointmentError } = await supabase
-          .from('appointments')
-          .select(`
-            id,
-            status,
-            language,
-            cancellation_deadline,
-            cancel_token,
-            patient:patients(name, email, phone),
-            treatment_type:treatment_types(name),
-            time_slot:time_slots(date, start_time, end_time),
-            practitioner:practitioners(title, first_name, last_name)
-          `)
-          .eq('id', reminder.appointment_id)
-          .single()
+        const isMfa = reminder.booking_type === 'mfa'
+        let emailData: AppointmentData
+        let lang: EmailLanguage
+        let appointmentStatus: string
 
-        if (appointmentError || !appointment) {
-          console.error(`[process-email-reminders] Appointment not found: ${reminder.appointment_id}`)
-          result.failed++
-          result.errors.push(`Termin ${reminder.appointment_id} nicht gefunden`)
+        if (isMfa) {
+          // MFA-Termin laden
+          const { data: appointment, error: appointmentError } = await supabase
+            .from('mfa_appointments')
+            .select(`
+              id,
+              status,
+              language,
+              cancel_token,
+              patient:patients(name, email, phone),
+              mfa_treatment_type:mfa_treatment_types(name),
+              mfa_time_slot:mfa_time_slots(date, start_time, end_time)
+            `)
+            .eq('id', reminder.appointment_id)
+            .single()
 
-          // Markiere als verarbeitet (um Endlosschleife zu vermeiden)
-          await supabase
-            .from('email_reminders')
-            .update({ sent_at: new Date().toISOString() })
-            .eq('id', reminder.id)
+          if (appointmentError || !appointment) {
+            console.error(`[process-email-reminders] MFA appointment not found: ${reminder.appointment_id}`)
+            result.failed++
+            result.errors.push(`MFA-Termin ${reminder.appointment_id} nicht gefunden`)
 
-          continue
-        }
+            await supabase
+              .from('email_reminders')
+              .update({ sent_at: new Date().toISOString() })
+              .eq('id', reminder.id)
 
-        // Überspringe stornierte Termine
-        if (appointment.status === 'cancelled') {
-          console.log(`[process-email-reminders] Skipping cancelled appointment: ${reminder.appointment_id}`)
+            continue
+          }
 
-          // Markiere als verarbeitet
-          await supabase
-            .from('email_reminders')
-            .update({ sent_at: new Date().toISOString() })
-            .eq('id', reminder.id)
+          appointmentStatus = appointment.status
+          lang = (appointment.language || 'de') as EmailLanguage
 
-          continue
-        }
+          const mfaProviderNames: Record<string, string> = {
+            de: 'Praxisleistung (MFA)',
+            en: 'Practice Service (MFA)',
+            tr: 'Muayenehane Hizmeti (MFA)',
+          }
 
-        // Sprache des Patienten auslesen
-        const lang = (appointment.language || 'de') as EmailLanguage
-        const localeMap: Record<string, string> = { de: 'de-DE', en: 'en-US', tr: 'tr-TR' }
-
-        // Formatiere Stornierungsfrist
-        let cancellationDeadline: string | undefined
-        if (appointment.cancellation_deadline) {
-          const deadline = new Date(appointment.cancellation_deadline)
-          cancellationDeadline = deadline.toLocaleString(localeMap[lang] || 'de-DE', {
+          // Formatiere Stornierungsfrist
+          const slotDatetime = new Date(`${appointment.mfa_time_slot.date}T${appointment.mfa_time_slot.start_time}`)
+          const deadline = new Date(slotDatetime.getTime() - 24 * 60 * 60 * 1000)
+          const localeMap: Record<string, string> = { de: 'de-DE', en: 'en-US', tr: 'tr-TR' }
+          const cancellationDeadline = deadline.toLocaleString(localeMap[lang] || 'de-DE', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
           }) + (lang === 'de' ? ' Uhr' : '')
+
+          emailData = {
+            patientName: appointment.patient.name,
+            patientEmail: appointment.patient.email,
+            patientPhone: appointment.patient.phone,
+            date: appointment.mfa_time_slot.date,
+            time: appointment.mfa_time_slot.start_time,
+            endTime: appointment.mfa_time_slot.end_time,
+            treatmentType: appointment.mfa_treatment_type.name,
+            practitionerName: mfaProviderNames[lang] || mfaProviderNames.de,
+            cancellationDeadline,
+            cancelToken: appointment.cancel_token || undefined,
+          }
+        } else {
+          // Doctor-Termin laden (bestehende Logik)
+          const { data: appointment, error: appointmentError } = await supabase
+            .from('appointments')
+            .select(`
+              id,
+              status,
+              language,
+              cancellation_deadline,
+              cancel_token,
+              patient:patients(name, email, phone),
+              treatment_type:treatment_types(name),
+              time_slot:time_slots(date, start_time, end_time),
+              practitioner:practitioners(title, first_name, last_name)
+            `)
+            .eq('id', reminder.appointment_id)
+            .single()
+
+          if (appointmentError || !appointment) {
+            console.error(`[process-email-reminders] Appointment not found: ${reminder.appointment_id}`)
+            result.failed++
+            result.errors.push(`Termin ${reminder.appointment_id} nicht gefunden`)
+
+            await supabase
+              .from('email_reminders')
+              .update({ sent_at: new Date().toISOString() })
+              .eq('id', reminder.id)
+
+            continue
+          }
+
+          appointmentStatus = appointment.status
+          lang = (appointment.language || 'de') as EmailLanguage
+          const localeMap: Record<string, string> = { de: 'de-DE', en: 'en-US', tr: 'tr-TR' }
+
+          let cancellationDeadline: string | undefined
+          if (appointment.cancellation_deadline) {
+            const deadline = new Date(appointment.cancellation_deadline)
+            cancellationDeadline = deadline.toLocaleString(localeMap[lang] || 'de-DE', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            }) + (lang === 'de' ? ' Uhr' : '')
+          }
+
+          emailData = {
+            patientName: appointment.patient.name,
+            patientEmail: appointment.patient.email,
+            patientPhone: appointment.patient.phone,
+            date: appointment.time_slot.date,
+            time: appointment.time_slot.start_time,
+            endTime: appointment.time_slot.end_time,
+            treatmentType: appointment.treatment_type.name,
+            practitionerName: appointment.practitioner
+              ? `${appointment.practitioner.title || ''} ${appointment.practitioner.first_name} ${appointment.practitioner.last_name}`.trim()
+              : null,
+            cancellationDeadline,
+            cancelToken: appointment.cancel_token || undefined,
+          }
         }
 
-        // Erstelle E-Mail-Daten
-        const emailData: AppointmentData = {
-          patientName: appointment.patient.name,
-          patientEmail: appointment.patient.email,
-          patientPhone: appointment.patient.phone,
-          date: appointment.time_slot.date,
-          time: appointment.time_slot.start_time,
-          endTime: appointment.time_slot.end_time,
-          treatmentType: appointment.treatment_type.name,
-          practitionerName: appointment.practitioner
-            ? `${appointment.practitioner.title || ''} ${appointment.practitioner.first_name} ${appointment.practitioner.last_name}`.trim()
-            : null,
-          cancellationDeadline,
-          cancelToken: appointment.cancel_token || undefined,
+        // Überspringe stornierte Termine
+        if (appointmentStatus === 'cancelled') {
+          console.log(`[process-email-reminders] Skipping cancelled ${isMfa ? 'MFA ' : ''}appointment: ${reminder.appointment_id}`)
+
+          await supabase
+            .from('email_reminders')
+            .update({ sent_at: new Date().toISOString() })
+            .eq('id', reminder.id)
+
+          continue
         }
 
         // Generiere HTML

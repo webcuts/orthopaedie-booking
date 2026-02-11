@@ -2,11 +2,12 @@ import { useState, useEffect, useMemo } from 'react';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
 import { MonthView } from './MonthView';
-import { useAppointments, type AppointmentWithDetails } from '../../hooks';
+import { useAppointments, useMfaAppointments, type AppointmentWithDetails } from '../../hooks';
 import { supabase } from '../../../lib/supabaseClient';
 import styles from './CalendarView.module.css';
 
 type ViewType = 'day' | 'week' | 'month';
+type FilterType = 'all' | 'doctor' | 'mfa';
 
 interface Practitioner {
   id: string;
@@ -25,8 +26,18 @@ export function CalendarView({ onAppointmentClick, onNewAppointment }: CalendarV
   const [view, setView] = useState<ViewType>('day');
   const [practitioners, setPractitioners] = useState<Practitioner[]>([]);
   const [filterPractitionerId, setFilterPractitionerId] = useState<string>('');
+  const [filterType, setFilterType] = useState<FilterType>('all');
 
-  const { appointments, loading, error, refetch } = useAppointments(currentDate, view);
+  const { appointments: doctorAppointments, loading: doctorLoading, error: doctorError, refetch: refetchDoctor } = useAppointments(currentDate, view);
+  const { appointments: mfaAppointments, loading: mfaLoading, error: mfaError, refetch: refetchMfa } = useMfaAppointments(currentDate, view);
+
+  const loading = doctorLoading || mfaLoading;
+  const error = doctorError || mfaError;
+
+  const refetch = () => {
+    refetchDoctor();
+    refetchMfa();
+  };
 
   // Load practitioners for filter
   useEffect(() => {
@@ -41,11 +52,26 @@ export function CalendarView({ onAppointmentClick, onNewAppointment }: CalendarV
     load();
   }, []);
 
-  // Filter appointments by practitioner
+  // Merge and filter appointments
   const filteredAppointments = useMemo(() => {
-    if (!filterPractitionerId) return appointments;
-    return appointments.filter(apt => apt.practitioner_id === filterPractitionerId);
-  }, [appointments, filterPractitionerId]);
+    let combined: AppointmentWithDetails[] = [];
+
+    if (filterType === 'all' || filterType === 'doctor') {
+      combined = [...doctorAppointments.map(a => ({ ...a, bookingType: 'doctor' as const }))];
+    }
+    if (filterType === 'all' || filterType === 'mfa') {
+      combined = [...combined, ...mfaAppointments];
+    }
+
+    // Practitioner filter only applies to doctor appointments
+    if (filterPractitionerId) {
+      combined = combined.filter(apt =>
+        apt.bookingType === 'mfa' || apt.practitioner_id === filterPractitionerId
+      );
+    }
+
+    return combined;
+  }, [doctorAppointments, mfaAppointments, filterPractitionerId, filterType]);
 
   const navigateDate = (direction: 'prev' | 'next' | 'today') => {
     if (direction === 'today') {
@@ -113,6 +139,15 @@ export function CalendarView({ onAppointmentClick, onNewAppointment }: CalendarV
         <h2 className={styles.dateHeader}>{formatDateHeader()}</h2>
 
         <div className={styles.actions}>
+          <select
+            className={styles.filterSelect}
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value as FilterType)}
+          >
+            <option value="all">Alle Termine</option>
+            <option value="doctor">Arzttermine</option>
+            <option value="mfa">MFA-Termine</option>
+          </select>
           <select
             className={styles.filterSelect}
             value={filterPractitionerId}

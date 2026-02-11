@@ -1,0 +1,180 @@
+.calendar {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+}
+
+.navButton:hover:not(:disabled) {
+  background: var(--color-accent-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.navButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.monthLabel {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: capitalize;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+}
+
+.weekday {
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  padding: var(--spacing-xs);
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-xs);
+}
+
+.day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+}
+
+.day:hover:not(:disabled) {
+  background: var(--color-accent-light);
+  color: var(--color-primary);
+}
+
+.day.selected {
+  background: var(--color-primary);
+  color: white;
+}
+
+.day.selected:hover {
+  background: var(--color-primary-dark);
+  color: white;
+}
+
+.day.disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.day.today:not(.selected) {
+  border: 2px solid var(--color-primary);
+}
+
+.emptyDay {
+  aspect-ratio: 1;
+}
+
+.noSlots {
+  text-align: center;
+  padding: var(--spacing-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.noSlots p {
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Time slots section */
+.timeSection {
+  margin-top: var(--spacing-lg);
+}
+
+.timeSectionTitle {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.timeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-sm);
+}
+
+@media (max-width: 480px) {
+  .timeGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.timeSlot {
+  padding: var(--spacing-md);
+  background: var(--color-accent-light);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.timeSlot:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: white;
+}
+
+.timeSlot.selected {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.timeSlot:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.noTimeSlots {
+  text-align: center;
+  padding: var(--spacing-lg);
+  color: var(--color-text-secondary);
+}

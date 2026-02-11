@@ -3,7 +3,8 @@ import { Button } from '../../';
 import {
   useSpecialties,
   useTreatmentTypes,
-  usePractitioners
+  usePractitioners,
+  useMfaTreatmentTypes
 } from '../../../hooks/useSupabase';
 import { getPractitionerFullName } from '../../../types/database';
 import { useTranslation, getLocalizedName } from '../../../i18n';
@@ -25,7 +26,10 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
   const { data: specialties } = useSpecialties();
   const { data: treatmentTypes } = useTreatmentTypes();
   const { data: practitioners } = usePractitioners(state.specialtyId);
+  const { data: mfaTreatmentTypes } = useMfaTreatmentTypes();
   const { t, language } = useTranslation();
+
+  const isMfa = state.bookingType === 'mfa';
 
   const selectedSpecialty = useMemo(() =>
     specialties.find(s => s.id === state.specialtyId),
@@ -40,6 +44,11 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
   const selectedPractitioner = useMemo(() =>
     practitioners.find(p => p.id === state.practitionerId),
     [practitioners, state.practitionerId]
+  );
+
+  const selectedMfaTreatment = useMemo(() =>
+    mfaTreatmentTypes.find(t => t.id === state.mfaTreatmentTypeId),
+    [mfaTreatmentTypes, state.mfaTreatmentTypeId]
   );
 
   const formatDate = (dateStr: string) => {
@@ -75,16 +84,29 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
         <div className={styles.detailItem}>
           <span className={styles.detailLabel}>{t('success.labelDateTime')}</span>
           <span className={styles.detailValue}>
-            {state.selectedDate && formatDate(state.selectedDate)}
-            <br />
-            {state.selectedStartTime && formatTime(state.selectedStartTime)} {t('common.clock')}
+            {isMfa ? (
+              <>
+                {state.mfaSelectedDate && formatDate(state.mfaSelectedDate)}
+                <br />
+                {state.mfaSelectedStartTime && formatTime(state.mfaSelectedStartTime)} {t('common.clock')}
+              </>
+            ) : (
+              <>
+                {state.selectedDate && formatDate(state.selectedDate)}
+                <br />
+                {state.selectedStartTime && formatTime(state.selectedStartTime)} {t('common.clock')}
+              </>
+            )}
           </span>
         </div>
 
         <div className={styles.detailItem}>
           <span className={styles.detailLabel}>{t('success.labelTreatment')}</span>
           <span className={styles.detailValue}>
-            {selectedTreatment ? getLocalizedName(selectedTreatment, language) : ''}
+            {isMfa
+              ? (selectedMfaTreatment ? getLocalizedName(selectedMfaTreatment, language) : '')
+              : (selectedTreatment ? getLocalizedName(selectedTreatment, language) : '')
+            }
           </span>
         </div>
 
@@ -95,7 +117,14 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
           </span>
         </div>
 
-        {selectedPractitioner && (
+        {isMfa ? (
+          <div className={styles.detailItem}>
+            <span className={styles.detailLabel}>{t('success.labelPractitioner')}</span>
+            <span className={styles.detailValue}>
+              {t('contact.mfaProvider')}
+            </span>
+          </div>
+        ) : selectedPractitioner && (
           <div className={styles.detailItem}>
             <span className={styles.detailLabel}>{t('success.labelPractitioner')}</span>
             <span className={styles.detailValue}>

@@ -9,7 +9,10 @@ import type {
   Appointment,
   Specialty,
   Practitioner,
-  PracticeHours
+  PracticeHours,
+  MfaTreatmentType,
+  MfaTimeSlot,
+  MfaAppointment
 } from '../types/database';
 
 // =====================================================
@@ -402,6 +405,263 @@ export function useNextFreeSlot() {
   }, []);
 
   return { date, startTime, loading };
+}
+
+// =====================================================
+// MFA Hooks (ORTHO-027)
+// =====================================================
+
+export function useMfaTreatmentTypes() {
+  const [data, setData] = useState<MfaTreatmentType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const refetch = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error } = await supabase
+        .from('mfa_treatment_types')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order');
+
+      if (error) throw error;
+      setData(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fehler beim Laden der MFA-Leistungen');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  return { data, loading, error, refetch };
+}
+
+export function useMfaAvailableDates(month: Date) {
+  const [data, setData] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetch() {
+      setLoading(true);
+      setError(null);
+      try {
+        const startOfMonth = new Date(month.getFullYear(), month.getMonth(), 1);
+        const endOfMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const startDate = startOfMonth < today ? formatLocalDate(today) : formatLocalDate(startOfMonth);
+        const endDate = formatLocalDate(endOfMonth);
+
+        // Lade MFA-Slots mit Buchungszählung
+        const { data: slots, error } = await supabase
+          .from('mfa_time_slots')
+          .select('id, date, max_parallel')
+          .gte('date', startDate)
+          .lte('date', endDate);
+
+        if (error) throw error;
+        if (!slots?.length) { setData([]); return; }
+
+        // Lade Buchungen für diese Slots
+        const slotIds = slots.map(s => s.id);
+        const { data: bookings } = await supabase
+          .from('mfa_appointments')
+          .select('mfa_time_slot_id')
+          .in('mfa_time_slot_id', slotIds)
+          .neq('status', 'cancelled');
+
+        const bookingCounts = new Map<string, number>();
+        (bookings || []).forEach(b => {
+          bookingCounts.set(b.mfa_time_slot_id, (bookingCounts.get(b.mfa_time_slot_id) || 0) + 1);
+        });
+
+        // Tage mit mindestens einem verfügbaren Slot
+        const availableDates = new Set<string>();
+        slots.forEach(slot => {
+          const count = bookingCounts.get(slot.id) || 0;
+          if (count < slot.max_parallel) {
+            availableDates.add(slot.date);
+          }
+        });
+
+        setData(Array.from(availableDates).sort());
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Fehler beim Laden der verfügbaren MFA-Tage');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetch();
+  }, [month]);
+
+  return { data, loading, error };
+}
+
+export function useMfaTimeSlots(date: string | null) {
+  const [data, setData] = useState<(MfaTimeSlot & { available: boolean })[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!date) {
+      setData([]);
+      return;
+    }
+
+    async function fetch() {
+      setLoading(true);
+      setError(null);
+      try {
+        const { data: slots, error } = await supabase
+          .from('mfa_time_slots')
+          .select('*')
+          .eq('date', date)
+          .order('start_time');
+
+        if (error) throw error;
+        if (!slots?.length) { setData([]); return; }
+
+        // Lade Buchungen für diese Slots
+        const slotIds = slots.map(s => s.id);
+        const { data: bookings } = await supabase
+          .from('mfa_appointments')
+          .select('mfa_time_slot_id')
+          .in('mfa_time_slot_id', slotIds)
+          .neq('status', 'cancelled');
+
+        const bookingCounts = new Map<string, number>();
+        (bookings || []).forEach(b => {
+          bookingCounts.set(b.mfa_time_slot_id, (bookingCounts.get(b.mfa_time_slot_id) || 0) + 1);
+        });
+
+        const slotsWithAvailability = slots.map(slot => ({
+          ...slot,
+          available: (bookingCounts.get(slot.id) || 0) < slot.max_parallel
+        }));
+
+        setData(slotsWithAvailability);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Fehler beim Laden der MFA-Zeitslots');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetch();
+  }, [date]);
+
+  return { data, loading, error };
+}
+
+// =====================================================
+// Hook: MFA-Buchung erstellen
+// =====================================================
+
+interface MfaBookingData {
+  patientData: PatientInput;
+  mfaTreatmentTypeId: string;
+  mfaTimeSlotId: string;
+  notes?: string;
+  language?: string;
+  consent_given?: boolean;
+  consent_timestamp?: string;
+}
+
+interface MfaBookingResult {
+  patient: Patient;
+  appointment: MfaAppointment;
+}
+
+export function useCreateMfaBooking() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const createBooking = useCallback(async (bookingData: MfaBookingData): Promise<MfaBookingResult | null> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // 0. Rate Limit prüfen (zählt Doctor + MFA zusammen)
+      const { data: allowed, error: rateLimitError } = await supabase
+        .rpc('check_booking_rate_limit', { p_email: bookingData.patientData.email });
+
+      if (rateLimitError) {
+        console.error('Rate limit check failed:', rateLimitError);
+      } else if (allowed === false) {
+        throw new Error('Sie haben bereits mehrere Termine gebucht. Bitte kontaktieren Sie die Praxis telefonisch.');
+      }
+
+      // 1. Kapazitätsprüfung
+      const { data: available, error: capError } = await supabase
+        .rpc('check_mfa_slot_availability', { p_slot_id: bookingData.mfaTimeSlotId });
+
+      if (capError) {
+        console.error('Capacity check failed:', capError);
+      } else if (available === false) {
+        throw new Error('Dieser Zeitslot ist leider nicht mehr verfügbar. Bitte wählen Sie einen anderen.');
+      }
+
+      // 2. Patient anlegen
+      const { data: patient, error: patientError } = await supabase
+        .from('patients')
+        .insert(bookingData.patientData)
+        .select()
+        .single();
+
+      if (patientError) throw patientError;
+
+      // 3. MFA-Appointment anlegen
+      const { data: appointment, error: appointmentError } = await supabase
+        .from('mfa_appointments')
+        .insert({
+          patient_id: patient.id,
+          mfa_treatment_type_id: bookingData.mfaTreatmentTypeId,
+          mfa_time_slot_id: bookingData.mfaTimeSlotId,
+          notes: bookingData.notes || null,
+          language: bookingData.language || 'de',
+          consent_given: bookingData.consent_given || false,
+          consent_timestamp: bookingData.consent_timestamp || null,
+          booked_by: 'patient',
+          status: 'confirmed'
+        })
+        .select()
+        .single();
+
+      if (appointmentError) throw appointmentError;
+
+      // 4. Bestätigungs-E-Mails (non-blocking)
+      supabase.functions.invoke('send-booking-confirmation', {
+        body: { appointmentId: appointment.id, booking_type: 'mfa' }
+      }).then(({ error }) => {
+        if (error) console.error('Fehler beim Senden der MFA-Bestätigung:', error);
+      });
+
+      supabase.functions.invoke('send-practice-notification', {
+        body: { appointmentId: appointment.id, booking_type: 'mfa' }
+      }).then(({ error }) => {
+        if (error) console.error('Fehler beim Senden der MFA-Praxis-Benachrichtigung:', error);
+      });
+
+      return { patient, appointment };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Fehler bei der MFA-Buchung';
+      setError(message);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const clearError = useCallback(() => setError(null), []);
+
+  return { createBooking, loading, error, clearError };
 }
 
 // =====================================================

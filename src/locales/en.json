@@ -3,8 +3,11 @@
 
   "step.specialty": "Specialty",
   "step.insurance": "Insurance",
+  "step.bookingType": "Type",
   "step.treatment": "Treatment",
   "step.practitioner": "Practitioner",
+  "step.mfaTreatment": "Service",
+  "step.mfaCalendar": "Appointment",
   "step.date": "Date",
   "step.time": "Time",
   "step.contact": "Contact",
@@ -119,5 +122,23 @@
 
   "nextFreeSlot.today": "Next available: Today, {time}",
   "nextFreeSlot.tomorrow": "Next available: Tomorrow, {time}",
-  "nextFreeSlot.date": "Next available: {date}, {time}"
+  "nextFreeSlot.date": "Next available: {date}, {time}",
+
+  "bookingType.title": "What would you like to book?",
+  "bookingType.description": "Choose the type of appointment",
+  "bookingType.doctor": "Doctor Appointment",
+  "bookingType.doctorDescription": "Appointment with a doctor",
+  "bookingType.mfa": "Practice Service (without Doctor)",
+  "bookingType.mfaDescription": "Prescriptions, referrals, PRP, hyaluronic acid etc.",
+
+  "mfaTreatment.title": "Choose Service",
+  "mfaTreatment.description": "Which practice service do you need?",
+  "mfaTreatment.loading": "Loading services...",
+
+  "mfaCalendar.title": "Choose Appointment",
+  "mfaCalendar.description": "Select date and time",
+  "mfaCalendar.noSlots": "Unfortunately, no appointments are available for this day.",
+
+  "contact.labelMfaTreatment": "Service",
+  "contact.mfaProvider": "Practice Service (MFA)"
 }

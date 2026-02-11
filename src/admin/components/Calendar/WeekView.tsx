@@ -21,6 +21,18 @@ const STATUS_COLORS: Record<string, { bg: string; border: string; text: string }
   completed: { bg: '#F3F4F6', border: '#6B7280', text: '#374151' },
 };
 
+const MFA_COLORS: Record<string, { bg: string; border: string; text: string }> = {
+  pending: { bg: '#F3E8FF', border: '#7C3AED', text: '#5B21B6' },
+  confirmed: { bg: '#EDE9FE', border: '#7C3AED', text: '#5B21B6' },
+  cancelled: { bg: '#FEE2E2', border: '#DC3545', text: '#991B1B' },
+  completed: { bg: '#F5F3FF', border: '#8B5CF6', text: '#6D28D9' },
+};
+
+function getColors(apt: AppointmentWithDetails) {
+  const palette = apt.bookingType === 'mfa' ? MFA_COLORS : STATUS_COLORS;
+  return palette[apt.status] || STATUS_COLORS.pending;
+}
+
 interface LayoutInfo {
   column: number;
   totalColumns: number;
@@ -180,10 +192,13 @@ export function WeekView({ date, appointments, onAppointmentClick }: WeekViewPro
 
               <div className={styles.appointments}>
                 {dayApts.map((apt) => {
-                  const colors = STATUS_COLORS[apt.status] || STATUS_COLORS.pending;
-                  const practName = apt.practitioner
-                    ? `${apt.practitioner.title || ''} ${apt.practitioner.last_name}`.trim()
-                    : '';
+                  const colors = getColors(apt);
+                  const isMfa = apt.bookingType === 'mfa';
+                  const practName = isMfa
+                    ? 'MFA'
+                    : apt.practitioner
+                      ? `${apt.practitioner.title || ''} ${apt.practitioner.last_name}`.trim()
+                      : '';
                   return (
                     <div
                       key={apt.id}

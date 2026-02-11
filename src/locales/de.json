@@ -3,8 +3,11 @@
 
   "step.specialty": "Fachgebiet",
   "step.insurance": "Versicherung",
+  "step.bookingType": "Buchungsart",
   "step.treatment": "Terminart",
   "step.practitioner": "Behandler",
+  "step.mfaTreatment": "Leistung",
+  "step.mfaCalendar": "Termin",
   "step.date": "Datum",
   "step.time": "Uhrzeit",
   "step.contact": "Kontakt",
@@ -119,5 +122,23 @@
 
   "nextFreeSlot.today": "Nächster freier Termin: Heute, {time} Uhr",
   "nextFreeSlot.tomorrow": "Nächster freier Termin: Morgen, {time} Uhr",
-  "nextFreeSlot.date": "Nächster freier Termin: {date}, {time} Uhr"
+  "nextFreeSlot.date": "Nächster freier Termin: {date}, {time} Uhr",
+
+  "bookingType.title": "Was möchten Sie buchen?",
+  "bookingType.description": "Wählen Sie die Art Ihres Termins",
+  "bookingType.doctor": "Ärztlicher Termin",
+  "bookingType.doctorDescription": "Termin bei einem Arzt",
+  "bookingType.mfa": "Praxisleistung (ohne Arzt)",
+  "bookingType.mfaDescription": "Rezepte, Überweisungen, PRP, Hyaluronsäure u.a.",
+
+  "mfaTreatment.title": "Leistung wählen",
+  "mfaTreatment.description": "Welche Praxisleistung benötigen Sie?",
+  "mfaTreatment.loading": "Leistungen werden geladen...",
+
+  "mfaCalendar.title": "Termin wählen",
+  "mfaCalendar.description": "Wählen Sie Datum und Uhrzeit",
+  "mfaCalendar.noSlots": "Für diesen Tag sind leider keine Termine verfügbar.",
+
+  "contact.labelMfaTreatment": "Leistung",
+  "contact.mfaProvider": "Praxisleistung (MFA)"
 }

@@ -13,6 +13,7 @@ const corsHeaders = {
 
 interface RequestBody {
   appointmentId: string;
+  booking_type?: 'doctor' | 'mfa';
 }
 
 Deno.serve(async (req) => {
@@ -28,61 +29,103 @@ Deno.serve(async (req) => {
 
     // Parse request body
     const body: RequestBody = await req.json()
-    const { appointmentId } = body
+    const { appointmentId, booking_type } = body
 
     if (!appointmentId) {
       throw new Error('appointmentId ist erforderlich')
     }
 
-    console.log(`[send-booking-confirmation] Processing appointment: ${appointmentId}`)
+    const isMfa = booking_type === 'mfa'
+    console.log(`[send-booking-confirmation] Processing ${isMfa ? 'MFA' : 'doctor'} appointment: ${appointmentId}`)
 
-    // Lade Termin mit allen Details
-    const { data: appointment, error: appointmentError } = await supabase
-      .from('appointments')
-      .select(`
-        *,
-        patient:patients(name, email, phone, insurance_type_id),
-        treatment_type:treatment_types(name),
-        time_slot:time_slots(date, start_time, end_time),
-        practitioner:practitioners(title, first_name, last_name, specialty_id)
-      `)
-      .eq('id', appointmentId)
-      .single()
+    let emailData: AppointmentData
+    let lang: EmailLanguage
 
-    if (appointmentError || !appointment) {
-      throw new Error(`Termin nicht gefunden: ${appointmentError?.message}`)
-    }
-
-    // Lade Specialty wenn Practitioner vorhanden
-    let specialtyName: string | undefined
-    if (appointment.practitioner?.specialty_id) {
-      const { data: specialty } = await supabase
-        .from('specialties')
-        .select('name')
-        .eq('id', appointment.practitioner.specialty_id)
+    if (isMfa) {
+      // MFA-Termin laden
+      const { data: appointment, error: appointmentError } = await supabase
+        .from('mfa_appointments')
+        .select(`
+          *,
+          patient:patients(name, email, phone, insurance_type_id),
+          mfa_treatment_type:mfa_treatment_types(name),
+          mfa_time_slot:mfa_time_slots(date, start_time, end_time)
+        `)
+        .eq('id', appointmentId)
         .single()
-      specialtyName = specialty?.name
-    }
 
-    // Erstelle E-Mail-Daten
-    const emailData: AppointmentData = {
-      patientName: appointment.patient.name,
-      patientEmail: appointment.patient.email,
-      patientPhone: appointment.patient.phone,
-      date: appointment.time_slot.date,
-      time: appointment.time_slot.start_time,
-      endTime: appointment.time_slot.end_time,
-      treatmentType: appointment.treatment_type.name,
-      practitionerName: appointment.practitioner
-        ? `${appointment.practitioner.title || ''} ${appointment.practitioner.first_name} ${appointment.practitioner.last_name}`.trim()
-        : null,
-      specialtyName,
-      cancelToken: appointment.cancel_token || undefined,
-      appointmentId,
-    }
+      if (appointmentError || !appointment) {
+        throw new Error(`MFA-Termin nicht gefunden: ${appointmentError?.message}`)
+      }
 
-    // Sprache des Patienten auslesen
-    const lang = (appointment.language || 'de') as EmailLanguage
+      lang = (appointment.language || 'de') as EmailLanguage
+
+      const mfaProviderNames: Record<string, string> = {
+        de: 'Praxisleistung (MFA)',
+        en: 'Practice Service (MFA)',
+        tr: 'Muayenehane Hizmeti (MFA)',
+      }
+
+      emailData = {
+        patientName: appointment.patient.name,
+        patientEmail: appointment.patient.email,
+        patientPhone: appointment.patient.phone,
+        date: appointment.mfa_time_slot.date,
+        time: appointment.mfa_time_slot.start_time,
+        endTime: appointment.mfa_time_slot.end_time,
+        treatmentType: appointment.mfa_treatment_type.name,
+        practitionerName: mfaProviderNames[lang] || mfaProviderNames.de,
+        cancelToken: appointment.cancel_token || undefined,
+        appointmentId,
+        bookingType: 'mfa',
+      }
+    } else {
+      // Doctor-Termin laden (bestehende Logik)
+      const { data: appointment, error: appointmentError } = await supabase
+        .from('appointments')
+        .select(`
+          *,
+          patient:patients(name, email, phone, insurance_type_id),
+          treatment_type:treatment_types(name),
+          time_slot:time_slots(date, start_time, end_time),
+          practitioner:practitioners(title, first_name, last_name, specialty_id)
+        `)
+        .eq('id', appointmentId)
+        .single()
+
+      if (appointmentError || !appointment) {
+        throw new Error(`Termin nicht gefunden: ${appointmentError?.message}`)
+      }
+
+      // Lade Specialty wenn Practitioner vorhanden
+      let specialtyName: string | undefined
+      if (appointment.practitioner?.specialty_id) {
+        const { data: specialty } = await supabase
+          .from('specialties')
+          .select('name')
+          .eq('id', appointment.practitioner.specialty_id)
+          .single()
+        specialtyName = specialty?.name
+      }
+
+      lang = (appointment.language || 'de') as EmailLanguage
+
+      emailData = {
+        patientName: appointment.patient.name,
+        patientEmail: appointment.patient.email,
+        patientPhone: appointment.patient.phone,
+        date: appointment.time_slot.date,
+        time: appointment.time_slot.start_time,
+        endTime: appointment.time_slot.end_time,
+        treatmentType: appointment.treatment_type.name,
+        practitionerName: appointment.practitioner
+          ? `${appointment.practitioner.title || ''} ${appointment.practitioner.first_name} ${appointment.practitioner.last_name}`.trim()
+          : null,
+        specialtyName,
+        cancelToken: appointment.cancel_token || undefined,
+        appointmentId,
+      }
+    }
 
     // Generiere HTML
     const html = generateBookingConfirmationEmail(emailData, lang)

@@ -2,20 +2,23 @@ import { useState, useMemo } from 'react';
 import { Input, Button } from '../../';
 import {
   useCreateBooking,
+  useCreateMfaBooking,
   useSpecialties,
   useInsuranceTypes,
   useTreatmentTypes,
-  usePractitioners
+  usePractitioners,
+  useMfaTreatmentTypes
 } from '../../../hooks/useSupabase';
 import { getPractitionerFullName } from '../../../types/database';
 import { sanitizeInput, validateName, validateEmail, validatePhone, FIELD_LIMITS } from '../../../utils/validation';
 import { useTranslation, getLocalizedName } from '../../../i18n';
-import type { BookingState } from '../BookingWizard';
+import type { BookingState, StepType } from '../BookingWizard';
 import styles from '../BookingWizard.module.css';
 import contactStyles from './ContactStep.module.css';
 
 interface ContactStepProps {
   state: BookingState;
+  steps: StepType[];
   onUpdateContact: (data: BookingState['contactData']) => void;
   onComplete: (appointmentId: string) => void;
   onBack: () => void;
@@ -29,19 +32,32 @@ const localeMap: Record<string, string> = {
   tr: 'tr-TR'
 };
 
-export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoToStep, wizardStartTime }: ContactStepProps) {
+export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack, onGoToStep, wizardStartTime }: ContactStepProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [honeypot, setHoneypot] = useState('');
   const [consentGiven, setConsentGiven] = useState(false);
   const [consentError, setConsentError] = useState(false);
-  const { createBooking, loading, error: bookingError, clearError } = useCreateBooking();
+  const { createBooking, loading: doctorLoading, error: doctorError, clearError: clearDoctorError } = useCreateBooking();
+  const { createBooking: createMfaBooking, loading: mfaLoading, error: mfaError, clearError: clearMfaError } = useCreateMfaBooking();
   const { t, language } = useTranslation();
+
+  const isMfa = state.bookingType === 'mfa';
+  const loading = isMfa ? mfaLoading : doctorLoading;
+  const bookingError = isMfa ? mfaError : doctorError;
+  const clearError = isMfa ? clearMfaError : clearDoctorError;
+
+  // Helper: find step number by step type
+  const stepNumberOf = (stepType: StepType) => {
+    const idx = steps.indexOf(stepType);
+    return idx >= 0 ? idx + 1 : 1;
+  };
 
   // Load data for summary
   const { data: specialties } = useSpecialties();
   const { data: insuranceTypes } = useInsuranceTypes();
   const { data: treatmentTypes } = useTreatmentTypes();
   const { data: practitioners } = usePractitioners(state.specialtyId);
+  const { data: mfaTreatmentTypes } = useMfaTreatmentTypes();
 
   const selectedSpecialty = useMemo(() =>
     specialties.find(s => s.id === state.specialtyId),
@@ -63,8 +79,13 @@ export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoTo
     [practitioners, state.practitionerId]
   );
 
+  const selectedMfaTreatment = useMemo(() =>
+    mfaTreatmentTypes.find(t => t.id === state.mfaTreatmentTypeId),
+    [mfaTreatmentTypes, state.mfaTreatmentTypeId]
+  );
+
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
+    const date = new Date(dateStr + 'T00:00:00');
     return date.toLocaleDateString(localeMap[language] || 'de-DE', {
       weekday: 'long',
       day: 'numeric',
@@ -104,7 +125,7 @@ export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoTo
     if (Date.now() - wizardStartTime < 3000) return;
 
     if (!validateForm()) return;
-    if (!state.insuranceTypeId || !state.treatmentTypeId || !state.timeSlotId) return;
+    if (!state.insuranceTypeId) return;
 
     if (!consentGiven) {
       setConsentError(true);
@@ -113,23 +134,49 @@ export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoTo
 
     clearError();
 
-    const result = await createBooking({
-      patientData: {
-        name: sanitizeInput(state.contactData.name.trim()),
-        email: state.contactData.email.trim(),
-        phone: state.contactData.phone.trim(),
-        insurance_type_id: state.insuranceTypeId
-      },
-      treatmentTypeId: state.treatmentTypeId,
-      timeSlotId: state.timeSlotId,
-      practitionerId: state.practitionerId,
-      language,
-      consent_given: true,
-      consent_timestamp: new Date().toISOString()
-    });
+    if (isMfa) {
+      // MFA Booking
+      if (!state.mfaTreatmentTypeId || !state.mfaTimeSlotId) return;
 
-    if (result) {
-      onComplete(result.appointment.id);
+      const result = await createMfaBooking({
+        patientData: {
+          name: sanitizeInput(state.contactData.name.trim()),
+          email: state.contactData.email.trim(),
+          phone: state.contactData.phone.trim(),
+          insurance_type_id: state.insuranceTypeId
+        },
+        mfaTreatmentTypeId: state.mfaTreatmentTypeId,
+        mfaTimeSlotId: state.mfaTimeSlotId,
+        language,
+        consent_given: true,
+        consent_timestamp: new Date().toISOString()
+      });
+
+      if (result) {
+        onComplete(result.appointment.id);
+      }
+    } else {
+      // Doctor Booking
+      if (!state.treatmentTypeId || !state.timeSlotId) return;
+
+      const result = await createBooking({
+        patientData: {
+          name: sanitizeInput(state.contactData.name.trim()),
+          email: state.contactData.email.trim(),
+          phone: state.contactData.phone.trim(),
+          insurance_type_id: state.insuranceTypeId
+        },
+        treatmentTypeId: state.treatmentTypeId,
+        timeSlotId: state.timeSlotId,
+        practitionerId: state.practitionerId,
+        language,
+        consent_given: true,
+        consent_timestamp: new Date().toISOString()
+      });
+
+      if (result) {
+        onComplete(result.appointment.id);
+      }
     }
   };
 
@@ -144,6 +191,10 @@ export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoTo
     }
   };
 
+  // Determine display date/time based on booking type
+  const displayDate = isMfa ? state.mfaSelectedDate : state.selectedDate;
+  const displayTime = isMfa ? state.mfaSelectedStartTime : state.selectedStartTime;
+
   return (
     <div>
       <div className={styles.stepHeader}>
@@ -157,43 +208,75 @@ export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoTo
       <div className={contactStyles.summary}>
         <h3 className={contactStyles.summaryTitle}>{t('contact.summaryTitle')}</h3>
 
-        <div className={contactStyles.summaryItem} onClick={() => onGoToStep(1)}>
+        <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('specialty'))}>
           <span className={contactStyles.summaryLabel}>{t('contact.labelSpecialty')}</span>
           <span className={contactStyles.summaryValue}>{selectedSpecialty?.name}</span>
         </div>
 
-        <div className={contactStyles.summaryItem} onClick={() => onGoToStep(2)}>
+        <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('insurance'))}>
           <span className={contactStyles.summaryLabel}>{t('contact.labelInsurance')}</span>
           <span className={contactStyles.summaryValue}>{selectedInsurance ? getLocalizedName(selectedInsurance, language) : ''}</span>
         </div>
 
-        <div className={contactStyles.summaryItem} onClick={() => onGoToStep(3)}>
-          <span className={contactStyles.summaryLabel}>{t('contact.labelTreatment')}</span>
-          <span className={contactStyles.summaryValue}>
-            {selectedTreatment ? getLocalizedName(selectedTreatment, language) : ''} ({selectedTreatment?.duration_minutes} {t('common.minutesShort')})
-          </span>
-        </div>
+        {isMfa ? (
+          <>
+            <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('mfaTreatment'))}>
+              <span className={contactStyles.summaryLabel}>{t('contact.labelMfaTreatment')}</span>
+              <span className={contactStyles.summaryValue}>
+                {selectedMfaTreatment ? getLocalizedName(selectedMfaTreatment, language) : ''} ({selectedMfaTreatment?.duration_minutes} {t('common.minutesShort')})
+              </span>
+            </div>
 
-        <div className={contactStyles.summaryItem} onClick={() => onGoToStep(4)}>
-          <span className={contactStyles.summaryLabel}>{t('contact.labelPractitioner')}</span>
-          <span className={contactStyles.summaryValue}>
-            {selectedPractitioner ? getPractitionerFullName(selectedPractitioner) : t('contact.noPreference')}
-          </span>
-        </div>
+            <div className={contactStyles.summaryItem}>
+              <span className={contactStyles.summaryLabel}>{t('contact.labelPractitioner')}</span>
+              <span className={contactStyles.summaryValue}>{t('contact.mfaProvider')}</span>
+            </div>
 
-        <div className={contactStyles.summaryItem} onClick={() => onGoToStep(5)}>
-          <span className={contactStyles.summaryLabel}>{t('contact.labelDate')}</span>
-          <span className={contactStyles.summaryValue}>
-            {state.selectedDate && formatDate(state.selectedDate)}
-          </span>
-        </div>
+            <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('mfaCalendar'))}>
+              <span className={contactStyles.summaryLabel}>{t('contact.labelDate')}</span>
+              <span className={contactStyles.summaryValue}>
+                {displayDate && formatDate(displayDate)}
+              </span>
+            </div>
 
-        <div className={contactStyles.summaryItem} onClick={() => onGoToStep(6)}>
-          <span className={contactStyles.summaryLabel}>{t('contact.labelTime')}</span>
-          <span className={contactStyles.summaryValue}>
-            {state.selectedStartTime && formatTime(state.selectedStartTime)} {t('common.clock')}
-          </span>
-        </div>
+            <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('mfaCalendar'))}>
+              <span className={contactStyles.summaryLabel}>{t('contact.labelTime')}</span>
+              <span className={contactStyles.summaryValue}>
+                {displayTime && formatTime(displayTime)} {t('common.clock')}
+              </span>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('treatment'))}>
+              <span className={contactStyles.summaryLabel}>{t('contact.labelTreatment')}</span>
+              <span className={contactStyles.summaryValue}>
+                {selectedTreatment ? getLocalizedName(selectedTreatment, language) : ''} ({selectedTreatment?.duration_minutes} {t('common.minutesShort')})
+              </span>
+            </div>
+
+            <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('practitioner'))}>
+              <span className={contactStyles.summaryLabel}>{t('contact.labelPractitioner')}</span>
+              <span className={contactStyles.summaryValue}>
+                {selectedPractitioner ? getPractitionerFullName(selectedPractitioner) : t('contact.noPreference')}
+              </span>
+            </div>
+
+            <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('date'))}>
+              <span className={contactStyles.summaryLabel}>{t('contact.labelDate')}</span>
+              <span className={contactStyles.summaryValue}>
+                {displayDate && formatDate(displayDate)}
+              </span>
+            </div>
+
+            <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('time'))}>
+              <span className={contactStyles.summaryLabel}>{t('contact.labelTime')}</span>
+              <span className={contactStyles.summaryValue}>
+                {displayTime && formatTime(displayTime)} {t('common.clock')}
+              </span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Contact Form */}
@@ -273,8 +356,13 @@ export function ContactStep({ state, onUpdateContact, onComplete, onBack, onGoTo
         <div className={styles.error}>
           <div className={styles.errorTitle}>{t('contact.bookingError')}</div>
           <p>{bookingError}</p>
-          {bookingError.includes('vergeben') && (
-            <button className={styles.retryButton} onClick={() => onGoToStep(6)}>
+          {bookingError.includes('vergeben') && !isMfa && (
+            <button className={styles.retryButton} onClick={() => onGoToStep(stepNumberOf('time'))}>
+              {t('contact.chooseOtherTime')}
+            </button>
+          )}
+          {bookingError.includes('verfügbar') && isMfa && (
+            <button className={styles.retryButton} onClick={() => onGoToStep(stepNumberOf('mfaCalendar'))}>
               {t('contact.chooseOtherTime')}
             </button>
           )}
