@@ -860,32 +860,50 @@ export function useMfaAppointments(date: Date, view: CalendarView) {
         endDate = lastDay.toISOString().split('T')[0];
       }
 
-      const { data, error: fetchError } = await supabase
+      // Step 1: Get MFA time slots in the date range
+      const { data: slots, error: slotsError } = await supabase
+        .from('mfa_time_slots')
+        .select('id, date, start_time, end_time')
+        .gte('date', startDate)
+        .lte('date', endDate);
+
+      if (slotsError) throw slotsError;
+      if (!slots || slots.length === 0) {
+        setAppointments([]);
+        return;
+      }
+
+      const slotIds = slots.map(s => s.id);
+      const slotMap = new Map(slots.map(s => [s.id, s]));
+
+      // Step 2: Get MFA appointments for those slots
+      const { data: mfaData, error: fetchError } = await supabase
         .from('mfa_appointments')
         .select(`
           *,
           patient:patients(id, name, email, phone),
-          mfa_treatment_type:mfa_treatment_types(id, name, duration_minutes),
-          mfa_time_slot:mfa_time_slots!inner(id, date, start_time, end_time)
+          mfa_treatment_type:mfa_treatment_types(id, name, duration_minutes)
         `)
-        .gte('mfa_time_slot.date', startDate)
-        .lte('mfa_time_slot.date', endDate);
+        .in('mfa_time_slot_id', slotIds);
 
       if (fetchError) throw fetchError;
 
       // Normalize to AppointmentWithDetails shape
-      const normalized: AppointmentWithDetails[] = (data || []).map((mfa: any) => ({
-        ...mfa,
-        treatment_type: mfa.mfa_treatment_type,
-        time_slot: mfa.mfa_time_slot,
-        practitioner: null,
-        time_slot_id: mfa.mfa_time_slot_id,
-        treatment_type_id: mfa.mfa_treatment_type_id,
-        practitioner_id: null,
-        bookingType: 'mfa' as const,
-      }));
+      const normalized: AppointmentWithDetails[] = (mfaData || []).map((mfa: any) => {
+        const slot = slotMap.get(mfa.mfa_time_slot_id);
+        return {
+          ...mfa,
+          treatment_type: mfa.mfa_treatment_type,
+          time_slot: slot || { id: mfa.mfa_time_slot_id, date: '', start_time: '', end_time: '' },
+          practitioner: null,
+          time_slot_id: mfa.mfa_time_slot_id,
+          treatment_type_id: mfa.mfa_treatment_type_id,
+          practitioner_id: null,
+          bookingType: 'mfa' as const,
+        };
+      });
 
-      // Sort client-side by date+time
+      // Sort by date+time
       normalized.sort((a, b) => {
         const dateA = a.time_slot?.date || '';
         const dateB = b.time_slot?.date || '';
