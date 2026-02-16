@@ -860,34 +860,54 @@ export function useMfaAppointments(date: Date, view: CalendarView) {
         endDate = lastDay.toISOString().split('T')[0];
       }
 
-      // Load ALL mfa_appointments with simple LEFT JOINs (no foreign table filters)
-      const { data: mfaData, error: fetchError } = await supabase
+      // Step 1: Get ALL raw mfa_appointments (no joins)
+      const { data: rawAppts, error: apptsError } = await supabase
         .from('mfa_appointments')
-        .select(`
-          *,
-          patient:patients(id, name, email, phone),
-          mfa_treatment_type:mfa_treatment_types(id, name, duration_minutes),
-          mfa_time_slot:mfa_time_slots(id, date, start_time, end_time)
-        `);
+        .select('*');
 
-      if (fetchError) throw fetchError;
+      if (apptsError) throw apptsError;
+      if (!rawAppts || rawAppts.length === 0) {
+        setAppointments([]);
+        return;
+      }
 
-      // Filter by date range client-side and normalize
-      const normalized: AppointmentWithDetails[] = (mfaData || [])
-        .filter((mfa: any) => {
-          const slotDate = mfa.mfa_time_slot?.date;
-          return slotDate && slotDate >= startDate && slotDate <= endDate;
+      // Step 2: Get related data separately (small, unique ID sets)
+      const patientIds = [...new Set(rawAppts.map(a => a.patient_id))];
+      const slotIds = [...new Set(rawAppts.map(a => a.mfa_time_slot_id))];
+      const treatmentIds = [...new Set(rawAppts.map(a => a.mfa_treatment_type_id))];
+
+      const [patientsRes, slotsRes, treatmentsRes] = await Promise.all([
+        supabase.from('patients').select('id, name, email, phone').in('id', patientIds),
+        supabase.from('mfa_time_slots').select('id, date, start_time, end_time').in('id', slotIds),
+        supabase.from('mfa_treatment_types').select('id, name, duration_minutes').in('id', treatmentIds),
+      ]);
+
+      const patientMap = new Map((patientsRes.data || []).map(p => [p.id, p]));
+      const slotMap = new Map((slotsRes.data || []).map(s => [s.id, s]));
+      const treatmentMap = new Map((treatmentsRes.data || []).map(t => [t.id, t]));
+
+      // Step 3: Merge, filter by date range, normalize
+      const normalized: AppointmentWithDetails[] = rawAppts
+        .map((mfa: any) => {
+          const slot = slotMap.get(mfa.mfa_time_slot_id);
+          const patient = patientMap.get(mfa.patient_id);
+          const treatment = treatmentMap.get(mfa.mfa_treatment_type_id);
+          return {
+            ...mfa,
+            patient: patient || null,
+            treatment_type: treatment || null,
+            time_slot: slot || { id: mfa.mfa_time_slot_id, date: '', start_time: '', end_time: '' },
+            practitioner: null,
+            time_slot_id: mfa.mfa_time_slot_id,
+            treatment_type_id: mfa.mfa_treatment_type_id,
+            practitioner_id: null,
+            bookingType: 'mfa' as const,
+          };
         })
-        .map((mfa: any) => ({
-          ...mfa,
-          treatment_type: mfa.mfa_treatment_type,
-          time_slot: mfa.mfa_time_slot,
-          practitioner: null,
-          time_slot_id: mfa.mfa_time_slot_id,
-          treatment_type_id: mfa.mfa_treatment_type_id,
-          practitioner_id: null,
-          bookingType: 'mfa' as const,
-        }));
+        .filter((apt: any) => {
+          const slotDate = apt.time_slot?.date;
+          return slotDate && slotDate >= startDate && slotDate <= endDate;
+        });
 
       // Sort by date+time
       normalized.sort((a, b) => {
