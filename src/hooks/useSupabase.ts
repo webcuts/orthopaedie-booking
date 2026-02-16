@@ -630,6 +630,7 @@ export function useCreateMfaBooking() {
         .single();
 
       console.log('[MFA Booking] Appointment result:', { appointment, error: appointmentError });
+      alert(`[DEBUG] MFA Insert result: ${appointment ? 'SUCCESS id=' + appointment.id : 'NULL'} error: ${appointmentError ? appointmentError.message : 'none'}`);
       if (appointmentError) throw appointmentError;
 
       // 4. Bestätigungs-E-Mails (non-blocking)
@@ -648,6 +649,7 @@ export function useCreateMfaBooking() {
       return { patient, appointment };
     } catch (err) {
       console.error('[MFA Booking] ERROR:', err);
+      alert(`[DEBUG] MFA Booking ERROR: ${err instanceof Error ? err.message : String(err)}`);
       const message = err instanceof Error ? err.message : 'Fehler bei der MFA-Buchung';
       setError(message);
       return null;
