@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useAvailableDates, usePracticeHours, useNextFreeSlot, usePractitionerSchedules } from '../../../hooks/useSupabase';
+import { useAvailableDates, usePracticeHours, useNextFreeSlot, usePractitionerSchedules, useInsuranceTypes } from '../../../hooks/useSupabase';
 import { useTranslation, useTranslationArray } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 import dateStyles from './DateStep.module.css';
@@ -7,6 +7,7 @@ import dateStyles from './DateStep.module.css';
 interface DateStepProps {
   selectedDate: string | null;
   practitionerId: string | null;
+  insuranceTypeId: string | null;
   onSelect: (date: string) => void;
   onBack: () => void;
 }
@@ -28,13 +29,21 @@ function formatLocalDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export function DateStep({ selectedDate, practitionerId, onSelect, onBack }: DateStepProps) {
+export function DateStep({ selectedDate, practitionerId, insuranceTypeId, onSelect, onBack }: DateStepProps) {
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const { data: availableDates, loading, error } = useAvailableDates(currentMonth, practitionerId);
   const { data: practiceHours } = usePracticeHours();
   const { data: practitionerSchedules } = usePractitionerSchedules(practitionerId);
+  const { data: insuranceTypes } = useInsuranceTypes();
   const hasPractitionerSchedule = practitionerSchedules.length > 0;
   const { date: nextDate, startTime: nextTime, loading: nextLoading } = useNextFreeSlot();
+
+  // ORTHO-029: Determine if patient has public insurance → hide private_only windows
+  const isPublicInsurance = useMemo(() => {
+    if (!insuranceTypeId || !insuranceTypes.length) return false;
+    const selected = insuranceTypes.find(i => i.id === insuranceTypeId);
+    return selected?.name?.includes('Gesetzlich') || false;
+  }, [insuranceTypeId, insuranceTypes]);
   const { t, language } = useTranslation();
   const weekdays = useTranslationArray('date.weekdays');
 
@@ -115,9 +124,12 @@ export function DateStep({ selectedDate, practitionerId, onSelect, onBack }: Dat
       // Practitioner has custom schedule: check if this day has bookable windows
       // day_of_week uses JS getDay() convention (0=Sunday), matching the DB
       const jsDayOfWeek = date.getDay();
-      const hasBookableWindow = practitionerSchedules.some(
-        s => s.day_of_week === jsDayOfWeek && s.is_bookable
-      );
+      const hasBookableWindow = practitionerSchedules.some(s => {
+        if (s.day_of_week !== jsDayOfWeek || !s.is_bookable) return false;
+        // ORTHO-029: Hide private_only windows for public insurance patients
+        if (isPublicInsurance && s.insurance_filter === 'private_only') return false;
+        return true;
+      });
       if (!hasBookableWindow) return false;
     } else {
       // No custom schedule: fall back to global practice hours

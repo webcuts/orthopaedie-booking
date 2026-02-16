@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useTimeSlots, usePractitionerSchedules } from '../../../hooks/useSupabase';
+import { useTimeSlots, usePractitionerSchedules, useInsuranceTypes } from '../../../hooks/useSupabase';
 import { useTranslation } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 import timeStyles from './TimeSlotStep.module.css';
@@ -8,6 +8,7 @@ interface TimeSlotStepProps {
   selectedDate: string | null;
   selectedId: string | null;
   practitionerId: string | null;
+  insuranceTypeId: string | null;
   onSelect: (id: string, startTime: string) => void;
   onBack: () => void;
 }
@@ -18,23 +19,36 @@ const localeMap: Record<string, string> = {
   tr: 'tr-TR'
 };
 
-export function TimeSlotStep({ selectedDate, selectedId, practitionerId, onSelect, onBack }: TimeSlotStepProps) {
+export function TimeSlotStep({ selectedDate, selectedId, practitionerId, insuranceTypeId, onSelect, onBack }: TimeSlotStepProps) {
   const { data: timeSlots, loading, error } = useTimeSlots(selectedDate, practitionerId);
   const { data: practitionerSchedules } = usePractitionerSchedules(practitionerId);
+  const { data: insuranceTypes } = useInsuranceTypes();
   const { t, language } = useTranslation();
 
-  // Filter slots by practitioner schedule windows + past slots for today
+  // Determine if patient has public insurance (Gesetzlich) → hide private_only windows
+  const isPublicInsurance = useMemo(() => {
+    if (!insuranceTypeId || !insuranceTypes.length) return false;
+    const selected = insuranceTypes.find(i => i.id === insuranceTypeId);
+    return selected?.name?.includes('Gesetzlich') || false;
+  }, [insuranceTypeId, insuranceTypes]);
+
+  // Filter slots by practitioner schedule windows + insurance + past slots
   const filteredSlots = useMemo(() => {
     if (!selectedDate || !timeSlots.length) return timeSlots;
 
     let slots = timeSlots;
 
-    // 1. Filter by practitioner schedule bookable windows
+    // 1. Filter by practitioner schedule bookable windows (+ insurance_filter)
     if (practitionerSchedules.length > 0) {
       const selectedDateObj = new Date(selectedDate + 'T00:00:00');
       const jsDayOfWeek = selectedDateObj.getDay();
       const bookableWindows = practitionerSchedules
-        .filter(s => s.day_of_week === jsDayOfWeek && s.is_bookable)
+        .filter(s => {
+          if (s.day_of_week !== jsDayOfWeek || !s.is_bookable) return false;
+          // ORTHO-029: Hide private_only windows for public insurance patients
+          if (isPublicInsurance && s.insurance_filter === 'private_only') return false;
+          return true;
+        })
         .map(s => ({ start: s.start_time.slice(0, 5), end: s.end_time.slice(0, 5) }));
 
       if (bookableWindows.length > 0) {
@@ -58,7 +72,7 @@ export function TimeSlotStep({ selectedDate, selectedId, practitionerId, onSelec
     }
 
     return slots;
-  }, [timeSlots, selectedDate, practitionerSchedules]);
+  }, [timeSlots, selectedDate, practitionerSchedules, isPublicInsurance]);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);

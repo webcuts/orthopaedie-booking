@@ -246,6 +246,7 @@ function BookingWizardInner() {
             <DateStep
               selectedDate={state.selectedDate}
               practitionerId={state.practitionerId}
+              insuranceTypeId={state.insuranceTypeId}
               onSelect={(date) => {
                 updateState({ selectedDate: date, timeSlotId: null });
                 nextStep();
@@ -259,6 +260,7 @@ function BookingWizardInner() {
               selectedDate={state.selectedDate}
               selectedId={state.timeSlotId}
               practitionerId={state.practitionerId}
+              insuranceTypeId={state.insuranceTypeId}
               onSelect={(id, startTime) => {
                 updateState({ timeSlotId: id, selectedStartTime: startTime });
                 nextStep();
