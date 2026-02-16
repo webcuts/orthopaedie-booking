@@ -568,9 +568,17 @@ export function useCreateMfaBooking() {
     setError(null);
 
     try {
+      console.log('[MFA Booking] Starting booking...', {
+        email: bookingData.patientData.email,
+        treatmentId: bookingData.mfaTreatmentTypeId,
+        slotId: bookingData.mfaTimeSlotId
+      });
+
       // 0. Rate Limit prüfen (zählt Doctor + MFA zusammen)
       const { data: allowed, error: rateLimitError } = await supabase
         .rpc('check_booking_rate_limit', { p_email: bookingData.patientData.email });
+
+      console.log('[MFA Booking] Rate limit:', { allowed, error: rateLimitError });
 
       if (rateLimitError) {
         console.error('Rate limit check failed:', rateLimitError);
@@ -582,6 +590,8 @@ export function useCreateMfaBooking() {
       const { data: available, error: capError } = await supabase
         .rpc('check_mfa_slot_availability', { p_slot_id: bookingData.mfaTimeSlotId });
 
+      console.log('[MFA Booking] Capacity:', { available, error: capError });
+
       if (capError) {
         console.error('Capacity check failed:', capError);
       } else if (available === false) {
@@ -589,31 +599,37 @@ export function useCreateMfaBooking() {
       }
 
       // 2. Patient anlegen
+      console.log('[MFA Booking] Inserting patient...', bookingData.patientData);
       const { data: patient, error: patientError } = await supabase
         .from('patients')
         .insert(bookingData.patientData)
         .select()
         .single();
 
+      console.log('[MFA Booking] Patient result:', { patient, error: patientError });
       if (patientError) throw patientError;
 
       // 3. MFA-Appointment anlegen
+      const insertData = {
+        patient_id: patient.id,
+        mfa_treatment_type_id: bookingData.mfaTreatmentTypeId,
+        mfa_time_slot_id: bookingData.mfaTimeSlotId,
+        notes: bookingData.notes || null,
+        language: bookingData.language || 'de',
+        consent_given: bookingData.consent_given || false,
+        consent_timestamp: bookingData.consent_timestamp || null,
+        booked_by: 'patient',
+        status: 'confirmed'
+      };
+      console.log('[MFA Booking] Inserting appointment...', insertData);
+
       const { data: appointment, error: appointmentError } = await supabase
         .from('mfa_appointments')
-        .insert({
-          patient_id: patient.id,
-          mfa_treatment_type_id: bookingData.mfaTreatmentTypeId,
-          mfa_time_slot_id: bookingData.mfaTimeSlotId,
-          notes: bookingData.notes || null,
-          language: bookingData.language || 'de',
-          consent_given: bookingData.consent_given || false,
-          consent_timestamp: bookingData.consent_timestamp || null,
-          booked_by: 'patient',
-          status: 'confirmed'
-        })
+        .insert(insertData)
         .select()
         .single();
 
+      console.log('[MFA Booking] Appointment result:', { appointment, error: appointmentError });
       if (appointmentError) throw appointmentError;
 
       // 4. Bestätigungs-E-Mails (non-blocking)
@@ -631,6 +647,7 @@ export function useCreateMfaBooking() {
 
       return { patient, appointment };
     } catch (err) {
+      console.error('[MFA Booking] ERROR:', err);
       const message = err instanceof Error ? err.message : 'Fehler bei der MFA-Buchung';
       setError(message);
       return null;
