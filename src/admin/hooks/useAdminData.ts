@@ -860,48 +860,34 @@ export function useMfaAppointments(date: Date, view: CalendarView) {
         endDate = lastDay.toISOString().split('T')[0];
       }
 
-      // Step 1: Get MFA time slots in the date range
-      const { data: slots, error: slotsError } = await supabase
-        .from('mfa_time_slots')
-        .select('id, date, start_time, end_time')
-        .gte('date', startDate)
-        .lte('date', endDate);
-
-      if (slotsError) throw slotsError;
-      if (!slots || slots.length === 0) {
-        setAppointments([]);
-        return;
-      }
-
-      const slotIds = slots.map(s => s.id);
-      const slotMap = new Map(slots.map(s => [s.id, s]));
-
-      // Step 2: Get MFA appointments for those slots
+      // Load ALL mfa_appointments with simple LEFT JOINs (no foreign table filters)
       const { data: mfaData, error: fetchError } = await supabase
         .from('mfa_appointments')
         .select(`
           *,
           patient:patients(id, name, email, phone),
-          mfa_treatment_type:mfa_treatment_types(id, name, duration_minutes)
-        `)
-        .in('mfa_time_slot_id', slotIds);
+          mfa_treatment_type:mfa_treatment_types(id, name, duration_minutes),
+          mfa_time_slot:mfa_time_slots(id, date, start_time, end_time)
+        `);
 
       if (fetchError) throw fetchError;
 
-      // Normalize to AppointmentWithDetails shape
-      const normalized: AppointmentWithDetails[] = (mfaData || []).map((mfa: any) => {
-        const slot = slotMap.get(mfa.mfa_time_slot_id);
-        return {
+      // Filter by date range client-side and normalize
+      const normalized: AppointmentWithDetails[] = (mfaData || [])
+        .filter((mfa: any) => {
+          const slotDate = mfa.mfa_time_slot?.date;
+          return slotDate && slotDate >= startDate && slotDate <= endDate;
+        })
+        .map((mfa: any) => ({
           ...mfa,
           treatment_type: mfa.mfa_treatment_type,
-          time_slot: slot || { id: mfa.mfa_time_slot_id, date: '', start_time: '', end_time: '' },
+          time_slot: mfa.mfa_time_slot,
           practitioner: null,
           time_slot_id: mfa.mfa_time_slot_id,
           treatment_type_id: mfa.mfa_treatment_type_id,
           practitioner_id: null,
           bookingType: 'mfa' as const,
-        };
-      });
+        }));
 
       // Sort by date+time
       normalized.sort((a, b) => {
