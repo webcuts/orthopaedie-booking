@@ -14,6 +14,8 @@ import { MfaCalendarStep } from './steps/MfaCalendarStep';
 import { ContactStep } from './steps/ContactStep';
 import { SuccessStep } from './steps/SuccessStep';
 import { useIframeResize } from '../../hooks';
+import { usePractitioners } from '../../hooks/useSupabase';
+import { getPractitionerFullName } from '../../types/database';
 import styles from './BookingWizard.module.css';
 
 export type StepType =
@@ -38,6 +40,7 @@ export interface BookingState {
   selectedDate: string | null;
   timeSlotId: string | null;
   selectedStartTime: string | null;
+  additionalSlotIds: string[];
   // MFA-specific
   mfaTreatmentTypeId: string | null;
   mfaTimeSlotId: string | null;
@@ -85,6 +88,7 @@ const initialState: BookingState = {
   selectedDate: null,
   timeSlotId: null,
   selectedStartTime: null,
+  additionalSlotIds: [],
   mfaTreatmentTypeId: null,
   mfaTimeSlotId: null,
   mfaSelectedDate: null,
@@ -106,6 +110,21 @@ function BookingWizardInner() {
   const steps = useMemo(() => getSteps(state.bookingType), [state.bookingType]);
   const totalSteps = steps.length;
   const currentStepType = steps[state.currentStep - 1] as StepType | undefined;
+
+  // ORTHO-024: Behandlername für Banner
+  const { data: practitioners } = usePractitioners(state.specialtyId);
+  const practitionerName = useMemo(() => {
+    if (!state.practitionerId || !practitioners.length) return null;
+    const p = practitioners.find(pr => pr.id === state.practitionerId);
+    return p ? getPractitionerFullName(p) : null;
+  }, [state.practitionerId, practitioners]);
+
+  const practitionerStepIndex = steps.indexOf('practitioner');
+  const showPractitionerBanner = state.bookingType === 'doctor'
+    && state.practitionerId
+    && practitionerName
+    && practitionerStepIndex >= 0
+    && state.currentStep > practitionerStepIndex + 1;
 
   // Iframe-Höhe dynamisch anpassen bei Step-Wechsel
   useIframeResize([state.currentStep, state.bookingComplete]);
@@ -186,6 +205,16 @@ function BookingWizardInner() {
           steps={steps}
         />
 
+        {showPractitionerBanner && (
+          <div className={styles.practitionerBanner}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            {t('booking.practitionerBanner', { name: practitionerName! })}
+          </div>
+        )}
+
         <div className={styles.stepContent}>
           {currentStepType === 'specialty' && (
             <SpecialtyStep
@@ -261,8 +290,9 @@ function BookingWizardInner() {
               selectedId={state.timeSlotId}
               practitionerId={state.practitionerId}
               insuranceTypeId={state.insuranceTypeId}
-              onSelect={(id, startTime) => {
-                updateState({ timeSlotId: id, selectedStartTime: startTime });
+              treatmentTypeId={state.treatmentTypeId}
+              onSelect={(id, startTime, additionalSlotIds) => {
+                updateState({ timeSlotId: id, selectedStartTime: startTime, additionalSlotIds: additionalSlotIds || [] });
                 nextStep();
               }}
               onBack={prevStep}

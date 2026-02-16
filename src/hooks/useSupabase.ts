@@ -697,6 +697,7 @@ interface BookingData {
   treatmentTypeId: string;
   timeSlotId: string;
   practitionerId: string | null;
+  additionalSlotIds?: string[];
   notes?: string;
   language?: string;
   consent_given?: boolean;
@@ -761,6 +762,29 @@ export function useCreateBooking() {
           throw new Error('Dieser Zeitslot wurde leider gerade vergeben. Bitte wählen Sie einen anderen.');
         }
         throw appointmentError;
+      }
+
+      // 2b. ORTHO-025: Block additional consecutive slots for multi-slot treatments
+      if (bookingData.additionalSlotIds?.length) {
+        for (const additionalSlotId of bookingData.additionalSlotIds) {
+          const { error: blockError } = await supabase
+            .from('appointments')
+            .insert({
+              patient_id: patient.id,
+              treatment_type_id: bookingData.treatmentTypeId,
+              time_slot_id: additionalSlotId,
+              practitioner_id: bookingData.practitionerId,
+              primary_appointment_id: appointment.id,
+              status: 'confirmed'
+            });
+
+          if (blockError) {
+            if (blockError.code === '23505') {
+              throw new Error('Ein Folgeslot wurde leider gerade vergeben. Bitte wählen Sie einen anderen Termin.');
+            }
+            throw blockError;
+          }
+        }
       }
 
       // 3. Send confirmation emails (non-blocking)

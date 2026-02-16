@@ -169,6 +169,7 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
         treatmentTypeId: state.treatmentTypeId,
         timeSlotId: state.timeSlotId,
         practitionerId: state.practitionerId,
+        additionalSlotIds: state.additionalSlotIds.length > 0 ? state.additionalSlotIds : undefined,
         language,
         consent_given: true,
         consent_timestamp: new Date().toISOString()

@@ -264,6 +264,28 @@ Deno.serve(async (req) => {
       .update({ is_available: true })
       .eq('id', appointment.time_slot_id)
 
+    // ORTHO-025: Cancel linked secondary appointments (multi-slot treatments)
+    const { data: linkedAppointments } = await supabase
+      .from('appointments')
+      .select('id, time_slot_id')
+      .eq('primary_appointment_id', appointment.id)
+      .neq('status', 'cancelled')
+
+    if (linkedAppointments?.length) {
+      const linkedIds = linkedAppointments.map(a => a.id)
+      const linkedSlotIds = linkedAppointments.map(a => a.time_slot_id)
+
+      await supabase
+        .from('appointments')
+        .update({ status: 'cancelled' })
+        .in('id', linkedIds)
+
+      await supabase
+        .from('time_slots')
+        .update({ is_available: true })
+        .in('id', linkedSlotIds)
+    }
+
     // Log the cancellation
     await supabase
       .from('system_logs')

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useTimeSlots, usePractitionerSchedules, useInsuranceTypes } from '../../../hooks/useSupabase';
+import { useTimeSlots, usePractitionerSchedules, useInsuranceTypes, useTreatmentTypes } from '../../../hooks/useSupabase';
 import { useTranslation } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 import timeStyles from './TimeSlotStep.module.css';
@@ -9,7 +9,8 @@ interface TimeSlotStepProps {
   selectedId: string | null;
   practitionerId: string | null;
   insuranceTypeId: string | null;
-  onSelect: (id: string, startTime: string) => void;
+  treatmentTypeId: string | null;
+  onSelect: (id: string, startTime: string, additionalSlotIds?: string[]) => void;
   onBack: () => void;
 }
 
@@ -19,10 +20,18 @@ const localeMap: Record<string, string> = {
   tr: 'tr-TR'
 };
 
-export function TimeSlotStep({ selectedDate, selectedId, practitionerId, insuranceTypeId, onSelect, onBack }: TimeSlotStepProps) {
+// ORTHO-025: Add minutes to a HH:MM time string
+function addMinutesToTime(time: string, minutes: number): string {
+  const [h, m] = time.split(':').map(Number);
+  const total = h * 60 + m + minutes;
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+}
+
+export function TimeSlotStep({ selectedDate, selectedId, practitionerId, insuranceTypeId, treatmentTypeId, onSelect, onBack }: TimeSlotStepProps) {
   const { data: timeSlots, loading, error } = useTimeSlots(selectedDate, practitionerId);
   const { data: practitionerSchedules } = usePractitionerSchedules(practitionerId);
   const { data: insuranceTypes } = useInsuranceTypes();
+  const { data: treatmentTypes } = useTreatmentTypes();
   const { t, language } = useTranslation();
 
   // Determine if patient has public insurance (Gesetzlich) → hide private_only windows
@@ -31,6 +40,14 @@ export function TimeSlotStep({ selectedDate, selectedId, practitionerId, insuran
     const selected = insuranceTypes.find(i => i.id === insuranceTypeId);
     return selected?.name?.includes('Gesetzlich') || false;
   }, [insuranceTypeId, insuranceTypes]);
+
+  // ORTHO-025: Determine how many slots are needed based on treatment duration
+  const slotsNeeded = useMemo(() => {
+    if (!treatmentTypeId || !treatmentTypes.length) return 1;
+    const treatment = treatmentTypes.find(t => t.id === treatmentTypeId);
+    if (!treatment) return 1;
+    return Math.ceil(treatment.duration_minutes / 10);
+  }, [treatmentTypeId, treatmentTypes]);
 
   // Filter slots by practitioner schedule windows + insurance + past slots
   const filteredSlots = useMemo(() => {
@@ -71,8 +88,21 @@ export function TimeSlotStep({ selectedDate, selectedId, practitionerId, insuran
       slots = slots.filter(slot => slot.start_time.slice(0, 5) > cutoffTime);
     }
 
+    // 3. ORTHO-025: For multi-slot treatments, only show slots where consecutive slots are available
+    if (slotsNeeded > 1) {
+      slots = slots.filter(slot => {
+        const slotTime = slot.start_time.slice(0, 5);
+        for (let i = 1; i < slotsNeeded; i++) {
+          const nextTime = addMinutesToTime(slotTime, i * 10);
+          // Check against ALL available slots (not just schedule-filtered) since blocking slots can be outside bookable windows
+          if (!timeSlots.some(s => s.start_time.slice(0, 5) === nextTime)) return false;
+        }
+        return true;
+      });
+    }
+
     return slots;
-  }, [timeSlots, selectedDate, practitionerSchedules, isPublicInsurance]);
+  }, [timeSlots, selectedDate, practitionerSchedules, isPublicInsurance, slotsNeeded]);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -132,7 +162,20 @@ export function TimeSlotStep({ selectedDate, selectedId, practitionerId, insuran
             <button
               key={slot.id}
               className={`${timeStyles.slot} ${selectedId === slot.id ? timeStyles.selected : ''}`}
-              onClick={() => onSelect(slot.id, slot.start_time)}
+              onClick={() => {
+                if (slotsNeeded > 1) {
+                  const slotTime = slot.start_time.slice(0, 5);
+                  const additionalIds: string[] = [];
+                  for (let i = 1; i < slotsNeeded; i++) {
+                    const nextTime = addMinutesToTime(slotTime, i * 10);
+                    const nextSlot = timeSlots.find(s => s.start_time.slice(0, 5) === nextTime);
+                    if (nextSlot) additionalIds.push(nextSlot.id);
+                  }
+                  onSelect(slot.id, slot.start_time, additionalIds);
+                } else {
+                  onSelect(slot.id, slot.start_time);
+                }
+              }}
             >
               {formatTime(slot.start_time)}
             </button>
