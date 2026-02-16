@@ -140,5 +140,8 @@
   "mfaCalendar.noSlots": "Für diesen Tag sind leider keine Termine verfügbar.",
 
   "contact.labelMfaTreatment": "Leistung",
-  "contact.mfaProvider": "Praxisleistung (MFA)"
+  "contact.mfaProvider": "Praxisleistung (MFA)",
+
+  "booking.practitionerBanner": "Termin buchen bei {name}",
+  "success.titleWithPractitioner": "Termin bestätigt bei {name}"
 }

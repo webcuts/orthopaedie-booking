@@ -72,7 +72,12 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
         </svg>
       </div>
 
-      <h1 className={styles.title}>{t('success.title')}</h1>
+      <h1 className={styles.title}>
+        {!isMfa && selectedPractitioner
+          ? t('success.titleWithPractitioner', { name: getPractitionerFullName(selectedPractitioner) })
+          : t('success.title')
+        }
+      </h1>
       <p
         className={styles.subtitle}
         dangerouslySetInnerHTML={{ __html: t('success.subtitle', { email: state.contactData.email }) }}

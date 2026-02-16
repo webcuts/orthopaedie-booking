@@ -180,7 +180,15 @@ function t(lang: EmailLanguage, key: string): string {
 /**
  * E-Mail-Betreff für Buchungsbestätigung
  */
-export function getConfirmationSubject(lang: EmailLanguage = 'de'): string {
+export function getConfirmationSubject(lang: EmailLanguage = 'de', practitionerName?: string | null): string {
+  if (practitionerName) {
+    const withName: Record<EmailLanguage, string> = {
+      de: `Ihr Termin bei ${practitionerName} - Orthopädie Königstraße`,
+      en: `Your Appointment with ${practitionerName} - Orthopädie Königstraße`,
+      tr: `${practitionerName} ile Randevunuz - Orthopädie Königstraße`,
+    };
+    return withName[lang] ?? withName.de;
+  }
   const subjects: Record<EmailLanguage, string> = {
     de: 'Ihre Terminbestätigung - Orthopädie Königstraße',
     en: 'Your Appointment Confirmation - Orthopädie Königstraße',

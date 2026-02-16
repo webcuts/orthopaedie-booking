@@ -133,7 +133,7 @@ Deno.serve(async (req) => {
     // Sende E-Mail
     const result = await sendEmail({
       to: emailData.patientEmail,
-      subject: getConfirmationSubject(lang),
+      subject: getConfirmationSubject(lang, emailData.practitionerName),
       html,
     })
 

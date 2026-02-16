@@ -140,5 +140,8 @@
   "mfaCalendar.noSlots": "Maalesef bu gün için randevu mevcut değil.",
 
   "contact.labelMfaTreatment": "Hizmet",
-  "contact.mfaProvider": "Muayenehane Hizmeti (MFA)"
+  "contact.mfaProvider": "Muayenehane Hizmeti (MFA)",
+
+  "booking.practitionerBanner": "{name} ile randevu al",
+  "success.titleWithPractitioner": "{name} ile randevu onaylandı"
 }
