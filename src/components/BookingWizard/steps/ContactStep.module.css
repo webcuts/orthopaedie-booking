@@ -53,6 +53,12 @@
   margin-bottom: var(--spacing-lg);
 }
 
+.contactHint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
 .consent {
   display: flex;
   align-items: flex-start;

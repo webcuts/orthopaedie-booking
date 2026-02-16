@@ -22,7 +22,7 @@ export interface InsuranceType {
 export interface Patient {
   id: string;
   name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
   insurance_type_id: string;
   created_at: string;
@@ -178,7 +178,7 @@ export interface Appointment {
 
 export interface PatientInput {
   name: string;
-  email: string;
+  email?: string;
   phone?: string;
   insurance_type_id: string;
 }

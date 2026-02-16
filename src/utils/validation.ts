@@ -45,6 +45,36 @@ export function validatePhone(phone: string): string | null {
   return null;
 }
 
+export function validateContactFields(
+  email: string,
+  phone: string
+): { emailError: string | null; phoneError: string | null } {
+  const trimmedEmail = email.trim();
+  const trimmedPhone = phone.trim();
+
+  if (!trimmedEmail && !trimmedPhone) {
+    return {
+      emailError: 'validation.contact.required',
+      phoneError: 'validation.contact.required',
+    };
+  }
+
+  let emailError: string | null = null;
+  if (trimmedEmail) {
+    if (trimmedEmail.length > EMAIL_MAX) emailError = 'validation.email.tooLong';
+    else if (!EMAIL_PATTERN.test(trimmedEmail)) emailError = 'validation.email.invalid';
+  }
+
+  let phoneError: string | null = null;
+  if (trimmedPhone) {
+    if (trimmedPhone.length < PHONE_MIN) phoneError = 'validation.phone.tooShort';
+    else if (trimmedPhone.length > PHONE_MAX) phoneError = 'validation.phone.tooLong';
+    else if (!PHONE_PATTERN.test(trimmedPhone)) phoneError = 'validation.phone.invalid';
+  }
+
+  return { emailError, phoneError };
+}
+
 export function validateNotes(notes: string): string | null {
   if (!notes) return null;
   if (notes.length > NOTES_MAX) return 'validation.notes.tooLong';

@@ -5,7 +5,7 @@ export type EmailLanguage = 'de' | 'en' | 'tr';
 
 export interface AppointmentData {
   patientName: string;
-  patientEmail: string;
+  patientEmail?: string | null;
   patientPhone?: string;
   date: string;
   time: string;

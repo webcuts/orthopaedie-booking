@@ -10,7 +10,7 @@ import {
   useMfaTreatmentTypes
 } from '../../../hooks/useSupabase';
 import { getPractitionerFullName } from '../../../types/database';
-import { sanitizeInput, validateName, validateEmail, validatePhone, FIELD_LIMITS } from '../../../utils/validation';
+import { sanitizeInput, validateName, validateContactFields, FIELD_LIMITS } from '../../../utils/validation';
 import { useTranslation, getLocalizedName } from '../../../i18n';
 import type { BookingState, StepType } from '../BookingWizard';
 import styles from '../BookingWizard.module.css';
@@ -102,13 +102,12 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
     const nameError = validateName(state.contactData.name);
     if (nameError) newErrors.name = nameError;
 
-    const emailError = validateEmail(state.contactData.email);
+    const { emailError, phoneError } = validateContactFields(
+      state.contactData.email,
+      state.contactData.phone
+    );
     if (emailError) newErrors.email = emailError;
-
-    if (state.contactData.phone.trim()) {
-      const phoneError = validatePhone(state.contactData.phone);
-      if (phoneError) newErrors.phone = phoneError;
-    }
+    if (phoneError) newErrors.phone = phoneError;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -141,8 +140,8 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
       const result = await createMfaBooking({
         patientData: {
           name: sanitizeInput(state.contactData.name.trim()),
-          email: state.contactData.email.trim(),
-          phone: state.contactData.phone.trim(),
+          email: state.contactData.email.trim() || undefined,
+          phone: state.contactData.phone.trim() || undefined,
           insurance_type_id: state.insuranceTypeId
         },
         mfaTreatmentTypeId: state.mfaTreatmentTypeId,
@@ -162,8 +161,8 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
       const result = await createBooking({
         patientData: {
           name: sanitizeInput(state.contactData.name.trim()),
-          email: state.contactData.email.trim(),
-          phone: state.contactData.phone.trim(),
+          email: state.contactData.email.trim() || undefined,
+          phone: state.contactData.phone.trim() || undefined,
           insurance_type_id: state.insuranceTypeId
         },
         treatmentTypeId: state.treatmentTypeId,
@@ -328,6 +327,8 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
           maxLength={FIELD_LIMITS.PHONE_MAX}
           fullWidth
         />
+
+        <p className={contactStyles.contactHint}>{t('contact.contactHint')}</p>
       </div>
 
       {/* DSGVO Consent Checkbox */}
@@ -352,7 +353,10 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
           <circle cx="12" cy="12" r="10" />
           <path d="M12 16v-4M12 8h.01" />
         </svg>
-        <span>{t('contact.cancellationHint')}</span>
+        <span>{state.contactData.email.trim()
+          ? t('contact.cancellationHint')
+          : t('contact.cancellationHintNoEmail')
+        }</span>
       </div>
 
       {bookingError && (

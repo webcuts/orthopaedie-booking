@@ -613,8 +613,11 @@ export function useCreateMfaBooking() {
 
     try {
       // 0. Rate Limit prüfen (zählt Doctor + MFA zusammen)
+      const mfaEmail = bookingData.patientData.email?.trim() || null;
+      const mfaPhone = bookingData.patientData.phone?.trim() || null;
+
       const { data: allowed, error: rateLimitError } = await supabase
-        .rpc('check_booking_rate_limit', { p_email: bookingData.patientData.email });
+        .rpc('check_booking_rate_limit', { p_email: mfaEmail, p_phone: mfaPhone });
 
       if (rateLimitError) {
         console.error('Rate limit check failed:', rateLimitError);
@@ -661,11 +664,13 @@ export function useCreateMfaBooking() {
       if (appointmentError) throw appointmentError;
 
       // 4. Bestätigungs-E-Mails (non-blocking)
-      supabase.functions.invoke('send-booking-confirmation', {
-        body: { appointmentId: appointment.id, booking_type: 'mfa' }
-      }).then(({ error }) => {
-        if (error) console.error('Fehler beim Senden der MFA-Bestätigung:', error);
-      });
+      if (mfaEmail) {
+        supabase.functions.invoke('send-booking-confirmation', {
+          body: { appointmentId: appointment.id, booking_type: 'mfa' }
+        }).then(({ error }) => {
+          if (error) console.error('Fehler beim Senden der MFA-Bestätigung:', error);
+        });
+      }
 
       supabase.functions.invoke('send-practice-notification', {
         body: { appointmentId: appointment.id, booking_type: 'mfa' }
@@ -718,9 +723,12 @@ export function useCreateBooking() {
     setError(null);
 
     try {
-      // 0. Rate Limit prüfen (max 3 Buchungen pro E-Mail in 24h)
+      // 0. Rate Limit prüfen (max 3 Buchungen pro E-Mail/Telefon in 24h)
+      const docEmail = bookingData.patientData.email?.trim() || null;
+      const docPhone = bookingData.patientData.phone?.trim() || null;
+
       const { data: allowed, error: rateLimitError } = await supabase
-        .rpc('check_booking_rate_limit', { p_email: bookingData.patientData.email });
+        .rpc('check_booking_rate_limit', { p_email: docEmail, p_phone: docPhone });
 
       if (rateLimitError) {
         console.error('Rate limit check failed:', rateLimitError);
@@ -788,12 +796,14 @@ export function useCreateBooking() {
       }
 
       // 3. Send confirmation emails (non-blocking)
-      // Bestätigung an Patient
-      supabase.functions.invoke('send-booking-confirmation', {
-        body: { appointmentId: appointment.id }
-      }).then(({ error }) => {
-        if (error) console.error('Fehler beim Senden der Bestätigung:', error);
-      });
+      // Bestätigung an Patient (nur wenn E-Mail vorhanden)
+      if (docEmail) {
+        supabase.functions.invoke('send-booking-confirmation', {
+          body: { appointmentId: appointment.id }
+        }).then(({ error }) => {
+          if (error) console.error('Fehler beim Senden der Bestätigung:', error);
+        });
+      }
 
       // Benachrichtigung an Praxis
       supabase.functions.invoke('send-practice-notification', {

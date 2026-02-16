@@ -127,6 +127,15 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Guard: Kein E-Mail-Versand wenn Patient keine E-Mail hat
+    if (!emailData.patientEmail) {
+      console.log(`[send-booking-confirmation] No email for patient, skipping`)
+      return new Response(
+        JSON.stringify({ success: true, skipped: true, reason: 'no_email' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      )
+    }
+
     // Generiere HTML
     const html = generateBookingConfirmationEmail(emailData, lang)
 

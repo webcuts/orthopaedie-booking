@@ -106,9 +106,13 @@ export function AppointmentModal({
             </div>
             <div className={styles.field}>
               <span className={styles.label}>E-Mail</span>
-              <a href={`mailto:${appointment.patient?.email}`} className={styles.link}>
-                {appointment.patient?.email}
-              </a>
+              {appointment.patient?.email ? (
+                <a href={`mailto:${appointment.patient.email}`} className={styles.link}>
+                  {appointment.patient.email}
+                </a>
+              ) : (
+                <span className={styles.value}>–</span>
+              )}
             </div>
             {appointment.patient?.phone && (
               <div className={styles.field}>

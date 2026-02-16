@@ -207,6 +207,18 @@ Deno.serve(async (req) => {
           }
         }
 
+        // Überspringe Patienten ohne E-Mail
+        if (!emailData.patientEmail) {
+          console.log(`[process-email-reminders] No email for patient, skipping reminder ${reminder.id}`)
+
+          await supabase
+            .from('email_reminders')
+            .update({ sent_at: new Date().toISOString() })
+            .eq('id', reminder.id)
+
+          continue
+        }
+
         // Überspringe stornierte Termine
         if (appointmentStatus === 'cancelled') {
           console.log(`[process-email-reminders] Skipping cancelled ${isMfa ? 'MFA ' : ''}appointment: ${reminder.appointment_id}`)
