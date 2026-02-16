@@ -79,12 +79,19 @@ export function useAppointments(date: Date, view: CalendarView) {
           practitioner:practitioners(id, title, first_name, last_name)
         `)
         .gte('time_slot.date', startDate)
-        .lte('time_slot.date', endDate)
-        .order('time_slot(date)', { ascending: true });
+        .lte('time_slot.date', endDate);
 
       if (fetchError) throw fetchError;
 
-      setAppointments(data as AppointmentWithDetails[]);
+      // Sort client-side (PostgREST foreign table order syntax unreliable)
+      const sorted = (data as AppointmentWithDetails[]).sort((a, b) => {
+        const dateA = a.time_slot?.date || '';
+        const dateB = b.time_slot?.date || '';
+        if (dateA !== dateB) return dateA.localeCompare(dateB);
+        return (a.time_slot?.start_time || '').localeCompare(b.time_slot?.start_time || '');
+      });
+
+      setAppointments(sorted);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Fehler beim Laden der Termine');
     } finally {
