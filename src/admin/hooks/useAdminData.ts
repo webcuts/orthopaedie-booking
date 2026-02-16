@@ -872,10 +872,8 @@ export function useMfaAppointments(date: Date, view: CalendarView) {
         .from('mfa_appointments')
         .select('*');
 
-      console.log('[MFA Debug] Step 1 - rawAppts:', rawAppts?.length, 'error:', apptsError);
       if (apptsError) throw apptsError;
       if (!rawAppts || rawAppts.length === 0) {
-        console.log('[MFA Debug] No MFA appointments found in database');
         setAppointments([]);
         return;
       }
@@ -890,9 +888,6 @@ export function useMfaAppointments(date: Date, view: CalendarView) {
         supabase.from('mfa_time_slots').select('id, date, start_time, end_time').in('id', slotIds),
         supabase.from('mfa_treatment_types').select('id, name, duration_minutes').in('id', treatmentIds),
       ]);
-
-      console.log('[MFA Debug] Step 2 - patients:', patientsRes.data?.length, 'slots:', slotsRes.data?.length, 'treatments:', treatmentsRes.data?.length);
-      console.log('[MFA Debug] Step 2 errors:', patientsRes.error, slotsRes.error, treatmentsRes.error);
 
       const patientMap = new Map((patientsRes.data || []).map(p => [p.id, p]));
       const slotMap = new Map((slotsRes.data || []).map(s => [s.id, s]));
@@ -920,9 +915,6 @@ export function useMfaAppointments(date: Date, view: CalendarView) {
           const slotDate = apt.time_slot?.date;
           return slotDate && slotDate >= startDate && slotDate <= endDate;
         });
-
-      console.log('[MFA Debug] Step 3 - normalized count:', normalized.length, 'dateRange:', startDate, '-', endDate);
-      if (normalized.length > 0) console.log('[MFA Debug] First appointment:', JSON.stringify(normalized[0], null, 2));
 
       // Sort by date+time
       normalized.sort((a, b) => {

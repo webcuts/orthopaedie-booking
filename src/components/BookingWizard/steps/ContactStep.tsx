@@ -282,12 +282,14 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
       {/* Contact Form */}
       <div className={contactStyles.form}>
         {/* Honeypot field - invisible to users, bots fill it */}
-        <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
+        <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden', pointerEvents: 'none' }} aria-hidden="true">
           <input
             type="text"
-            name="website"
+            name="hp_x_field"
+            id="hp_x_field"
             tabIndex={-1}
-            autoComplete="off"
+            autoComplete="nope"
+            data-form-type="other"
             value={honeypot}
             onChange={(e) => setHoneypot(e.target.value)}
           />
