@@ -20,5 +20,7 @@ export {
   useAdminCreateMfaBooking,
   useAdminMfaAvailableSlots,
   useGenerateMfaSlots,
+  // Practitioner Schedules (ORTHO-028)
+  usePractitionerSchedulesAdmin,
 } from './useAdminData';
-export type { AppointmentWithDetails, PractitionerAbsence, Practitioner, SystemLog, AnalyticsData } from './useAdminData';
+export type { AppointmentWithDetails, PractitionerAbsence, PractitionerScheduleEntry, Practitioner, SystemLog, AnalyticsData } from './useAdminData';

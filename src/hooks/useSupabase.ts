@@ -12,7 +12,8 @@ import type {
   PracticeHours,
   MfaTreatmentType,
   MfaTimeSlot,
-  MfaAppointment
+  MfaAppointment,
+  PractitionerSchedule
 } from '../types/database';
 
 // =====================================================
@@ -253,6 +254,49 @@ export function usePracticeHours() {
     }
     fetch();
   }, []);
+
+  return { data, loading, error };
+}
+
+// =====================================================
+// Hook: Individuelle Sprechzeiten pro Behandler (ORTHO-028)
+// =====================================================
+
+export function usePractitionerSchedules(practitionerId: string | null) {
+  const [data, setData] = useState<PractitionerSchedule[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!practitionerId) {
+      setData([]);
+      return;
+    }
+
+    async function fetch() {
+      setLoading(true);
+      setError(null);
+      try {
+        const today = formatLocalDate(new Date());
+        const { data, error } = await supabase
+          .from('practitioner_schedules')
+          .select('*')
+          .eq('practitioner_id', practitionerId)
+          .lte('valid_from', today)
+          .or(`valid_until.is.null,valid_until.gte.${today}`)
+          .order('day_of_week')
+          .order('start_time');
+
+        if (error) throw error;
+        setData(data || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Fehler beim Laden der Sprechzeiten');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetch();
+  }, [practitionerId]);
 
   return { data, loading, error };
 }

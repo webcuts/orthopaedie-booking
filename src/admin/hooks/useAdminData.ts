@@ -1203,3 +1203,101 @@ export function useGenerateMfaSlots() {
 
   return { generateSlots, loading, result, error };
 }
+
+// =====================================================
+// Hook: Individuelle Sprechzeiten (ORTHO-028)
+// =====================================================
+
+export interface PractitionerScheduleEntry {
+  id: string;
+  practitioner_id: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+  is_bookable: boolean;
+  insurance_filter: 'all' | 'private_only';
+  label: string | null;
+  valid_from: string;
+  valid_until: string | null;
+  created_at: string;
+}
+
+export function usePractitionerSchedulesAdmin() {
+  const [schedules, setSchedules] = useState<PractitionerScheduleEntry[]>([]);
+  const [practitioners, setPractitioners] = useState<Practitioner[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchSchedules = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('practitioner_schedules')
+        .select('*')
+        .order('practitioner_id')
+        .order('day_of_week')
+        .order('start_time');
+
+      if (fetchError) throw fetchError;
+      setSchedules(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fehler beim Laden der Sprechzeiten');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchPractitioners = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('practitioners')
+      .select('*')
+      .eq('is_active', true)
+      .order('last_name');
+    if (!error && data) setPractitioners(data);
+  }, []);
+
+  useEffect(() => {
+    fetchSchedules();
+    fetchPractitioners();
+  }, [fetchSchedules, fetchPractitioners]);
+
+  const createSchedule = useCallback(async (data: {
+    practitioner_id: string;
+    day_of_week: number;
+    start_time: string;
+    end_time: string;
+    is_bookable: boolean;
+    insurance_filter: 'all' | 'private_only';
+    label?: string;
+    valid_from: string;
+    valid_until?: string | null;
+  }) => {
+    const { error } = await supabase
+      .from('practitioner_schedules')
+      .insert(data);
+    if (error) return { success: false, error: error.message };
+    await fetchSchedules();
+    return { success: true };
+  }, [fetchSchedules]);
+
+  const deleteSchedule = useCallback(async (id: string) => {
+    const { error } = await supabase
+      .from('practitioner_schedules')
+      .delete()
+      .eq('id', id);
+    if (error) return { success: false, error: error.message };
+    await fetchSchedules();
+    return { success: true };
+  }, [fetchSchedules]);
+
+  return {
+    schedules,
+    practitioners,
+    loading,
+    error,
+    createSchedule,
+    deleteSchedule,
+    refetch: fetchSchedules,
+  };
+}

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useTimeSlots } from '../../../hooks/useSupabase';
+import { useTimeSlots, usePractitionerSchedules } from '../../../hooks/useSupabase';
 import { useTranslation } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 import timeStyles from './TimeSlotStep.module.css';
@@ -20,20 +20,45 @@ const localeMap: Record<string, string> = {
 
 export function TimeSlotStep({ selectedDate, selectedId, practitionerId, onSelect, onBack }: TimeSlotStepProps) {
   const { data: timeSlots, loading, error } = useTimeSlots(selectedDate, practitionerId);
+  const { data: practitionerSchedules } = usePractitionerSchedules(practitionerId);
   const { t, language } = useTranslation();
 
-  // Filter out past slots for today (with 30min buffer)
+  // Filter slots by practitioner schedule windows + past slots for today
   const filteredSlots = useMemo(() => {
     if (!selectedDate || !timeSlots.length) return timeSlots;
+
+    let slots = timeSlots;
+
+    // 1. Filter by practitioner schedule bookable windows
+    if (practitionerSchedules.length > 0) {
+      const selectedDateObj = new Date(selectedDate + 'T00:00:00');
+      const jsDayOfWeek = selectedDateObj.getDay();
+      const bookableWindows = practitionerSchedules
+        .filter(s => s.day_of_week === jsDayOfWeek && s.is_bookable)
+        .map(s => ({ start: s.start_time.slice(0, 5), end: s.end_time.slice(0, 5) }));
+
+      if (bookableWindows.length > 0) {
+        slots = slots.filter(slot => {
+          const time = slot.start_time.slice(0, 5);
+          return bookableWindows.some(w => time >= w.start && time < w.end);
+        });
+      } else {
+        slots = [];
+      }
+    }
+
+    // 2. Filter out past slots for today (with 30min buffer)
     const now = new Date();
     const selected = new Date(selectedDate + 'T00:00:00');
     const isToday = now.toDateString() === selected.toDateString();
-    if (!isToday) return timeSlots;
+    if (isToday) {
+      const cutoff = new Date(now.getTime() + 30 * 60 * 1000);
+      const cutoffTime = cutoff.toTimeString().slice(0, 5);
+      slots = slots.filter(slot => slot.start_time.slice(0, 5) > cutoffTime);
+    }
 
-    const cutoff = new Date(now.getTime() + 30 * 60 * 1000);
-    const cutoffTime = cutoff.toTimeString().slice(0, 5);
-    return timeSlots.filter(slot => slot.start_time.slice(0, 5) > cutoffTime);
-  }, [timeSlots, selectedDate]);
+    return slots;
+  }, [timeSlots, selectedDate, practitionerSchedules]);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);

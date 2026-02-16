@@ -1,4 +1,4 @@
-import { SlotGenerator, TreatmentTypes, MfaTreatmentTypes, AbsenceManager } from '../components';
+import { SlotGenerator, TreatmentTypes, MfaTreatmentTypes, AbsenceManager, PractitionerScheduleManager } from '../components';
 import styles from './SettingsPage.module.css';
 
 export function SettingsPage() {
@@ -8,6 +8,7 @@ export function SettingsPage() {
 
       <div className={styles.sections}>
         <AbsenceManager />
+        <PractitionerScheduleManager />
         <SlotGenerator />
         <TreatmentTypes />
         <MfaTreatmentTypes />

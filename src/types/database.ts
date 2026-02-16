@@ -83,6 +83,24 @@ export interface PracticeHours {
   created_at: string;
 }
 
+// =====================================================
+// Individuelle Sprechzeiten (ORTHO-028)
+// =====================================================
+
+export interface PractitionerSchedule {
+  id: string;
+  practitioner_id: string;
+  day_of_week: number; // JS getDay(): 0=Sonntag, 1=Montag, ..., 6=Samstag
+  start_time: string;
+  end_time: string;
+  is_bookable: boolean;
+  insurance_filter: 'all' | 'private_only';
+  label: string | null;
+  valid_from: string;
+  valid_until: string | null;
+  created_at: string;
+}
+
 export interface EmailReminder {
   id: string;
   appointment_id: string;

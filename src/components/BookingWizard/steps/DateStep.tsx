@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useAvailableDates, usePracticeHours, useNextFreeSlot } from '../../../hooks/useSupabase';
+import { useAvailableDates, usePracticeHours, useNextFreeSlot, usePractitionerSchedules } from '../../../hooks/useSupabase';
 import { useTranslation, useTranslationArray } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
 import dateStyles from './DateStep.module.css';
@@ -32,6 +32,8 @@ export function DateStep({ selectedDate, practitionerId, onSelect, onBack }: Dat
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const { data: availableDates, loading, error } = useAvailableDates(currentMonth, practitionerId);
   const { data: practiceHours } = usePracticeHours();
+  const { data: practitionerSchedules } = usePractitionerSchedules(practitionerId);
+  const hasPractitionerSchedule = practitionerSchedules.length > 0;
   const { date: nextDate, startTime: nextTime, loading: nextLoading } = useNextFreeSlot();
   const { t, language } = useTranslation();
   const weekdays = useTranslationArray('date.weekdays');
@@ -109,9 +111,19 @@ export function DateStep({ selectedDate, practitionerId, onSelect, onBack }: Dat
     // Past dates
     if (date < today) return false;
 
-    // Closed days (Sunday = 6 in our system, but Date.getDay() returns 0 for Sunday)
-    const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1;
-    if (closedDays.includes(dayOfWeek)) return false;
+    if (hasPractitionerSchedule) {
+      // Practitioner has custom schedule: check if this day has bookable windows
+      // day_of_week uses JS getDay() convention (0=Sunday), matching the DB
+      const jsDayOfWeek = date.getDay();
+      const hasBookableWindow = practitionerSchedules.some(
+        s => s.day_of_week === jsDayOfWeek && s.is_bookable
+      );
+      if (!hasBookableWindow) return false;
+    } else {
+      // No custom schedule: fall back to global practice hours
+      const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1;
+      if (closedDays.includes(dayOfWeek)) return false;
+    }
 
     // No available slots
     if (!isDateAvailable(date)) return false;

@@ -1,0 +1,367 @@
+/* =====================================================
+   PractitionerScheduleManager - Sprechzeiten-Verwaltung
+   ===================================================== */
+
+.container {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0;
+}
+
+.addButton {
+  padding: 0.5rem 1rem;
+  background: #2674BB;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.addButton:hover {
+  background: #1E5A96;
+}
+
+/* =====================================================
+   Practitioner Auswahl
+   ===================================================== */
+
+.practitionerSelect {
+  margin-bottom: 1.5rem;
+}
+
+.practitionerSelect label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  display: block;
+  margin-bottom: 0.375rem;
+}
+
+.practitionerSelect select {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: white;
+}
+
+.practitionerSelect select:focus {
+  outline: none;
+  border-color: #2674BB;
+  box-shadow: 0 0 0 3px rgba(38, 116, 187, 0.1);
+}
+
+/* =====================================================
+   Formular
+   ===================================================== */
+
+.form {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.formRow3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.field label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.field input,
+.field select {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: white;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: #2674BB;
+  box-shadow: 0 0 0 3px rgba(38, 116, 187, 0.1);
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 1.5rem;
+}
+
+.checkboxField input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #2674BB;
+}
+
+.checkboxField label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.cancelButton {
+  padding: 0.625rem 1.25rem;
+  background: white;
+  color: #374151;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background: #F9FAFB;
+}
+
+.submitButton {
+  padding: 0.625rem 1.25rem;
+  background: #2674BB;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #1E5A96;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.formError {
+  background: #FEE2E2;
+  border: 1px solid #FCA5A5;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #DC2626;
+  margin-bottom: 1rem;
+}
+
+/* =====================================================
+   Wochenübersicht
+   ===================================================== */
+
+.weekOverview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.daySection {
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dayHeader {
+  padding: 0.625rem 1rem;
+  background: #F9FAFB;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.daySlots {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.dayEmpty {
+  padding: 0.5rem 1rem;
+  font-size: 0.813rem;
+  color: #9CA3AF;
+  font-style: italic;
+}
+
+/* =====================================================
+   Schedule-Karten (farbcodiert)
+   ===================================================== */
+
+.scheduleCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.625rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid;
+  font-size: 0.875rem;
+}
+
+.cardBookable {
+  background: #DCFCE7;
+  border-color: #BBF7D0;
+  color: #166534;
+}
+
+.cardPrivate {
+  background: #EDE9FE;
+  border-color: #C4B5FD;
+  color: #5B21B6;
+}
+
+.cardNotBookable {
+  background: #FEE2E2;
+  border-color: #FCA5A5;
+  color: #991B1B;
+}
+
+.cardContent {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cardTime {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cardLabel {
+  font-size: 0.813rem;
+  opacity: 0.8;
+}
+
+.cardBadge {
+  font-size: 0.688rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  font-size: 1.125rem;
+  color: inherit;
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 0.125rem 0.375rem;
+  line-height: 1;
+  transition: opacity 0.2s;
+}
+
+.deleteButton:hover {
+  opacity: 1;
+}
+
+/* =====================================================
+   Zustände
+   ===================================================== */
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #6B7280;
+}
+
+.error {
+  background: #FEE2E2;
+  border: 1px solid #FCA5A5;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #DC2626;
+  margin-bottom: 1rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: #9CA3AF;
+  font-size: 0.875rem;
+}
+
+/* =====================================================
+   Responsive
+   ===================================================== */
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .formRow,
+  .formRow3 {
+    grid-template-columns: 1fr;
+  }
+
+  .formActions {
+    flex-direction: column;
+  }
+
+  .cancelButton,
+  .submitButton {
+    width: 100%;
+  }
+
+  .practitionerSelect select {
+    max-width: 100%;
+  }
+}
