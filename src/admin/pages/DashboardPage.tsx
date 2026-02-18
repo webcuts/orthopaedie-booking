@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { CalendarView, AppointmentModal, NewAppointmentModal } from '../components';
+import { CalendarView, AppointmentModal, NewAppointmentModal, RescheduleModal } from '../components';
 import { AnalyticsWidget } from '../components/Dashboard/AnalyticsWidget';
 import { SystemStatus } from '../components/Dashboard/SystemStatus';
 import { type AppointmentWithDetails } from '../hooks';
@@ -7,6 +7,7 @@ import { type AppointmentWithDetails } from '../hooks';
 export function DashboardPage() {
   const [selectedAppointment, setSelectedAppointment] = useState<AppointmentWithDetails | null>(null);
   const [showNewAppointment, setShowNewAppointment] = useState(false);
+  const [rescheduleAppointment, setRescheduleAppointment] = useState<AppointmentWithDetails | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
   const handleAppointmentClick = useCallback((appointment: AppointmentWithDetails) => {
@@ -33,6 +34,16 @@ export function DashboardPage() {
     setRefreshKey((k) => k + 1);
   }, []);
 
+  const handleReschedule = useCallback(() => {
+    setRescheduleAppointment(selectedAppointment);
+    setSelectedAppointment(null);
+  }, [selectedAppointment]);
+
+  const handleRescheduled = useCallback(() => {
+    setRescheduleAppointment(null);
+    setRefreshKey((k) => k + 1);
+  }, []);
+
   return (
     <>
       <AnalyticsWidget />
@@ -48,6 +59,15 @@ export function DashboardPage() {
           appointment={selectedAppointment}
           onClose={handleCloseModal}
           onStatusUpdate={handleStatusUpdate}
+          onReschedule={handleReschedule}
+        />
+      )}
+
+      {rescheduleAppointment && (
+        <RescheduleModal
+          appointment={rescheduleAppointment}
+          onClose={() => setRescheduleAppointment(null)}
+          onRescheduled={handleRescheduled}
         />
       )}
 

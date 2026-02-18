@@ -64,6 +64,10 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     cancellationHint: 'Eine kostenfreie Stornierung ist noch bis',
     cancellationHintSuffix: 'möglich.',
     questionsText: 'Bei Fragen erreichen Sie uns telefonisch unter',
+    rescheduleSubtitle: 'Termin verlegt',
+    rescheduleIntro: 'Ihr Termin wurde von der Praxis verlegt. Nachfolgend finden Sie die neuen Termindetails.',
+    rescheduleOldLabel: 'Ursprünglicher Termin:',
+    rescheduleNewTitle: 'Ihr neuer Termin',
   },
   en: {
     confirmationSubtitle: 'Appointment Confirmation',
@@ -94,6 +98,10 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     cancellationHint: 'Free cancellation is still possible until',
     cancellationHintSuffix: '.',
     questionsText: 'For questions, you can reach us by phone at',
+    rescheduleSubtitle: 'Appointment Rescheduled',
+    rescheduleIntro: 'Your appointment has been rescheduled by the practice. Please find the new appointment details below.',
+    rescheduleOldLabel: 'Previous appointment:',
+    rescheduleNewTitle: 'Your New Appointment',
   },
   tr: {
     confirmationSubtitle: 'Randevu Onayı',
@@ -124,6 +132,10 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     cancellationHint: 'Ücretsiz iptal hâlâ şu tarihe kadar mümkündür:',
     cancellationHintSuffix: '.',
     questionsText: 'Sorularınız için bize telefonla ulaşabilirsiniz:',
+    rescheduleSubtitle: 'Randevu Değiştirildi',
+    rescheduleIntro: 'Randevunuz muayenehane tarafından değiştirildi. Aşağıda yeni randevu detaylarınızı bulabilirsiniz.',
+    rescheduleOldLabel: 'Önceki randevu:',
+    rescheduleNewTitle: 'Yeni Randevunuz',
   },
 };
 
@@ -322,6 +334,143 @@ export function generateBookingConfirmationEmail(data: AppointmentData, lang: Em
 
       <p style="${styles.text}">
         ${t(lang, 'lookForward')}
+      </p>
+
+      <p style="${styles.text}">
+        ${t(lang, 'regards')}<br>
+        <strong>${t(lang, 'team')}</strong><br>
+        ${PRACTICE_INFO.name}
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="${styles.footer}">
+      <p style="${styles.footerText}">
+        ${PRACTICE_INFO.name} | ${PRACTICE_INFO.address} | ${PRACTICE_INFO.city}
+      </p>
+      <p style="${styles.footerText}">
+        <a href="${PRACTICE_INFO.website}" style="${styles.footerLink}">${PRACTICE_INFO.website}</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+}
+
+/**
+ * E-Mail-Betreff für Terminverlegung
+ */
+export function getRescheduleSubject(lang: EmailLanguage = 'de', date: string, time: string): string {
+  const formattedDate = formatDate(date, lang);
+  const formattedTime = formatTime(time, lang);
+  const subjects: Record<EmailLanguage, string> = {
+    de: `Ihr Termin wurde verlegt: ${formattedDate} um ${formattedTime}`,
+    en: `Your appointment has been rescheduled: ${formattedDate} at ${formattedTime}`,
+    tr: `Randevunuz değiştirildi: ${formattedDate}, ${formattedTime}`,
+  };
+  return subjects[lang] ?? subjects.de;
+}
+
+/**
+ * Terminverlegung E-Mail (mehrsprachig)
+ */
+export function generateRescheduleEmail(data: AppointmentData, oldDate: string, oldTime: string, lang: EmailLanguage = 'de'): string {
+  const practitioner = data.practitionerName || t(lang, 'noPractitioner');
+  const htmlLang = lang === 'tr' ? 'tr' : lang === 'en' ? 'en' : 'de';
+
+  return `
+<!DOCTYPE html>
+<html lang="${htmlLang}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${t(lang, 'rescheduleSubtitle')}</title>
+</head>
+<body style="${styles.body}">
+  <div style="${styles.container}">
+    <!-- Header -->
+    <div style="${styles.header}">
+      <h1 style="${styles.headerTitle}">${PRACTICE_INFO.name}</h1>
+      <p style="${styles.headerSubtitle}">${t(lang, 'rescheduleSubtitle')}</p>
+    </div>
+
+    <!-- Content -->
+    <div style="${styles.content}">
+      <p style="${styles.greeting}">${t(lang, 'greeting')} ${data.patientName},</p>
+
+      <p style="${styles.text}">
+        ${t(lang, 'rescheduleIntro')}
+      </p>
+
+      <!-- Alter Termin -->
+      <div style="background-color: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 12px 16px; margin: 16px 0;">
+        <p style="font-size: 13px; color: #991B1B; margin: 0;">
+          <strong>${t(lang, 'rescheduleOldLabel')}</strong> ${formatDate(oldDate, lang)}, ${formatTime(oldTime, lang)}
+        </p>
+      </div>
+
+      <!-- Neue Termindetails -->
+      <div style="${styles.detailsBox}">
+        <h2 style="${styles.detailsTitle}">${t(lang, 'rescheduleNewTitle')}</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 6px 0; color: #6B7280; width: 120px;">${t(lang, 'labelDate')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatDate(data.date, lang)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelTime')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatTime(data.time, lang)} - ${formatTime(data.endTime, lang)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelTreatment')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${data.treatmentType}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelPractitioner')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${practitioner}</td>
+          </tr>
+        </table>
+      </div>
+
+      ${data.appointmentId ? `
+      <!-- Kalender-Download -->
+      <div style="text-align: center; margin: 24px 0;">
+        <a href="${Deno.env.get('SUPABASE_URL')}/functions/v1/generate-ics?appointment_id=${data.appointmentId}${data.bookingType === 'mfa' ? '&booking_type=mfa' : ''}" style="display: inline-block; padding: 12px 24px; background-color: #2674BB; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500;">
+          📅 ${t(lang, 'addToCalendar')}
+        </a>
+      </div>
+      ` : ''}
+
+      <!-- Praxisadresse -->
+      <div style="${styles.addressBox}">
+        <h3 style="${styles.addressTitle}">${t(lang, 'addressTitle')}</h3>
+        <p style="${styles.addressText}">
+          ${PRACTICE_INFO.name}<br>
+          ${PRACTICE_INFO.address}<br>
+          ${PRACTICE_INFO.city}<br>
+          Tel: ${PRACTICE_INFO.phone}
+        </p>
+      </div>
+
+      <!-- Hinweise -->
+      <div style="${styles.hint}">
+        <strong>${t(lang, 'hintTitle')}</strong><br>
+        ${t(lang, 'hintText')}
+      </div>
+
+      ${data.cancelToken ? `
+      <!-- Stornierungslink -->
+      <div style="text-align: center; margin: 24px 0;">
+        <a href="${SITE_URL}/cancel.html?token=${data.cancelToken}" style="display: inline-block; padding: 12px 24px; background-color: #DC3545; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500;">
+          ${t(lang, 'cancelLinkText')}
+        </a>
+      </div>
+      ` : ''}
+
+      <p style="${styles.text}">
+        ${t(lang, 'contactText')} ${PRACTICE_INFO.phone} ${t(lang, 'contactOr')}
+        <a href="mailto:${PRACTICE_INFO.email}" style="color: #2674BB;">${PRACTICE_INFO.email}</a>.
       </p>
 
       <p style="${styles.text}">

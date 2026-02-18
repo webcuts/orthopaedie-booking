@@ -20,6 +20,8 @@ export {
   useAdminCreateMfaBooking,
   useAdminMfaAvailableSlots,
   useGenerateMfaSlots,
+  // Reschedule (ORTHO-031)
+  useRescheduleAppointment,
   // Practitioner Schedules (ORTHO-028)
   usePractitionerSchedulesAdmin,
 } from './useAdminData';

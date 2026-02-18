@@ -1205,6 +1205,77 @@ export function useGenerateMfaSlots() {
 }
 
 // =====================================================
+// Hook: Terminverlegung (ORTHO-031)
+// =====================================================
+
+export function useRescheduleAppointment() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const reschedule = useCallback(async (data: {
+    appointmentId: string;
+    bookingType: 'doctor' | 'mfa';
+    newSlotId: string;
+    additionalSlotIds?: string[];
+    oldDate: string;
+    oldTime: string;
+    patientEmail?: string | null;
+  }) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      if (data.bookingType === 'mfa') {
+        const { data: result, error: rpcError } = await supabase
+          .rpc('reschedule_mfa_appointment', {
+            p_appointment_id: data.appointmentId,
+            p_new_mfa_slot_id: data.newSlotId,
+          });
+
+        if (rpcError) throw rpcError;
+        if (!result?.success) throw new Error('Verlegung fehlgeschlagen');
+      } else {
+        const { data: result, error: rpcError } = await supabase
+          .rpc('reschedule_appointment', {
+            p_appointment_id: data.appointmentId,
+            p_new_time_slot_id: data.newSlotId,
+            p_additional_slot_ids: data.additionalSlotIds || [],
+          });
+
+        if (rpcError) throw rpcError;
+        if (!result?.success) throw new Error('Verlegung fehlgeschlagen');
+      }
+
+      // E-Mail senden (non-blocking, nur wenn Patient E-Mail hat)
+      if (data.patientEmail) {
+        supabase.functions.invoke('send-reschedule-notification', {
+          body: {
+            appointmentId: data.appointmentId,
+            bookingType: data.bookingType,
+            oldDate: data.oldDate,
+            oldTime: data.oldTime,
+          },
+        }).then(({ error }) => {
+          if (error) console.error('Fehler beim Senden der Verlegungsmail:', error);
+        });
+      }
+
+      return { success: true };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Fehler bei der Verlegung';
+      setError(message);
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const clearError = useCallback(() => setError(null), []);
+
+  return { reschedule, loading, error, clearError };
+}
+
+// =====================================================
 // Hook: Individuelle Sprechzeiten (ORTHO-028)
 // =====================================================
 

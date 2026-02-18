@@ -6,6 +6,7 @@ interface AppointmentModalProps {
   appointment: AppointmentWithDetails;
   onClose: () => void;
   onStatusUpdate: () => void;
+  onReschedule: () => void;
 }
 
 const STATUS_OPTIONS: { value: string; label: string; color: string }[] = [
@@ -19,6 +20,7 @@ export function AppointmentModal({
   appointment,
   onClose,
   onStatusUpdate,
+  onReschedule,
 }: AppointmentModalProps) {
   const [status, setStatus] = useState(appointment.status);
   const [showAnonymizeConfirm, setShowAnonymizeConfirm] = useState(false);
@@ -246,6 +248,24 @@ export function AppointmentModal({
         </div>
 
         <div className={styles.footer}>
+          {(status === 'pending' || status === 'confirmed') && (
+            <button
+              onClick={onReschedule}
+              style={{
+                padding: '0.625rem 1.25rem',
+                background: 'white',
+                color: '#2674BB',
+                border: '2px solid #2674BB',
+                borderRadius: '8px',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                cursor: 'pointer',
+                marginRight: 'auto',
+              }}
+            >
+              Verlegen
+            </button>
+          )}
           <button onClick={onClose} className={styles.closeButtonFooter}>
             Schließen
           </button>
