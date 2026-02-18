@@ -390,7 +390,7 @@ export function useTimeSlots(date: string | null, practitionerId: string | null 
 // Hook: Nächster freier Termin (ORTHO-023)
 // =====================================================
 
-export function useNextFreeSlot() {
+export function useNextFreeSlot(practitionerId?: string | null, insuranceTypeId?: string | null) {
   const [date, setDate] = useState<string | null>(null);
   const [startTime, setStartTime] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -409,6 +409,29 @@ export function useNextFreeSlot() {
         const cutoff = new Date(now.getTime() + 30 * 60 * 1000);
         const cutoffTime = cutoff.toTimeString().slice(0, 5);
 
+        // Practitioner-Schedule laden (falls vorhanden)
+        let schedules: PractitionerSchedule[] = [];
+        if (practitionerId) {
+          const { data: sData } = await supabase
+            .from('practitioner_schedules')
+            .select('*')
+            .eq('practitioner_id', practitionerId)
+            .lte('valid_from', today)
+            .or(`valid_until.is.null,valid_until.gte.${today}`);
+          schedules = sData || [];
+        }
+
+        // Insurance-Typ prüfen für private_only Filter
+        let isPublicInsurance = false;
+        if (insuranceTypeId && schedules.length > 0) {
+          const { data: insData } = await supabase
+            .from('insurance_types')
+            .select('name')
+            .eq('id', insuranceTypeId)
+            .single();
+          isPublicInsurance = insData?.name?.includes('Gesetzlich') || false;
+        }
+
         // Verfügbare Slots ab heute, sortiert nach Datum + Uhrzeit
         const { data: slots, error } = await supabase
           .from('time_slots')
@@ -418,7 +441,7 @@ export function useNextFreeSlot() {
           .lte('date', maxDateStr)
           .order('date', { ascending: true })
           .order('start_time', { ascending: true })
-          .limit(50);
+          .limit(100);
 
         if (error || !slots?.length) {
           setDate(null);
@@ -427,10 +450,30 @@ export function useNextFreeSlot() {
         }
 
         // Finde den ersten Slot, der nicht in der Vergangenheit liegt
+        // und der innerhalb der buchbaren Schedule-Fenster liegt
         for (const slot of slots) {
           if (slot.date === today && slot.start_time.slice(0, 5) <= cutoffTime) {
             continue;
           }
+
+          // Practitioner-Schedule Filter
+          if (schedules.length > 0) {
+            const slotDate = new Date(slot.date + 'T00:00:00');
+            const jsDayOfWeek = slotDate.getDay();
+            const time = slot.start_time.slice(0, 5);
+
+            const bookableWindows = schedules
+              .filter(s => {
+                if (s.day_of_week !== jsDayOfWeek || !s.is_bookable) return false;
+                if (isPublicInsurance && s.insurance_filter === 'private_only') return false;
+                return true;
+              })
+              .map(s => ({ start: s.start_time.slice(0, 5), end: s.end_time.slice(0, 5) }));
+
+            if (bookableWindows.length === 0) continue;
+            if (!bookableWindows.some(w => time >= w.start && time < w.end)) continue;
+          }
+
           setDate(slot.date);
           setStartTime(slot.start_time);
           return;
@@ -446,7 +489,7 @@ export function useNextFreeSlot() {
       }
     }
     fetch();
-  }, []);
+  }, [practitionerId, insuranceTypeId]);
 
   return { date, startTime, loading };
 }

@@ -36,7 +36,7 @@ export function DateStep({ selectedDate, practitionerId, insuranceTypeId, onSele
   const { data: practitionerSchedules } = usePractitionerSchedules(practitionerId);
   const { data: insuranceTypes } = useInsuranceTypes();
   const hasPractitionerSchedule = practitionerSchedules.length > 0;
-  const { date: nextDate, startTime: nextTime, loading: nextLoading } = useNextFreeSlot();
+  const { date: nextDate, startTime: nextTime, loading: nextLoading } = useNextFreeSlot(practitionerId, insuranceTypeId);
 
   // ORTHO-029: Determine if patient has public insurance → hide private_only windows
   const isPublicInsurance = useMemo(() => {
