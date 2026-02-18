@@ -13,7 +13,7 @@ export interface SendResult {
   error?: string;
 }
 
-const FROM_EMAIL = 'Orthopädie Königstraße <onboarding@resend.dev>';
+const FROM_EMAIL = 'Orthopädie Königstraße <termine@webcuts.de>';
 // Für Produktion: 'Orthopädie Königstraße <termine@orthopaedie-koenigstrasse.de>'
 
 export async function sendEmail(options: EmailOptions): Promise<SendResult> {
