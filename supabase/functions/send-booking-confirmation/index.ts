@@ -4,6 +4,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { generateBookingConfirmationEmail, getConfirmationSubject, type AppointmentData, type EmailLanguage } from '../_shared/email-templates.ts'
 import { sendEmail } from '../_shared/resend.ts'
+import { sendSms, maskPhone } from '../_shared/twilio.ts'
+import { getConfirmationSms } from '../_shared/sms-templates.ts'
 import { logEvent } from '../_shared/log-helper.ts'
 
 const corsHeaders = {
@@ -127,11 +129,36 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Guard: Kein E-Mail-Versand wenn Patient keine E-Mail hat
+    // Guard: Kein E-Mail → SMS Fallback (ORTHO-040)
     if (!emailData.patientEmail) {
-      console.log(`[send-booking-confirmation] No email for patient, skipping`)
+      if (emailData.patientPhone) {
+        console.log(`[send-booking-confirmation] No email, attempting SMS to ${maskPhone(emailData.patientPhone)}`)
+        const smsBody = getConfirmationSms(emailData, lang)
+        const smsResult = await sendSms({ to: emailData.patientPhone, body: smsBody })
+
+        if (smsResult.success) {
+          await logEvent('sms', `Bestätigungs-SMS gesendet an ${maskPhone(emailData.patientPhone)}`, {
+            appointmentId, phone: maskPhone(emailData.patientPhone), messageSid: smsResult.messageSid,
+          })
+          return new Response(
+            JSON.stringify({ success: true, channel: 'sms', messageSid: smsResult.messageSid }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+          )
+        } else {
+          console.warn(`[send-booking-confirmation] SMS failed: ${smsResult.error}`)
+          await logEvent('warning', `Bestätigungs-SMS fehlgeschlagen: ${smsResult.error}`, {
+            appointmentId, phone: maskPhone(emailData.patientPhone),
+          })
+          return new Response(
+            JSON.stringify({ success: true, skipped: false, smsError: smsResult.error }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+          )
+        }
+      }
+
+      console.log(`[send-booking-confirmation] No email and no phone, skipping`)
       return new Response(
-        JSON.stringify({ success: true, skipped: true, reason: 'no_email' }),
+        JSON.stringify({ success: true, skipped: true, reason: 'no_contact' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
       )
     }

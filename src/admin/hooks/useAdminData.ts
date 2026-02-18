@@ -184,7 +184,7 @@ export function useUpdateAppointmentStatus() {
 
       if (updateError) throw updateError;
 
-      // If cancelled, free up the time slot
+      // If cancelled, free up the time slot and notify patient (ORTHO-040)
       if (status === 'cancelled') {
         const { data: appointment } = await supabase
           .from('appointments')
@@ -198,6 +198,13 @@ export function useUpdateAppointmentStatus() {
             .update({ is_available: true })
             .eq('id', appointment.time_slot_id);
         }
+
+        // Absage-Benachrichtigung senden (E-Mail oder SMS)
+        supabase.functions.invoke('send-cancellation-notification', {
+          body: { appointmentId },
+        }).then(({ error }) => {
+          if (error) console.error('Fehler beim Senden der Absage-Benachrichtigung:', error);
+        });
       }
 
       return { success: true };
@@ -467,8 +474,8 @@ export function useAdminCreateBooking() {
         throw appointmentError;
       }
 
-      // 3. Send confirmation email only if email was provided
-      if (data.patientEmail) {
+      // 3. Send confirmation email/SMS if contact info was provided (ORTHO-040)
+      if (data.patientEmail || data.patientPhone) {
         supabase.functions.invoke('send-booking-confirmation', {
           body: { appointmentId: appointment.id },
         }).then(({ error }) => {
@@ -959,6 +966,16 @@ export function useUpdateMfaAppointmentStatus() {
         .eq('id', appointmentId);
 
       if (updateError) throw updateError;
+
+      // Absage-Benachrichtigung senden (ORTHO-040)
+      if (status === 'cancelled') {
+        supabase.functions.invoke('send-cancellation-notification', {
+          body: { appointmentId, booking_type: 'mfa' },
+        }).then(({ error }) => {
+          if (error) console.error('Fehler beim Senden der MFA-Absage-Benachrichtigung:', error);
+        });
+      }
+
       return { success: true };
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Fehler beim Aktualisieren';
@@ -1092,8 +1109,8 @@ export function useAdminCreateMfaBooking() {
 
       if (appointmentError) throw appointmentError;
 
-      // 4. Send confirmation email if email provided
-      if (data.patientEmail) {
+      // 4. Send confirmation email/SMS if contact info provided (ORTHO-040)
+      if (data.patientEmail || data.patientPhone) {
         supabase.functions.invoke('send-booking-confirmation', {
           body: { appointmentId: appointment.id, booking_type: 'mfa' },
         }).then(({ error }) => {
@@ -1220,6 +1237,7 @@ export function useRescheduleAppointment() {
     oldDate: string;
     oldTime: string;
     patientEmail?: string | null;
+    patientPhone?: string | null;
   }) => {
     setLoading(true);
     setError(null);
@@ -1246,8 +1264,8 @@ export function useRescheduleAppointment() {
         if (!result?.success) throw new Error('Verlegung fehlgeschlagen');
       }
 
-      // E-Mail senden (non-blocking, nur wenn Patient E-Mail hat)
-      if (data.patientEmail) {
+      // E-Mail/SMS senden (non-blocking, ORTHO-040)
+      if (data.patientEmail || data.patientPhone) {
         supabase.functions.invoke('send-reschedule-notification', {
           body: {
             appointmentId: data.appointmentId,

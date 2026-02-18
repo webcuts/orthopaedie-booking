@@ -706,8 +706,8 @@ export function useCreateMfaBooking() {
 
       if (appointmentError) throw appointmentError;
 
-      // 4. Bestätigungs-E-Mails (non-blocking)
-      if (mfaEmail) {
+      // 4. Bestätigungs-E-Mails / SMS (non-blocking, ORTHO-040)
+      if (mfaEmail || mfaPhone) {
         supabase.functions.invoke('send-booking-confirmation', {
           body: { appointmentId: appointment.id, booking_type: 'mfa' }
         }).then(({ error }) => {
@@ -838,9 +838,9 @@ export function useCreateBooking() {
         }
       }
 
-      // 3. Send confirmation emails (non-blocking)
-      // Bestätigung an Patient (nur wenn E-Mail vorhanden)
-      if (docEmail) {
+      // 3. Send confirmation emails / SMS (non-blocking, ORTHO-040)
+      // Bestätigung an Patient (wenn E-Mail oder Telefon vorhanden)
+      if (docEmail || docPhone) {
         supabase.functions.invoke('send-booking-confirmation', {
           body: { appointmentId: appointment.id }
         }).then(({ error }) => {

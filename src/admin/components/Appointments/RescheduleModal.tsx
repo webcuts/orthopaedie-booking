@@ -154,6 +154,7 @@ export function RescheduleModal({ appointment, onClose, onRescheduled }: Resched
       oldDate: appointment.time_slot?.date,
       oldTime: appointment.time_slot?.start_time,
       patientEmail: appointment.patient?.email,
+      patientPhone: appointment.patient?.phone,
     });
 
     if (result.success) {

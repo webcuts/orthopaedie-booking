@@ -68,6 +68,9 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     rescheduleIntro: 'Ihr Termin wurde von der Praxis verlegt. Nachfolgend finden Sie die neuen Termindetails.',
     rescheduleOldLabel: 'Ursprünglicher Termin:',
     rescheduleNewTitle: 'Ihr neuer Termin',
+    cancellationSubtitle: 'Termin abgesagt',
+    cancellationIntro: 'Ihr Termin wurde leider von der Praxis abgesagt. Wir bitten um Ihr Verständnis.',
+    cancellationNewBooking: 'Einen neuen Termin können Sie telefonisch oder online vereinbaren.',
   },
   en: {
     confirmationSubtitle: 'Appointment Confirmation',
@@ -102,6 +105,9 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     rescheduleIntro: 'Your appointment has been rescheduled by the practice. Please find the new appointment details below.',
     rescheduleOldLabel: 'Previous appointment:',
     rescheduleNewTitle: 'Your New Appointment',
+    cancellationSubtitle: 'Appointment Cancelled',
+    cancellationIntro: 'Unfortunately, your appointment has been cancelled by the practice. We apologize for any inconvenience.',
+    cancellationNewBooking: 'You can schedule a new appointment by phone or online.',
   },
   tr: {
     confirmationSubtitle: 'Randevu Onayı',
@@ -136,6 +142,9 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     rescheduleIntro: 'Randevunuz muayenehane tarafından değiştirildi. Aşağıda yeni randevu detaylarınızı bulabilirsiniz.',
     rescheduleOldLabel: 'Önceki randevu:',
     rescheduleNewTitle: 'Yeni Randevunuz',
+    cancellationSubtitle: 'Randevu İptal Edildi',
+    cancellationIntro: 'Randevunuz maalesef muayenehane tarafından iptal edildi. Anlayışınız için teşekkür ederiz.',
+    cancellationNewBooking: 'Telefonla veya online olarak yeni bir randevu alabilirsiniz.',
   },
   ru: {
     confirmationSubtitle: 'Подтверждение записи',
@@ -170,6 +179,9 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     rescheduleIntro: 'Ваш приём был перенесён клиникой. Ниже вы найдёте новые данные приёма.',
     rescheduleOldLabel: 'Предыдущий приём:',
     rescheduleNewTitle: 'Ваш новый приём',
+    cancellationSubtitle: 'Приём отменён',
+    cancellationIntro: 'К сожалению, ваш приём был отменён клиникой. Приносим извинения за неудобства.',
+    cancellationNewBooking: 'Вы можете записаться на новый приём по телефону или онлайн.',
   },
   ar: {
     confirmationSubtitle: 'تأكيد الموعد',
@@ -204,6 +216,9 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     rescheduleIntro: 'تم تغيير موعدك من قبل العيادة. يرجى الاطلاع على تفاصيل الموعد الجديد أدناه.',
     rescheduleOldLabel: 'الموعد السابق:',
     rescheduleNewTitle: 'موعدك الجديد',
+    cancellationSubtitle: 'تم إلغاء الموعد',
+    cancellationIntro: 'للأسف تم إلغاء موعدك من قبل العيادة. نعتذر عن أي إزعاج.',
+    cancellationNewBooking: 'يمكنك حجز موعد جديد عبر الهاتف أو عبر الإنترنت.',
   },
 };
 
@@ -666,6 +681,112 @@ export function generatePracticeNotificationEmail(data: AppointmentData): string
     <div style="${styles.footer}">
       <p style="${styles.footerText}">
         Diese E-Mail wurde automatisch vom Buchungssystem generiert.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+}
+
+/**
+ * E-Mail-Betreff für Praxis-Stornierung (ORTHO-040)
+ */
+export function getCancellationSubject(lang: EmailLanguage = 'de'): string {
+  const subjects: Record<EmailLanguage, string> = {
+    de: 'Ihr Termin wurde abgesagt - Orthopädie Königstraße',
+    en: 'Your Appointment Has Been Cancelled - Orthopädie Königstraße',
+    tr: 'Randevunuz İptal Edildi - Orthopädie Königstraße',
+    ru: 'Ваш приём отменён - Orthopädie Königstraße',
+    ar: 'تم إلغاء موعدك - Orthopädie Königstraße',
+  };
+  return subjects[lang] ?? subjects.de;
+}
+
+/**
+ * Absage-E-Mail bei Praxis-Stornierung (ORTHO-040, mehrsprachig)
+ */
+export function generateCancellationEmail(data: AppointmentData, lang: EmailLanguage = 'de'): string {
+  const practitioner = data.practitionerName || t(lang, 'noPractitioner');
+  const htmlLang = lang;
+
+  return `
+<!DOCTYPE html>
+<html lang="${htmlLang}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${t(lang, 'cancellationSubtitle')}</title>
+</head>
+<body style="${styles.body}">
+  <div style="${styles.container}">
+    <!-- Header -->
+    <div style="background-color: #DC3545; padding: 24px; text-align: center;">
+      <h1 style="${styles.headerTitle}">${PRACTICE_INFO.name}</h1>
+      <p style="${styles.headerSubtitle}">${t(lang, 'cancellationSubtitle')}</p>
+    </div>
+
+    <!-- Content -->
+    <div style="${styles.content}">
+      <p style="${styles.greeting}">${t(lang, 'greeting')} ${data.patientName},</p>
+
+      <p style="${styles.text}">
+        ${t(lang, 'cancellationIntro')}
+      </p>
+
+      <!-- Stornierter Termin -->
+      <div style="background-color: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 20px; margin: 24px 0;">
+        <h2 style="font-size: 16px; font-weight: bold; color: #991B1B; margin: 0 0 16px 0;">${t(lang, 'cancellationSubtitle')}</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 6px 0; color: #6B7280; width: 120px;">${t(lang, 'labelDate')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatDate(data.date, lang)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelTime')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${formatTime(data.time, lang)} - ${formatTime(data.endTime, lang)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelTreatment')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${data.treatmentType}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6B7280;">${t(lang, 'labelPractitioner')}</td>
+            <td style="padding: 6px 0; color: #000000; font-weight: 500;">${practitioner}</td>
+          </tr>
+        </table>
+      </div>
+
+      <p style="${styles.text}">
+        ${t(lang, 'cancellationNewBooking')}
+      </p>
+
+      <!-- Online buchen Button -->
+      <div style="text-align: center; margin: 24px 0;">
+        <a href="${SITE_URL}" style="display: inline-block; padding: 12px 24px; background-color: #2674BB; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500;">
+          ${lang === 'de' ? 'Online Termin buchen' : lang === 'en' ? 'Book Online' : lang === 'tr' ? 'Online Randevu Al' : lang === 'ru' ? 'Записаться онлайн' : 'حجز موعد عبر الإنترنت'}
+        </a>
+      </div>
+
+      <p style="${styles.text}">
+        ${t(lang, 'contactText')} ${PRACTICE_INFO.phone} ${t(lang, 'contactOr')}
+        <a href="mailto:${PRACTICE_INFO.email}" style="color: #2674BB;">${PRACTICE_INFO.email}</a>.
+      </p>
+
+      <p style="${styles.text}">
+        ${t(lang, 'regards')}<br>
+        <strong>${t(lang, 'team')}</strong><br>
+        ${PRACTICE_INFO.name}
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="${styles.footer}">
+      <p style="${styles.footerText}">
+        ${PRACTICE_INFO.name} | ${PRACTICE_INFO.address} | ${PRACTICE_INFO.city}
+      </p>
+      <p style="${styles.footerText}">
+        <a href="${PRACTICE_INFO.website}" style="${styles.footerLink}">${PRACTICE_INFO.website}</a>
       </p>
     </div>
   </div>

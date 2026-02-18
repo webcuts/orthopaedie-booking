@@ -4,6 +4,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { generateReminderEmail, getReminderSubject, type AppointmentData, type EmailLanguage } from '../_shared/email-templates.ts'
 import { sendEmail } from '../_shared/resend.ts'
+import { sendSms, maskPhone } from '../_shared/twilio.ts'
+import { getReminderSms } from '../_shared/sms-templates.ts'
 import { logEvent } from '../_shared/log-helper.ts'
 
 const corsHeaders = {
@@ -207,9 +209,22 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Überspringe Patienten ohne E-Mail
+        // SMS Fallback für Patienten ohne E-Mail (ORTHO-040)
         if (!emailData.patientEmail) {
-          console.log(`[process-email-reminders] No email for patient, skipping reminder ${reminder.id}`)
+          if (emailData.patientPhone && reminder.reminder_type === '24h_before') {
+            console.log(`[process-email-reminders] No email, attempting SMS for reminder ${reminder.id}`)
+            const smsBody = getReminderSms(emailData, lang)
+            const smsResult = await sendSms({ to: emailData.patientPhone, body: smsBody })
+
+            if (smsResult.success) {
+              console.log(`[process-email-reminders] Reminder SMS sent to ${maskPhone(emailData.patientPhone)}`)
+              result.sent++
+            } else {
+              console.warn(`[process-email-reminders] Reminder SMS failed: ${smsResult.error}`)
+              result.failed++
+              result.errors.push(`SMS an ${maskPhone(emailData.patientPhone)} fehlgeschlagen: ${smsResult.error}`)
+            }
+          }
 
           await supabase
             .from('email_reminders')

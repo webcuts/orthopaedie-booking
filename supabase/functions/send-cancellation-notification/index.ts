@@ -1,11 +1,11 @@
-// ORTHO-031: Terminverlegung E-Mail-Benachrichtigung
-// Wird nach erfolgreicher Verlegung vom Admin-Dashboard aufgerufen
+// ORTHO-040: Absage-Benachrichtigung (Praxis-Stornierung)
+// Wird vom Admin-Dashboard aufgerufen wenn Praxis einen Termin absagt
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { generateRescheduleEmail, getRescheduleSubject, type AppointmentData, type EmailLanguage } from '../_shared/email-templates.ts'
+import { generateCancellationEmail, getCancellationSubject, type AppointmentData, type EmailLanguage } from '../_shared/email-templates.ts'
 import { sendEmail } from '../_shared/resend.ts'
 import { sendSms, maskPhone } from '../_shared/twilio.ts'
-import { getRescheduleSms } from '../_shared/sms-templates.ts'
+import { getCancellationSms } from '../_shared/sms-templates.ts'
 import { logEvent } from '../_shared/log-helper.ts'
 
 const corsHeaders = {
@@ -15,9 +15,7 @@ const corsHeaders = {
 
 interface RequestBody {
   appointmentId: string;
-  bookingType?: 'doctor' | 'mfa';
-  oldDate: string;
-  oldTime: string;
+  booking_type?: 'doctor' | 'mfa';
 }
 
 Deno.serve(async (req) => {
@@ -31,14 +29,14 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
     const body: RequestBody = await req.json()
-    const { appointmentId, bookingType, oldDate, oldTime } = body
+    const { appointmentId, booking_type } = body
 
-    if (!appointmentId || !oldDate || !oldTime) {
-      throw new Error('appointmentId, oldDate und oldTime sind erforderlich')
+    if (!appointmentId) {
+      throw new Error('appointmentId ist erforderlich')
     }
 
-    const isMfa = bookingType === 'mfa'
-    console.log(`[send-reschedule-notification] Processing ${isMfa ? 'MFA' : 'doctor'} appointment: ${appointmentId}`)
+    const isMfa = booking_type === 'mfa'
+    console.log(`[send-cancellation-notification] Processing ${isMfa ? 'MFA' : 'doctor'} appointment: ${appointmentId}`)
 
     let emailData: AppointmentData
     let lang: EmailLanguage
@@ -65,6 +63,8 @@ Deno.serve(async (req) => {
         de: 'Praxisleistung (MFA)',
         en: 'Practice Service (MFA)',
         tr: 'Muayenehane Hizmeti (MFA)',
+        ru: 'Услуга клиники (MFA)',
+        ar: 'خدمة العيادة (MFA)',
       }
 
       emailData = {
@@ -76,7 +76,6 @@ Deno.serve(async (req) => {
         endTime: appointment.mfa_time_slot.end_time,
         treatmentType: appointment.mfa_treatment_type.name,
         practitionerName: mfaProviderNames[lang] || mfaProviderNames.de,
-        cancelToken: appointment.cancel_token || undefined,
         appointmentId,
         bookingType: 'mfa',
       }
@@ -110,78 +109,71 @@ Deno.serve(async (req) => {
         practitionerName: appointment.practitioner
           ? `${appointment.practitioner.title || ''} ${appointment.practitioner.first_name} ${appointment.practitioner.last_name}`.trim()
           : null,
-        cancelToken: appointment.cancel_token || undefined,
         appointmentId,
       }
     }
 
-    // Guard: Kein E-Mail → SMS Fallback (ORTHO-040)
-    if (!emailData.patientEmail) {
-      if (emailData.patientPhone) {
-        console.log(`[send-reschedule-notification] No email, attempting SMS to ${maskPhone(emailData.patientPhone)}`)
-        const smsBody = getRescheduleSms(emailData, lang)
-        const smsResult = await sendSms({ to: emailData.patientPhone, body: smsBody })
+    // E-Mail senden wenn vorhanden
+    if (emailData.patientEmail) {
+      const html = generateCancellationEmail(emailData, lang)
+      const result = await sendEmail({
+        to: emailData.patientEmail,
+        subject: getCancellationSubject(lang),
+        html,
+      })
 
-        if (smsResult.success) {
-          await logEvent('sms', `Verlegungs-SMS gesendet an ${maskPhone(emailData.patientPhone)}`, {
-            appointmentId, oldDate, oldTime, phone: maskPhone(emailData.patientPhone), messageSid: smsResult.messageSid,
-          })
-          return new Response(
-            JSON.stringify({ success: true, channel: 'sms', messageSid: smsResult.messageSid }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-          )
-        } else {
-          console.warn(`[send-reschedule-notification] SMS failed: ${smsResult.error}`)
-          await logEvent('warning', `Verlegungs-SMS fehlgeschlagen: ${smsResult.error}`, {
-            appointmentId, phone: maskPhone(emailData.patientPhone),
-          })
-          return new Response(
-            JSON.stringify({ success: true, skipped: false, smsError: smsResult.error }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-          )
-        }
+      if (result.success) {
+        console.log(`[send-cancellation-notification] Email sent to ${emailData.patientEmail}`)
+        await logEvent('cancellation', `Absage-E-Mail gesendet an ${emailData.patientEmail}`, { appointmentId })
+        return new Response(
+          JSON.stringify({ success: true, channel: 'email', messageId: result.messageId }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        )
+      } else {
+        console.error(`[send-cancellation-notification] Email failed: ${result.error}`)
+        await logEvent('error', `Absage-E-Mail fehlgeschlagen: ${result.error}`, { appointmentId })
+        return new Response(
+          JSON.stringify({ success: false, error: result.error }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        )
       }
-
-      console.log(`[send-reschedule-notification] No email and no phone, skipping`)
-      return new Response(
-        JSON.stringify({ success: true, skipped: true, reason: 'no_contact' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-      )
     }
 
-    // Generiere HTML
-    const html = generateRescheduleEmail(emailData, oldDate, oldTime, lang)
+    // SMS Fallback wenn kein E-Mail aber Telefon
+    if (emailData.patientPhone) {
+      console.log(`[send-cancellation-notification] No email, attempting SMS to ${maskPhone(emailData.patientPhone)}`)
+      const smsBody = getCancellationSms(emailData, lang)
+      const smsResult = await sendSms({ to: emailData.patientPhone, body: smsBody })
 
-    // Sende E-Mail
-    const result = await sendEmail({
-      to: emailData.patientEmail,
-      subject: getRescheduleSubject(lang, emailData.date, emailData.time),
-      html,
-    })
-
-    if (!result.success) {
-      console.error(`[send-reschedule-notification] Failed to send email: ${result.error}`)
-      await logEvent('error', `Verlegungsmail fehlgeschlagen: ${result.error}`, { appointmentId, email: emailData.patientEmail })
-      return new Response(
-        JSON.stringify({ success: false, error: result.error }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
-      )
+      if (smsResult.success) {
+        await logEvent('sms', `Absage-SMS gesendet an ${maskPhone(emailData.patientPhone)}`, {
+          appointmentId, phone: maskPhone(emailData.patientPhone), messageSid: smsResult.messageSid,
+        })
+        return new Response(
+          JSON.stringify({ success: true, channel: 'sms', messageSid: smsResult.messageSid }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        )
+      } else {
+        console.warn(`[send-cancellation-notification] SMS failed: ${smsResult.error}`)
+        await logEvent('warning', `Absage-SMS fehlgeschlagen: ${smsResult.error}`, {
+          appointmentId, phone: maskPhone(emailData.patientPhone),
+        })
+        return new Response(
+          JSON.stringify({ success: true, skipped: false, smsError: smsResult.error }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        )
+      }
     }
 
-    console.log(`[send-reschedule-notification] Email sent to ${emailData.patientEmail}`)
-    await logEvent('reschedule', `Verlegungsmail gesendet an ${emailData.patientEmail}`, { appointmentId, oldDate, oldTime })
-
+    // Weder E-Mail noch Telefon
+    console.log(`[send-cancellation-notification] No email and no phone, skipping`)
     return new Response(
-      JSON.stringify({
-        success: true,
-        messageId: result.messageId,
-        recipient: emailData.patientEmail,
-      }),
+      JSON.stringify({ success: true, skipped: true, reason: 'no_contact' }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     )
 
   } catch (error) {
-    console.error('[send-reschedule-notification] Error:', error)
+    console.error('[send-cancellation-notification] Error:', error)
 
     return new Response(
       JSON.stringify({
