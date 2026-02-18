@@ -26,6 +26,8 @@ export function CancelPage() {
     de: 'de-DE',
     en: 'en-US',
     tr: 'tr-TR',
+    ru: 'ru-RU',
+    ar: 'ar-SA',
   };
 
   useEffect(() => {

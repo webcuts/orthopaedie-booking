@@ -15,6 +15,8 @@ export interface InsuranceType {
   name: string;
   name_en?: string | null;
   name_tr?: string | null;
+  name_ru?: string | null;
+  name_ar?: string | null;
   is_active: boolean;
   created_at: string;
 }
@@ -33,10 +35,14 @@ export interface TreatmentType {
   name: string;
   name_en?: string | null;
   name_tr?: string | null;
+  name_ru?: string | null;
+  name_ar?: string | null;
   duration_minutes: number;
   description: string | null;
   description_en?: string | null;
   description_tr?: string | null;
+  description_ru?: string | null;
+  description_ar?: string | null;
   is_active: boolean;
   created_at: string;
 }
@@ -59,6 +65,8 @@ export interface Specialty {
   name: string;
   name_en?: string | null;
   name_tr?: string | null;
+  name_ru?: string | null;
+  name_ar?: string | null;
   is_active: boolean;
   created_at: string;
 }
@@ -119,6 +127,8 @@ export interface MfaTreatmentType {
   name: string;
   name_en?: string | null;
   name_tr?: string | null;
+  name_ru?: string | null;
+  name_ar?: string | null;
   duration_minutes: number;
   is_active: boolean;
   sort_order: number;

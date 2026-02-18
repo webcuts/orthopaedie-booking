@@ -43,7 +43,7 @@
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--color-text);
-  text-align: right;
+  text-align: end;
 }
 
 .form {
@@ -89,7 +89,7 @@
   font-size: var(--font-size-sm);
   color: #DC3545;
   margin-bottom: var(--spacing-sm);
-  padding-left: var(--spacing-md);
+  padding-inline-start: var(--spacing-md);
 }
 
 .hint {

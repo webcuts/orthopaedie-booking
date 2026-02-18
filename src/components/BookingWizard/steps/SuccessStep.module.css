@@ -41,7 +41,7 @@
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
   margin-bottom: var(--spacing-lg);
-  text-align: left;
+  text-align: start;
 }
 
 .detailsTitle {
@@ -72,7 +72,7 @@
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--color-text);
-  text-align: right;
+  text-align: end;
 }
 
 .address {
@@ -80,7 +80,7 @@
   border-radius: var(--radius-lg);
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
-  text-align: left;
+  text-align: start;
 }
 
 .address h3 {
@@ -106,7 +106,7 @@
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   color: #92400E;
-  text-align: left;
+  text-align: start;
   margin-bottom: var(--spacing-xl);
 }
 

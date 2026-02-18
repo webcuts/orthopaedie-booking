@@ -85,7 +85,7 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: #1f2937;
-  text-align: right;
+  text-align: end;
 }
 
 .warning {
@@ -94,7 +94,7 @@
   gap: 0.75rem;
   padding: 1rem;
   background: #FEF3C7;
-  border-left: 4px solid #F59E0B;
+  border-inline-start: 4px solid #F59E0B;
   border-radius: 0 8px 8px 0;
   margin-bottom: 1.5rem;
   font-size: 0.8125rem;

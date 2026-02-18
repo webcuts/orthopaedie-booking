@@ -1,7 +1,7 @@
 // ORTHO-007: E-Mail Templates (mehrsprachig)
 // Shared email templates for booking system
 
-export type EmailLanguage = 'de' | 'en' | 'tr';
+export type EmailLanguage = 'de' | 'en' | 'tr' | 'ru' | 'ar';
 
 export interface AppointmentData {
   patientName: string;
@@ -137,6 +137,74 @@ const i18n: Record<EmailLanguage, Record<string, string>> = {
     rescheduleOldLabel: 'Önceki randevu:',
     rescheduleNewTitle: 'Yeni Randevunuz',
   },
+  ru: {
+    confirmationSubtitle: 'Подтверждение записи',
+    greeting: 'Здравствуйте',
+    confirmationIntro: 'Благодарим вас за запись на приём. Ваш приём успешно зарегистрирован.',
+    detailsTitle: 'Данные вашего приёма',
+    labelDate: 'Дата:',
+    labelTime: 'Время:',
+    labelTreatment: 'Вид приёма:',
+    labelPractitioner: 'Врач:',
+    labelSpecialty: 'Специализация:',
+    noPractitioner: 'Ближайший доступный врач',
+    addressTitle: 'Адрес клиники',
+    hintTitle: 'Обратите внимание:',
+    hintText: 'Бесплатная отмена возможна до 24 часов до приёма. Вы получите напоминание по электронной почте за 24 часа и за 6 часов до приёма.',
+    cancelLinkText: 'Отменить приём',
+    addToCalendar: 'Добавить в календарь',
+    contactText: 'По вопросам вы можете связаться с нами по телефону',
+    contactOr: 'или по электронной почте',
+    lookForward: 'Мы ждём вашего визита!',
+    regards: 'С уважением',
+    team: 'Команда клиники',
+    reminderSubtitle: 'Напоминание о приёме',
+    reminderTodayTitle: 'Ваш приём сегодня',
+    reminderTomorrowTitle: 'Ваш приём завтра',
+    reminderTodayIntro: 'Напоминаем вам о вашем сегодняшнем приёме.',
+    reminderTomorrowIntro: 'Напоминаем вам о вашем завтрашнем приёме.',
+    cancellationHint: 'Бесплатная отмена ещё возможна до',
+    cancellationHintSuffix: '.',
+    questionsText: 'По вопросам вы можете связаться с нами по телефону',
+    rescheduleSubtitle: 'Приём перенесён',
+    rescheduleIntro: 'Ваш приём был перенесён клиникой. Ниже вы найдёте новые данные приёма.',
+    rescheduleOldLabel: 'Предыдущий приём:',
+    rescheduleNewTitle: 'Ваш новый приём',
+  },
+  ar: {
+    confirmationSubtitle: 'تأكيد الموعد',
+    greeting: 'مرحباً',
+    confirmationIntro: 'شكراً لحجز موعدك. تم تسجيل موعدك بنجاح.',
+    detailsTitle: 'تفاصيل موعدك',
+    labelDate: 'التاريخ:',
+    labelTime: 'الوقت:',
+    labelTreatment: 'نوع العلاج:',
+    labelPractitioner: 'الطبيب:',
+    labelSpecialty: 'التخصص:',
+    noPractitioner: 'أقرب طبيب متاح',
+    addressTitle: 'عنوان العيادة',
+    hintTitle: 'يرجى ملاحظة:',
+    hintText: 'الإلغاء المجاني ممكن حتى 24 ساعة قبل الموعد. ستتلقى تذكيراً بالبريد الإلكتروني قبل 24 ساعة و6 ساعات من موعدك.',
+    cancelLinkText: 'إلغاء الموعد',
+    addToCalendar: 'إضافة إلى التقويم',
+    contactText: 'للاستفسارات يمكنكم الاتصال بنا هاتفياً على',
+    contactOr: 'أو عبر البريد الإلكتروني',
+    lookForward: 'نتطلع لزيارتكم!',
+    regards: 'مع أطيب التحيات',
+    team: 'فريق العيادة',
+    reminderSubtitle: 'تذكير بالموعد',
+    reminderTodayTitle: 'موعدك اليوم',
+    reminderTomorrowTitle: 'موعدك غداً',
+    reminderTodayIntro: 'نود تذكيرك بموعدك اليوم.',
+    reminderTomorrowIntro: 'نود تذكيرك بموعدك غداً.',
+    cancellationHint: 'الإلغاء المجاني لا يزال ممكناً حتى',
+    cancellationHintSuffix: '.',
+    questionsText: 'للاستفسارات يمكنكم الاتصال بنا هاتفياً على',
+    rescheduleSubtitle: 'تم تغيير الموعد',
+    rescheduleIntro: 'تم تغيير موعدك من قبل العيادة. يرجى الاطلاع على تفاصيل الموعد الجديد أدناه.',
+    rescheduleOldLabel: 'الموعد السابق:',
+    rescheduleNewTitle: 'موعدك الجديد',
+  },
 };
 
 // E-Mail Styles (inline für bessere Kompatibilität)
@@ -167,6 +235,8 @@ const localeMap: Record<EmailLanguage, string> = {
   de: 'de-DE',
   en: 'en-US',
   tr: 'tr-TR',
+  ru: 'ru-RU',
+  ar: 'ar-SA',
 };
 
 function formatDate(dateStr: string, lang: EmailLanguage = 'de'): string {
@@ -198,6 +268,8 @@ export function getConfirmationSubject(lang: EmailLanguage = 'de', practitionerN
       de: `Ihr Termin bei ${practitionerName} - Orthopädie Königstraße`,
       en: `Your Appointment with ${practitionerName} - Orthopädie Königstraße`,
       tr: `${practitionerName} ile Randevunuz - Orthopädie Königstraße`,
+      ru: `Ваш приём у ${practitionerName} - Orthopädie Königstraße`,
+      ar: `موعدك مع ${practitionerName} - Orthopädie Königstraße`,
     };
     return withName[lang] ?? withName.de;
   }
@@ -205,6 +277,8 @@ export function getConfirmationSubject(lang: EmailLanguage = 'de', practitionerN
     de: 'Ihre Terminbestätigung - Orthopädie Königstraße',
     en: 'Your Appointment Confirmation - Orthopädie Königstraße',
     tr: 'Randevu Onayınız - Orthopädie Königstraße',
+    ru: 'Подтверждение записи - Orthopädie Königstraße',
+    ar: 'تأكيد الموعد - Orthopädie Königstraße',
   };
   return subjects[lang] ?? subjects.de;
 }
@@ -227,6 +301,14 @@ export function getReminderSubject(reminderType: '24h_before' | '6h_before', lan
       today: 'Hatırlatma: Bugünkü Randevunuz - Orthopädie Königstraße',
       tomorrow: 'Hatırlatma: Yarınki Randevunuz - Orthopädie Königstraße',
     },
+    ru: {
+      today: 'Напоминание: Ваш приём сегодня - Orthopädie Königstraße',
+      tomorrow: 'Напоминание: Ваш приём завтра - Orthopädie Königstraße',
+    },
+    ar: {
+      today: 'تذكير: موعدك اليوم - Orthopädie Königstraße',
+      tomorrow: 'تذكير: موعدك غداً - Orthopädie Königstraße',
+    },
   };
   const s = subjects[lang] ?? subjects.de;
   return isToday ? s.today : s.tomorrow;
@@ -237,7 +319,7 @@ export function getReminderSubject(reminderType: '24h_before' | '6h_before', lan
  */
 export function generateBookingConfirmationEmail(data: AppointmentData, lang: EmailLanguage = 'de'): string {
   const practitioner = data.practitionerName || t(lang, 'noPractitioner');
-  const htmlLang = lang === 'tr' ? 'tr' : lang === 'en' ? 'en' : 'de';
+  const htmlLang = lang;
 
   return `
 <!DOCTYPE html>
@@ -368,6 +450,8 @@ export function getRescheduleSubject(lang: EmailLanguage = 'de', date: string, t
     de: `Ihr Termin wurde verlegt: ${formattedDate} um ${formattedTime}`,
     en: `Your appointment has been rescheduled: ${formattedDate} at ${formattedTime}`,
     tr: `Randevunuz değiştirildi: ${formattedDate}, ${formattedTime}`,
+    ru: `Ваш приём перенесён: ${formattedDate}, ${formattedTime}`,
+    ar: `تم تغيير موعدك: ${formattedDate}، ${formattedTime}`,
   };
   return subjects[lang] ?? subjects.de;
 }
@@ -377,7 +461,7 @@ export function getRescheduleSubject(lang: EmailLanguage = 'de', date: string, t
  */
 export function generateRescheduleEmail(data: AppointmentData, oldDate: string, oldTime: string, lang: EmailLanguage = 'de'): string {
   const practitioner = data.practitionerName || t(lang, 'noPractitioner');
-  const htmlLang = lang === 'tr' ? 'tr' : lang === 'en' ? 'en' : 'de';
+  const htmlLang = lang;
 
   return `
 <!DOCTYPE html>
@@ -598,7 +682,7 @@ export function generateReminderEmail(data: AppointmentData, reminderType: '24h_
   const isToday = reminderType === '6h_before';
   const title = isToday ? t(lang, 'reminderTodayTitle') : t(lang, 'reminderTomorrowTitle');
   const intro = isToday ? t(lang, 'reminderTodayIntro') : t(lang, 'reminderTomorrowIntro');
-  const htmlLang = lang === 'tr' ? 'tr' : lang === 'en' ? 'en' : 'de';
+  const htmlLang = lang;
 
   return `
 <!DOCTYPE html>
@@ -658,7 +742,7 @@ export function generateReminderEmail(data: AppointmentData, reminderType: '24h_
 
       ${!isToday && data.cancellationDeadline ? `
       <div style="${styles.hint}">
-        <strong>${lang === 'de' ? 'Hinweis:' : lang === 'en' ? 'Note:' : 'Not:'}</strong> ${t(lang, 'cancellationHint')} ${data.cancellationDeadline} ${t(lang, 'cancellationHintSuffix')}
+        <strong>${t(lang, 'hintTitle')}</strong> ${t(lang, 'cancellationHint')} ${data.cancellationDeadline} ${t(lang, 'cancellationHintSuffix')}
       </div>
       ` : ''}
 

@@ -17,7 +17,9 @@ interface TimeSlotStepProps {
 const localeMap: Record<string, string> = {
   de: 'de-DE',
   en: 'en-US',
-  tr: 'tr-TR'
+  tr: 'tr-TR',
+  ru: 'ru-RU',
+  ar: 'ar-SA',
 };
 
 // ORTHO-025: Add minutes to a HH:MM time string

@@ -5,6 +5,8 @@ const LANGUAGES: { code: Language; label: string }[] = [
   { code: 'de', label: 'DE' },
   { code: 'en', label: 'EN' },
   { code: 'tr', label: 'TR' },
+  { code: 'ru', label: 'RU' },
+  { code: 'ar', label: 'AR' },
 ];
 
 export function LanguageSelector() {
