@@ -17,6 +17,9 @@ WHERE name = 'Stoßwellentherapie'
     LIMIT 1
   );
 
+-- sort_order Spalte hinzufügen (falls nicht vorhanden)
+ALTER TABLE treatment_types ADD COLUMN IF NOT EXISTS sort_order integer DEFAULT 0;
+
 -- Sortierung festlegen
 UPDATE treatment_types SET sort_order = 1 WHERE name = 'Erstuntersuchung Neupatient' AND is_active = true;
 UPDATE treatment_types SET sort_order = 2 WHERE name = 'Sprechstunde' AND is_active = true;
