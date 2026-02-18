@@ -3,13 +3,21 @@
 -- E-Mail wird optional, mindestens E-Mail oder Telefon erforderlich
 -- =====================================================
 
--- 1. Email nullable machen
+-- 1. Email nullable machen (idempotent: DROP NOT NULL ist wiederholbar)
 ALTER TABLE patients ALTER COLUMN email DROP NOT NULL;
 
 -- 2. Entweder-oder Constraint: email ODER phone muss gesetzt sein
-ALTER TABLE patients
-  ADD CONSTRAINT chk_patient_contact_required
-  CHECK (email IS NOT NULL OR phone IS NOT NULL);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'chk_patient_contact_required'
+  ) THEN
+    ALTER TABLE patients
+      ADD CONSTRAINT chk_patient_contact_required
+      CHECK (email IS NOT NULL OR phone IS NOT NULL);
+  END IF;
+END
+$$;
 
 -- 3. Rate Limit Funktion: auch Phone unterstützen
 --    Alte Signatur (TEXT) wird durch neue (TEXT, TEXT) ersetzt
