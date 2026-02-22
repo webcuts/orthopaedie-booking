@@ -34,7 +34,7 @@
   }
 
   function practitionerName(p) {
-    return ((p.title || '') + ' ' + p.first_name + ' ' + p.last_name).trim();
+    return ((p.title || 'Dr.') + ' ' + p.first_name + ' ' + p.last_name).trim();
   }
 
   function entryLabel(s) {
@@ -172,10 +172,10 @@
 
     for (var i = 0; i < hours.length; i++) {
       var row = document.createElement('div');
-      row.style.cssText = 'display:flex;justify-content:space-between;padding:3px 0;font-size:14px;';
+      row.style.cssText = 'display:flex;align-items:baseline;gap:12px;padding:3px 0;font-size:14px;';
 
       var dayEl = document.createElement('span');
-      dayEl.style.cssText = 'font-weight:600;color:#374151;';
+      dayEl.style.cssText = 'font-weight:600;color:#374151;min-width:28px;';
       dayEl.textContent = HOURS_DAY_NAMES[hours[i].day_of_week];
       row.appendChild(dayEl);
 

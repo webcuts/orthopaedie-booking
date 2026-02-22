@@ -60,7 +60,7 @@ function formatTime(timeStr: string): string {
 }
 
 function practitionerName(p: Practitioner): string {
-    return ((p.title || "") + " " + p.first_name + " " + p.last_name).trim()
+    return ((p.title || "Dr.") + " " + p.first_name + " " + p.last_name).trim()
 }
 
 function entryLabel(s: Schedule): string {
@@ -139,13 +139,15 @@ const styles = {
     } as React.CSSProperties,
     hoursRow: {
         display: "flex",
-        justifyContent: "space-between",
+        alignItems: "baseline",
+        gap: 12,
         padding: "3px 0",
         fontSize: 14,
     } as React.CSSProperties,
     hoursDay: {
         fontWeight: 600,
         color: "#374151",
+        minWidth: 28,
     } as React.CSSProperties,
     hoursTime: {
         color: "#6B7280",
