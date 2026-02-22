@@ -12,11 +12,7 @@
   var SUPABASE_URL = 'https://jgammhrdgoxxbcwvlqcd.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_Ww1hByyP9FrP4mCoj7-Uvg_tDPmW1Hg';
 
-  var SESSION_KEY = 'ortho_absence_banner_closed';
   var REASON_MAP = { vacation: 'Urlaub', sick: 'Erkrankung', other: 'Abwesenheit' };
-
-  // Nicht erneut anzeigen wenn in dieser Session geschlossen
-  if (sessionStorage.getItem(SESSION_KEY)) return;
 
   function formatDate(dateStr) {
     var d = new Date(dateStr + 'T00:00:00');
@@ -76,7 +72,6 @@
     closeBtn.onmouseout = function () { this.style.opacity = '0.7'; };
     closeBtn.onclick = function () {
       container.remove();
-      sessionStorage.setItem(SESSION_KEY, '1');
     };
     container.appendChild(closeBtn);
 
