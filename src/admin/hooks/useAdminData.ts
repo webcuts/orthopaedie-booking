@@ -402,6 +402,8 @@ export interface PractitionerAbsence {
   end_date: string;
   reason: 'sick' | 'vacation' | 'other';
   note: string | null;
+  show_on_website: boolean;
+  public_message: string | null;
   created_at: string;
   practitioner?: {
     id: string;
@@ -592,6 +594,8 @@ export function usePractitionerAbsences() {
     end_date: string;
     reason: 'sick' | 'vacation' | 'other';
     note?: string;
+    show_on_website?: boolean;
+    public_message?: string;
   }) => {
     const { error } = await supabase
       .from('practitioner_absences')

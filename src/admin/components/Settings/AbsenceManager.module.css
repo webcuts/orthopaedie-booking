@@ -140,6 +140,23 @@
   cursor: not-allowed;
 }
 
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  padding-top: 0.5rem;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #2674BB;
+}
+
 .formError {
   background: #FEE2E2;
   border: 1px solid #FCA5A5;

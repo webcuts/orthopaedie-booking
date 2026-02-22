@@ -34,6 +34,8 @@ export function AbsenceManager() {
   const [endDate, setEndDate] = useState('');
   const [reason, setReason] = useState<'sick' | 'vacation' | 'other'>('vacation');
   const [note, setNote] = useState('');
+  const [showOnWebsite, setShowOnWebsite] = useState(true);
+  const [publicMessage, setPublicMessage] = useState('');
 
   const resetForm = () => {
     setPractitionerId('');
@@ -41,6 +43,8 @@ export function AbsenceManager() {
     setEndDate('');
     setReason('vacation');
     setNote('');
+    setShowOnWebsite(true);
+    setPublicMessage('');
     setFormError(null);
   };
 
@@ -65,6 +69,8 @@ export function AbsenceManager() {
       end_date: endDate,
       reason,
       note: note || undefined,
+      show_on_website: showOnWebsite,
+      public_message: publicMessage || undefined,
     });
 
     setSaving(false);
@@ -186,6 +192,32 @@ export function AbsenceManager() {
             />
           </div>
 
+          <div className={styles.formRow}>
+            <div className={styles.field}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={showOnWebsite}
+                  onChange={(e) => setShowOnWebsite(e.target.checked)}
+                />
+                Auf Website anzeigen
+              </label>
+            </div>
+          </div>
+
+          {showOnWebsite && (
+            <div className={styles.field}>
+              <label htmlFor="publicMessage">Eigener Hinweistext (optional)</label>
+              <input
+                type="text"
+                id="publicMessage"
+                value={publicMessage}
+                onChange={(e) => setPublicMessage(e.target.value)}
+                placeholder="z.B. Vertretung durch Dr. Jonda. Wird auf der Website angezeigt."
+              />
+            </div>
+          )}
+
           <div className={styles.warning}>
             <strong>Hinweis:</strong> Beim Speichern werden alle betroffenen Termine
             automatisch storniert und die Patienten benachrichtigt.
@@ -240,6 +272,11 @@ export function AbsenceManager() {
                 </div>
                 {absence.note && (
                   <div className={styles.absenceNote}>{absence.note}</div>
+                )}
+                {absence.show_on_website && (
+                  <div className={styles.absenceNote} style={{ color: '#2674BB', fontSize: '11px' }}>
+                    Website-Banner aktiv{absence.public_message ? `: "${absence.public_message}"` : ''}
+                  </div>
                 )}
               </div>
               <button
