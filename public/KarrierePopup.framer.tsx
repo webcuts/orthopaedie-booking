@@ -1,14 +1,34 @@
 // Karriere Pop-up — Framer Code Component
 // Diesen Code in Framer unter Assets → Code → neue Datei einfügen
 // Component auf jeder Seite platzieren (unsichtbar, rendert Modal als Overlay)
+// Links, Texte und Verzögerung sind im Framer Canvas konfigurierbar
 
 import { useEffect, useState } from "react"
+import { addPropertyControls, ControlType } from "framer"
 
 const STORAGE_KEY = "ortho_karriere_popup_closed"
-const DELAY_MS = 2500
-const HIDE_DAYS = 7
 
-export default function KarrierePopup() {
+interface Props {
+    heading: string
+    bodyText: string
+    applyLabel: string
+    applyLink: string
+    moreLabel: string
+    moreLink: string
+    delayMs: number
+    hideDays: number
+}
+
+export default function KarrierePopup({
+    heading = "Wir suchen Verstärkung!",
+    bodyText = "Die Orthopädie Königstraße sucht ab sofort engagierte Medizinische Fachangestellte (MFA) sowie Fachärzte für Orthopädie und Unfallchirurgie. Werden Sie Teil unseres Teams in Hannover.",
+    applyLabel = "Jetzt bewerben",
+    applyLink = "mailto:bewerbung@orthopaedie-koenigstrasse.de?subject=Bewerbung",
+    moreLabel = "Mehr erfahren",
+    moreLink = "/karriere",
+    delayMs = 2500,
+    hideDays = 7,
+}: Props) {
     const [visible, setVisible] = useState(false)
     const [animating, setAnimating] = useState(false)
 
@@ -16,16 +36,16 @@ export default function KarrierePopup() {
         const closedAt = localStorage.getItem(STORAGE_KEY)
         if (closedAt) {
             const diff = Date.now() - parseInt(closedAt, 10)
-            if (diff < HIDE_DAYS * 86400000) return
+            if (diff < hideDays * 86400000) return
         }
 
         const timer = setTimeout(() => {
             setVisible(true)
             requestAnimationFrame(() => setAnimating(true))
-        }, DELAY_MS)
+        }, delayMs)
 
         return () => clearTimeout(timer)
-    }, [])
+    }, [delayMs, hideDays])
 
     const handleClose = () => {
         setAnimating(false)
@@ -119,7 +139,7 @@ export default function KarrierePopup() {
                         lineHeight: 1.3,
                     }}
                 >
-                    Wir suchen Verstärkung!
+                    {heading}
                 </h2>
 
                 {/* Text */}
@@ -132,11 +152,7 @@ export default function KarrierePopup() {
                         margin: "0 0 24px 0",
                     }}
                 >
-                    Die Orthopädie Königstraße sucht ab sofort
-                    engagierte Medizinische Fachangestellte (MFA)
-                    sowie Fachärzte für Orthopädie und
-                    Unfallchirurgie. Werden Sie Teil unseres Teams
-                    in Hannover.
+                    {bodyText}
                 </p>
 
                 {/* Buttons */}
@@ -148,7 +164,7 @@ export default function KarrierePopup() {
                     }}
                 >
                     <a
-                        href="mailto:bewerbung@orthopaedie-koenigstrasse.de?subject=Bewerbung"
+                        href={applyLink}
                         style={{
                             display: "inline-block",
                             padding: "12px 24px",
@@ -164,10 +180,10 @@ export default function KarrierePopup() {
                             minWidth: 140,
                         }}
                     >
-                        Jetzt bewerben
+                        {applyLabel}
                     </a>
                     <a
-                        href="/karriere"
+                        href={moreLink}
                         style={{
                             display: "inline-block",
                             padding: "12px 24px",
@@ -183,10 +199,62 @@ export default function KarrierePopup() {
                             minWidth: 140,
                         }}
                     >
-                        Mehr erfahren
+                        {moreLabel}
                     </a>
                 </div>
             </div>
         </div>
     )
 }
+
+addPropertyControls(KarrierePopup, {
+    heading: {
+        type: ControlType.String,
+        title: "Überschrift",
+        defaultValue: "Wir suchen Verstärkung!",
+    },
+    bodyText: {
+        type: ControlType.String,
+        title: "Text",
+        defaultValue:
+            "Die Orthopädie Königstraße sucht ab sofort engagierte Medizinische Fachangestellte (MFA) sowie Fachärzte für Orthopädie und Unfallchirurgie. Werden Sie Teil unseres Teams in Hannover.",
+        displayTextArea: true,
+    },
+    applyLabel: {
+        type: ControlType.String,
+        title: "Button 1 Text",
+        defaultValue: "Jetzt bewerben",
+    },
+    applyLink: {
+        type: ControlType.String,
+        title: "Button 1 Link",
+        defaultValue:
+            "mailto:bewerbung@orthopaedie-koenigstrasse.de?subject=Bewerbung",
+    },
+    moreLabel: {
+        type: ControlType.String,
+        title: "Button 2 Text",
+        defaultValue: "Mehr erfahren",
+    },
+    moreLink: {
+        type: ControlType.String,
+        title: "Button 2 Link",
+        defaultValue: "/karriere",
+    },
+    delayMs: {
+        type: ControlType.Number,
+        title: "Verzögerung (ms)",
+        defaultValue: 2500,
+        min: 0,
+        max: 10000,
+        step: 500,
+    },
+    hideDays: {
+        type: ControlType.Number,
+        title: "Ausblenden (Tage)",
+        defaultValue: 7,
+        min: 1,
+        max: 30,
+        step: 1,
+    },
+})
