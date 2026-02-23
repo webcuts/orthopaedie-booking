@@ -190,13 +190,11 @@ function BookingWizardInner() {
     <Container size="lg" className={styles.container}>
       <Card variant="elevated" padding="lg">
         <div className={styles.header}>
-          <div className={styles.headerTop}>
-            <div>
-              <h1 className={styles.title}>{t('title')}</h1>
-              <p className={styles.subtitle}>Orthopädie Königstraße, Hannover</p>
-            </div>
+          <div className={styles.languageRow}>
             <LanguageSelector />
           </div>
+          <h1 className={styles.title}>{t('title')}</h1>
+          <p className={styles.subtitle}>Orthopädie Königstraße, Hannover</p>
         </div>
 
         <ProgressIndicator

@@ -26,3 +26,10 @@
   border-color: #2674BB;
   color: #ffffff;
 }
+
+@media (max-width: 400px) {
+  .button {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
