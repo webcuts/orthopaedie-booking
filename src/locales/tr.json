@@ -1,11 +1,9 @@
 {
   "title": "Randevu Al",
 
-  "step.specialty": "Uzmanlık Alanı",
+  "step.doctorSelect": "Doktor Seçin",
   "step.insurance": "Sigorta",
-  "step.bookingType": "Tür",
   "step.treatment": "Tedavi Türü",
-  "step.practitioner": "Doktor",
   "step.mfaTreatment": "Hizmet",
   "step.mfaCalendar": "Randevu",
   "step.date": "Tarih",
@@ -13,10 +11,11 @@
   "step.contact": "İletişim",
   "stepIndicator": "Adım {current}/{total}",
 
-  "specialty.title": "Uzmanlık Alanı Seçin",
-  "specialty.description": "Hangi uzmanlık alanına ihtiyacınız var?",
-  "specialty.loading": "Uzmanlık alanları yükleniyor...",
-  "specialty.empty": "Uzmanlık alanı mevcut değil.",
+  "doctorSelect.title": "Doktorunuzu Seçin",
+  "doctorSelect.description": "Kime randevu almak istiyorsunuz?",
+  "doctorSelect.loading": "Doktorlar yükleniyor...",
+  "doctorSelect.mfaTitle": "Reçeteler ve Hizmetler",
+  "doctorSelect.mfaSubtitle": "Doktorsuz",
 
   "insurance.title": "Sigorta Seçin",
   "insurance.description": "Nasıl sigortalısınız?",
@@ -25,12 +24,6 @@
   "treatment.title": "Tedavi Türü Seçin",
   "treatment.description": "Ne tür bir randevuya ihtiyacınız var?",
   "treatment.loading": "Tedavi türleri yükleniyor...",
-
-  "practitioner.title": "Doktor Seçin",
-  "practitioner.description": "Hangi doktora randevu almak istersiniz?",
-  "practitioner.loading": "Doktorlar yükleniyor...",
-  "practitioner.noPreference": "Tercihim Yok",
-  "practitioner.noPreferenceSubtitle": "İlk müsait doktor",
 
   "date.title": "Tarih Seçin",
   "date.description": "Tercih ettiğiniz tarihi seçin",
@@ -128,13 +121,6 @@
   "nextFreeSlot.today": "Bir sonraki müsait randevu: Bugün, saat {time}",
   "nextFreeSlot.tomorrow": "Bir sonraki müsait randevu: Yarın, saat {time}",
   "nextFreeSlot.date": "Bir sonraki müsait randevu: {date}, saat {time}",
-
-  "bookingType.title": "Ne tür randevu almak istersiniz?",
-  "bookingType.description": "Randevu türünü seçin",
-  "bookingType.doctor": "Doktor Randevusu",
-  "bookingType.doctorDescription": "Doktor ile randevu",
-  "bookingType.mfa": "Muayenehane Hizmeti",
-  "bookingType.mfaDescription": "Reçete, sevk vb.",
 
   "mfaTreatment.title": "Hizmet Seçin",
   "mfaTreatment.description": "Hangi muayenehane hizmetine ihtiyacınız var?",

@@ -79,6 +79,7 @@ export interface Practitioner {
   specialty_id: string | null;
   is_active: boolean;
   available_from: string | null;
+  image_url: string | null;
   created_at: string;
 }
 

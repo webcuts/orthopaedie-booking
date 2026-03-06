@@ -2,11 +2,9 @@ import { useState, useCallback, useMemo } from 'react';
 import { Container, Card } from '../';
 import { LanguageProvider, LanguageSelector, useTranslation } from '../../i18n';
 import { ProgressIndicator } from './ProgressIndicator';
-import { SpecialtyStep } from './steps/SpecialtyStep';
+import { DoctorSelectStep } from './steps/DoctorSelectStep';
 import { InsuranceStep } from './steps/InsuranceStep';
-import { BookingTypeStep } from './steps/BookingTypeStep';
 import { TreatmentStep } from './steps/TreatmentStep';
-import { PractitionerStep } from './steps/PractitionerStep';
 import { DateStep } from './steps/DateStep';
 import { TimeSlotStep } from './steps/TimeSlotStep';
 import { MfaTreatmentStep } from './steps/MfaTreatmentStep';
@@ -14,16 +12,14 @@ import { MfaCalendarStep } from './steps/MfaCalendarStep';
 import { ContactStep } from './steps/ContactStep';
 import { SuccessStep } from './steps/SuccessStep';
 import { useIframeResize } from '../../hooks';
-import { usePractitioners } from '../../hooks/useSupabase';
+import { useAllPractitioners } from '../../hooks/useSupabase';
 import { getPractitionerFullName } from '../../types/database';
 import styles from './BookingWizard.module.css';
 
 export type StepType =
-  | 'specialty'
+  | 'doctorSelect'
   | 'insurance'
-  | 'bookingType'
   | 'treatment'
-  | 'practitioner'
   | 'date'
   | 'time'
   | 'mfaTreatment'
@@ -55,16 +51,14 @@ export interface BookingState {
   appointmentId: string | null;
 }
 
-const DOCTOR_STEPS: StepType[] = ['specialty', 'insurance', 'bookingType', 'treatment', 'practitioner', 'date', 'time', 'contact'];
-const MFA_STEPS: StepType[] = ['specialty', 'insurance', 'bookingType', 'mfaTreatment', 'mfaCalendar', 'contact'];
-const SHARED_STEPS: StepType[] = ['specialty', 'insurance', 'bookingType'];
+const DOCTOR_STEPS: StepType[] = ['doctorSelect', 'insurance', 'treatment', 'date', 'time', 'contact'];
+const MFA_STEPS: StepType[] = ['doctorSelect', 'insurance', 'mfaTreatment', 'mfaCalendar', 'contact'];
+const SHARED_STEPS: StepType[] = ['doctorSelect'];
 
 export const STEP_LABEL_KEYS: Record<StepType, string> = {
-  specialty: 'step.specialty',
+  doctorSelect: 'step.doctorSelect',
   insurance: 'step.insurance',
-  bookingType: 'step.bookingType',
   treatment: 'step.treatment',
-  practitioner: 'step.practitioner',
   date: 'step.date',
   time: 'step.time',
   mfaTreatment: 'step.mfaTreatment',
@@ -112,19 +106,18 @@ function BookingWizardInner() {
   const currentStepType = steps[state.currentStep - 1] as StepType | undefined;
 
   // ORTHO-024: Behandlername für Banner
-  const { data: practitioners } = usePractitioners(state.specialtyId);
+  const { data: allPractitioners } = useAllPractitioners();
   const practitionerName = useMemo(() => {
-    if (!state.practitionerId || !practitioners.length) return null;
-    const p = practitioners.find(pr => pr.id === state.practitionerId);
+    if (!state.practitionerId || !allPractitioners.length) return null;
+    const p = allPractitioners.find(pr => pr.id === state.practitionerId);
     return p ? getPractitionerFullName(p) : null;
-  }, [state.practitionerId, practitioners]);
+  }, [state.practitionerId, allPractitioners]);
 
-  const practitionerStepIndex = steps.indexOf('practitioner');
+  // Banner ab Step 2 anzeigen wenn doctor track + practitionerId gesetzt
   const showPractitionerBanner = state.bookingType === 'doctor'
     && state.practitionerId
     && practitionerName
-    && practitionerStepIndex >= 0
-    && state.currentStep > practitionerStepIndex + 1;
+    && state.currentStep > 1;
 
   // Iframe-Höhe dynamisch anpassen bei Step-Wechsel
   useIframeResize([state.currentStep, state.bookingComplete]);
@@ -214,11 +207,15 @@ function BookingWizardInner() {
         )}
 
         <div className={styles.stepContent}>
-          {currentStepType === 'specialty' && (
-            <SpecialtyStep
-              selectedId={state.specialtyId}
-              onSelect={(id) => {
-                updateState({ specialtyId: id, practitionerId: null });
+          {currentStepType === 'doctorSelect' && (
+            <DoctorSelectStep
+              onSelectDoctor={(practitionerId, specialtyId) => {
+                updateState({ bookingType: 'doctor', practitionerId, specialtyId });
+                nextStep();
+              }}
+              onSelectMfa={() => {
+                // Für MFA: specialtyId wird nicht benötigt (null)
+                updateState({ bookingType: 'mfa', specialtyId: null, practitionerId: null });
                 nextStep();
               }}
             />
@@ -235,34 +232,11 @@ function BookingWizardInner() {
             />
           )}
 
-          {currentStepType === 'bookingType' && (
-            <BookingTypeStep
-              selectedType={state.bookingType}
-              onSelect={(type) => {
-                updateState({ bookingType: type });
-                nextStep();
-              }}
-              onBack={prevStep}
-            />
-          )}
-
           {currentStepType === 'treatment' && (
             <TreatmentStep
               selectedId={state.treatmentTypeId}
               onSelect={(id) => {
                 updateState({ treatmentTypeId: id });
-                nextStep();
-              }}
-              onBack={prevStep}
-            />
-          )}
-
-          {currentStepType === 'practitioner' && (
-            <PractitionerStep
-              specialtyId={state.specialtyId}
-              selectedId={state.practitionerId}
-              onSelect={(id) => {
-                updateState({ practitionerId: id });
                 nextStep();
               }}
               onBack={prevStep}

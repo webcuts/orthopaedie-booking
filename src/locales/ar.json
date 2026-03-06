@@ -1,11 +1,9 @@
 {
   "title": "حجز موعد",
 
-  "step.specialty": "التخصص",
+  "step.doctorSelect": "اختيار الطبيب",
   "step.insurance": "التأمين",
-  "step.bookingType": "النوع",
   "step.treatment": "نوع العلاج",
-  "step.practitioner": "الطبيب",
   "step.mfaTreatment": "الخدمة",
   "step.mfaCalendar": "الموعد",
   "step.date": "التاريخ",
@@ -13,10 +11,11 @@
   "step.contact": "الاتصال",
   "stepIndicator": "خطوة {current}/{total}",
 
-  "specialty.title": "اختر التخصص",
-  "specialty.description": "ما هو التخصص الذي تحتاجه؟",
-  "specialty.loading": "جارٍ تحميل التخصصات...",
-  "specialty.empty": "لا تتوفر تخصصات.",
+  "doctorSelect.title": "اختر طبيبك",
+  "doctorSelect.description": "مع من تريد الحجز؟",
+  "doctorSelect.loading": "جارٍ تحميل الأطباء...",
+  "doctorSelect.mfaTitle": "الوصفات والخدمات",
+  "doctorSelect.mfaSubtitle": "بدون طبيب",
 
   "insurance.title": "اختر التأمين",
   "insurance.description": "ما نوع تأمينك الصحي؟",
@@ -25,12 +24,6 @@
   "treatment.title": "اختر نوع العلاج",
   "treatment.description": "ما نوع الموعد الذي تحتاجه؟",
   "treatment.loading": "جارٍ تحميل أنواع العلاج...",
-
-  "practitioner.title": "اختر الطبيب",
-  "practitioner.description": "عند أي طبيب تريد حجز موعد؟",
-  "practitioner.loading": "جارٍ تحميل الأطباء...",
-  "practitioner.noPreference": "بدون تفضيل",
-  "practitioner.noPreferenceSubtitle": "أقرب طبيب متاح",
 
   "date.title": "اختر التاريخ",
   "date.description": "اختر التاريخ المفضل لديك",
@@ -128,13 +121,6 @@
   "nextFreeSlot.today": "أقرب موعد متاح: اليوم، {time}",
   "nextFreeSlot.tomorrow": "أقرب موعد متاح: غداً، {time}",
   "nextFreeSlot.date": "أقرب موعد متاح: {date}، {time}",
-
-  "bookingType.title": "ماذا تريد أن تحجز؟",
-  "bookingType.description": "اختر نوع الموعد",
-  "bookingType.doctor": "موعد طبيب",
-  "bookingType.doctorDescription": "موعد مع طبيب",
-  "bookingType.mfa": "خدمة العيادة",
-  "bookingType.mfaDescription": "وصفات طبية، إحالات وغيرها",
 
   "mfaTreatment.title": "اختر الخدمة",
   "mfaTreatment.description": "ما خدمة العيادة التي تحتاجها؟",

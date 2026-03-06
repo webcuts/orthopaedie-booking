@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import { Button } from '../../';
 import {
-  useSpecialties,
   useTreatmentTypes,
-  usePractitioners,
+  useAllPractitioners,
   useMfaTreatmentTypes
 } from '../../../hooks/useSupabase';
 import { getPractitionerFullName } from '../../../types/database';
@@ -25,18 +24,12 @@ const localeMap: Record<string, string> = {
 };
 
 export function SuccessStep({ state, onReset }: SuccessStepProps) {
-  const { data: specialties } = useSpecialties();
   const { data: treatmentTypes } = useTreatmentTypes();
-  const { data: practitioners } = usePractitioners(state.specialtyId);
+  const { data: practitioners } = useAllPractitioners();
   const { data: mfaTreatmentTypes } = useMfaTreatmentTypes();
   const { t, language } = useTranslation();
 
   const isMfa = state.bookingType === 'mfa';
-
-  const selectedSpecialty = useMemo(() =>
-    specialties.find(s => s.id === state.specialtyId),
-    [specialties, state.specialtyId]
-  );
 
   const selectedTreatment = useMemo(() =>
     treatmentTypes.find(t => t.id === state.treatmentTypeId),
@@ -118,13 +111,6 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
               ? (selectedMfaTreatment ? getLocalizedName(selectedMfaTreatment, language) : '')
               : (selectedTreatment ? getLocalizedName(selectedTreatment, language) : '')
             }
-          </span>
-        </div>
-
-        <div className={styles.detailItem}>
-          <span className={styles.detailLabel}>{t('success.labelSpecialty')}</span>
-          <span className={styles.detailValue}>
-            {selectedSpecialty?.name}
           </span>
         </div>
 

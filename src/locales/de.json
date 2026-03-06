@@ -1,11 +1,9 @@
 {
   "title": "Termin buchen",
 
-  "step.specialty": "Fachgebiet",
+  "step.doctorSelect": "Arzt wählen",
   "step.insurance": "Versicherung",
-  "step.bookingType": "Buchungsart",
   "step.treatment": "Terminart",
-  "step.practitioner": "Behandler",
   "step.mfaTreatment": "Leistung",
   "step.mfaCalendar": "Termin",
   "step.date": "Datum",
@@ -13,10 +11,11 @@
   "step.contact": "Kontakt",
   "stepIndicator": "Schritt {current}/{total}",
 
-  "specialty.title": "Fachgebiet wählen",
-  "specialty.description": "Welches Fachgebiet benötigen Sie?",
-  "specialty.loading": "Fachgebiete werden geladen...",
-  "specialty.empty": "Keine Fachgebiete verfügbar.",
+  "doctorSelect.title": "Wählen Sie Ihren Behandler",
+  "doctorSelect.description": "Bei wem möchten Sie einen Termin buchen?",
+  "doctorSelect.loading": "Behandler werden geladen...",
+  "doctorSelect.mfaTitle": "Rezepte & Leistungen",
+  "doctorSelect.mfaSubtitle": "Ohne Arzt",
 
   "insurance.title": "Versicherung wählen",
   "insurance.description": "Wie sind Sie versichert?",
@@ -25,12 +24,6 @@
   "treatment.title": "Terminart wählen",
   "treatment.description": "Welche Art von Termin benötigen Sie?",
   "treatment.loading": "Terminarten werden geladen...",
-
-  "practitioner.title": "Behandler wählen",
-  "practitioner.description": "Bei welchem Behandler möchten Sie einen Termin?",
-  "practitioner.loading": "Behandler werden geladen...",
-  "practitioner.noPreference": "Ich habe keine Präferenz",
-  "practitioner.noPreferenceSubtitle": "Nächster verfügbarer Behandler",
 
   "date.title": "Datum wählen",
   "date.description": "Wählen Sie Ihren Wunschtermin",
@@ -128,13 +121,6 @@
   "nextFreeSlot.today": "Nächster freier Termin: Heute, {time} Uhr",
   "nextFreeSlot.tomorrow": "Nächster freier Termin: Morgen, {time} Uhr",
   "nextFreeSlot.date": "Nächster freier Termin: {date}, {time} Uhr",
-
-  "bookingType.title": "Was möchten Sie buchen?",
-  "bookingType.description": "Wählen Sie die Art Ihres Termins",
-  "bookingType.doctor": "Ärztlicher Termin",
-  "bookingType.doctorDescription": "Termin bei einem Arzt",
-  "bookingType.mfa": "Praxisleistung",
-  "bookingType.mfaDescription": "Rezepte, Überweisungen u.a.",
 
   "mfaTreatment.title": "Leistung wählen",
   "mfaTreatment.description": "Welche Praxisleistung benötigen Sie?",

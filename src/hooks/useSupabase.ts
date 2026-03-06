@@ -228,6 +228,53 @@ export function usePractitioners(specialtyId: string | null) {
 }
 
 // =====================================================
+// Hook: Alle Behandler ohne Fachgebiet-Filter (ORTHO-042)
+// =====================================================
+
+export function useAllPractitioners() {
+  const [data, setData] = useState<Practitioner[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetch() {
+      setLoading(true);
+      setError(null);
+      try {
+        const today = formatLocalDate(new Date());
+
+        const { data: practitioners, error: practError } = await supabase
+          .from('practitioners')
+          .select('*')
+          .eq('is_active', true)
+          .or(`available_from.is.null,available_from.lte.${today}`)
+          .order('last_name');
+
+        if (practError) throw practError;
+
+        // Abwesende Behandler filtern
+        const { data: absences } = await supabase
+          .from('practitioner_absences')
+          .select('practitioner_id')
+          .lte('start_date', today)
+          .gte('end_date', today);
+
+        const absentIds = new Set((absences || []).map(a => a.practitioner_id));
+
+        setData((practitioners || []).filter(p => !absentIds.has(p.id)));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Fehler beim Laden der Behandler');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetch();
+  }, []);
+
+  return { data, loading, error };
+}
+
+// =====================================================
 // Hook: Öffnungszeiten
 // =====================================================
 

@@ -3,10 +3,9 @@ import { Input, Button } from '../../';
 import {
   useCreateBooking,
   useCreateMfaBooking,
-  useSpecialties,
   useInsuranceTypes,
   useTreatmentTypes,
-  usePractitioners,
+  useAllPractitioners,
   useMfaTreatmentTypes
 } from '../../../hooks/useSupabase';
 import { getPractitionerFullName } from '../../../types/database';
@@ -55,16 +54,10 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
   };
 
   // Load data for summary
-  const { data: specialties } = useSpecialties();
   const { data: insuranceTypes } = useInsuranceTypes();
   const { data: treatmentTypes } = useTreatmentTypes();
-  const { data: practitioners } = usePractitioners(state.specialtyId);
+  const { data: practitioners } = useAllPractitioners();
   const { data: mfaTreatmentTypes } = useMfaTreatmentTypes();
-
-  const selectedSpecialty = useMemo(() =>
-    specialties.find(s => s.id === state.specialtyId),
-    [specialties, state.specialtyId]
-  );
 
   const selectedInsurance = useMemo(() =>
     insuranceTypes.find(i => i.id === state.insuranceTypeId),
@@ -210,11 +203,6 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
       <div className={contactStyles.summary}>
         <h3 className={contactStyles.summaryTitle}>{t('contact.summaryTitle')}</h3>
 
-        <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('specialty'))}>
-          <span className={contactStyles.summaryLabel}>{t('contact.labelSpecialty')}</span>
-          <span className={contactStyles.summaryValue}>{selectedSpecialty?.name}</span>
-        </div>
-
         <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('insurance'))}>
           <span className={contactStyles.summaryLabel}>{t('contact.labelInsurance')}</span>
           <span className={contactStyles.summaryValue}>{selectedInsurance ? getLocalizedName(selectedInsurance, language) : ''}</span>
@@ -257,10 +245,10 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
               </span>
             </div>
 
-            <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('practitioner'))}>
+            <div className={contactStyles.summaryItem} onClick={() => onGoToStep(stepNumberOf('doctorSelect'))}>
               <span className={contactStyles.summaryLabel}>{t('contact.labelPractitioner')}</span>
               <span className={contactStyles.summaryValue}>
-                {selectedPractitioner ? getPractitionerFullName(selectedPractitioner) : t('contact.noPreference')}
+                {selectedPractitioner ? getPractitionerFullName(selectedPractitioner) : ''}
               </span>
             </div>
 
