@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Benutzerhandbuch – Orthopädie Königstraße</title>
+<style>
+  @page {
+    size: A4;
+    margin: 25mm 20mm 25mm 20mm;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background: #fff;
+  }
+
+  /* Cover page */
+  .cover {
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .cover-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    background: #2674BB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+
+  .cover-logo svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .cover h1 {
+    font-size: 28pt;
+    font-weight: 700;
+    color: #2674BB;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .cover h2 {
+    font-size: 16pt;
+    font-weight: 400;
+    color: #555;
+    margin-bottom: 48px;
+  }
+
+  .cover-meta {
+    font-size: 10pt;
+    color: #888;
+    margin-top: 80px;
+  }
+
+  .cover-meta p { margin-bottom: 4px; }
+
+  .cover-line {
+    width: 120px;
+    height: 3px;
+    background: #2674BB;
+    border-radius: 2px;
+    margin: 0 auto 48px;
+  }
+
+  /* TOC */
+  .toc {
+    page-break-after: always;
+    padding: 20px 0;
+  }
+
+  .toc h2 {
+    font-size: 18pt;
+    color: #2674BB;
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #2674BB;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .toc-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px dotted #ccc;
+    font-size: 11pt;
+  }
+
+  .toc-list li.toc-chapter {
+    font-weight: 600;
+    font-size: 12pt;
+    color: #2674BB;
+    padding-top: 14px;
+  }
+
+  .toc-list li.toc-section {
+    padding-left: 20px;
+    font-weight: 400;
+    color: #444;
+    font-size: 10.5pt;
+  }
+
+  /* Chapter headings */
+  .chapter {
+    page-break-before: always;
+    padding-top: 10px;
+  }
+
+  .chapter:first-of-type {
+    page-break-before: avoid;
+  }
+
+  .chapter-number {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #2674BB;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .chapter h2 {
+    font-size: 20pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+
+  .chapter-intro {
+    font-size: 11pt;
+    color: #555;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  h3 {
+    font-size: 14pt;
+    font-weight: 600;
+    color: #2674BB;
+    margin-top: 28px;
+    margin-bottom: 10px;
+  }
+
+  h4 {
+    font-size: 12pt;
+    font-weight: 600;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin-bottom: 10px;
+  }
+
+  /* Numbered steps */
+  .steps {
+    counter-reset: step-counter;
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 20px;
+  }
+
+  .steps li {
+    counter-increment: step-counter;
+    position: relative;
+    padding: 10px 12px 10px 48px;
+    margin-bottom: 8px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #2674BB;
+    min-height: 40px;
+  }
+
+  .steps li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    width: 24px;
+    height: 24px;
+    background: #2674BB;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 10pt;
+    font-weight: 700;
+  }
+
+  /* Info/Hint/Warning boxes */
+  .info-box {
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    page-break-inside: avoid;
+  }
+
+  .info-box.tip {
+    background: #EFF6FF;
+    border-left: 4px solid #2674BB;
+    color: #1e40af;
+  }
+
+  .info-box.warning {
+    background: #FEF3C7;
+    border-left: 4px solid #F59E0B;
+    color: #92400e;
+  }
+
+  .info-box.important {
+    background: #FEE2E2;
+    border-left: 4px solid #DC3545;
+    color: #991b1b;
+  }
+
+  .info-box.success {
+    background: #D1FAE5;
+    border-left: 4px solid #22C55E;
+    color: #166534;
+  }
+
+  .info-box strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 10pt;
+  }
+
+  thead th {
+    background: #2674BB;
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 10pt;
+  }
+
+  thead th:first-child { border-radius: 6px 0 0 0; }
+  thead th:last-child { border-radius: 0 6px 0 0; }
+
+  tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #e5e5e5;
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody tr:last-child td:first-child { border-radius: 0 0 0 6px; }
+  tbody tr:last-child td:last-child { border-radius: 0 0 6px 0; }
+
+  /* Color swatches */
+  .color-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-right: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+
+  /* Key references */
+  .key {
+    display: inline-block;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1px 8px;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 9.5pt;
+    color: #333;
+  }
+
+  .button-ref {
+    display: inline-block;
+    background: #2674BB;
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 10px;
+    font-size: 9.5pt;
+    font-weight: 500;
+  }
+
+  .button-ref.gray {
+    background: #6B7280;
+  }
+
+  .button-ref.green {
+    background: #22C55E;
+  }
+
+  .button-ref.red {
+    background: #DC3545;
+  }
+
+  .button-ref.amber {
+    background: #F59E0B;
+    color: #000;
+  }
+
+  /* Indented blocks */
+  .indent {
+    margin-left: 20px;
+    padding-left: 16px;
+    border-left: 2px solid #e5e5e5;
+    margin-bottom: 12px;
+  }
+
+  /* Bulleted lists */
+  ul {
+    margin: 8px 0 16px 24px;
+    padding: 0;
+  }
+
+  ul li {
+    margin-bottom: 5px;
+  }
+
+  /* Page footer */
+  .page-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 8pt;
+    color: #999;
+    padding: 8px 0;
+  }
+
+  /* Screenshot placeholder */
+  .screenshot {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 32px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    margin: 16px 0;
+    background: #fafafa;
+  }
+
+  strong { font-weight: 600; }
+
+  /* Avoid page breaks in important elements */
+  .steps li, .info-box, table { page-break-inside: avoid; }
+  h3, h4 { page-break-after: avoid; }
+</style>
+</head>
+<body>
+
+<!-- ==================== COVER ==================== -->
+<div class="cover">
+  <div class="cover-logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+    </svg>
+  </div>
+  <h1>Benutzerhandbuch</h1>
+  <h2>Online-Terminbuchungssystem</h2>
+  <div class="cover-line"></div>
+  <p style="font-size: 14pt; color: #333; font-weight: 500;">Orthopädie Königstraße</p>
+  <p style="font-size: 11pt; color: #666; margin-top: 4px;">Königstraße 51 &middot; 30175 Hannover</p>
+
+  <div class="cover-meta">
+    <p>Version 1.0 &middot; März 2025</p>
+    <p>Für Praxismitarbeiterinnen und Praxismitarbeiter</p>
+  </div>
+</div>
+
+<!-- ==================== TOC ==================== -->
+<div class="toc">
+  <h2>Inhaltsverzeichnis</h2>
+  <ul class="toc-list">
+    <li class="toc-chapter"><span>1. Einleitung</span></li>
+    <li class="toc-section"><span>Was ist das Online-Terminbuchungssystem?</span></li>
+    <li class="toc-section"><span>Admin Dashboard aufrufen &amp; anmelden</span></li>
+
+    <li class="toc-chapter"><span>2. Dashboard-Übersicht</span></li>
+    <li class="toc-section"><span>Startseite und Statistiken</span></li>
+    <li class="toc-section"><span>Kalenderansichten</span></li>
+    <li class="toc-section"><span>Farbcodierung und Filter</span></li>
+
+    <li class="toc-chapter"><span>3. Termine verwalten</span></li>
+    <li class="toc-section"><span>Termin anklicken und Details ansehen</span></li>
+    <li class="toc-section"><span>Terminstatus ändern</span></li>
+    <li class="toc-section"><span>Termin verlegen</span></li>
+    <li class="toc-section"><span>Multi-Slot-Termine</span></li>
+
+    <li class="toc-chapter"><span>4. Neuen Termin manuell anlegen</span></li>
+    <li class="toc-section"><span>Arzttermin anlegen</span></li>
+    <li class="toc-section"><span>MFA-Termin anlegen</span></li>
+
+    <li class="toc-chapter"><span>5. Abwesenheitsverwaltung</span></li>
+    <li class="toc-section"><span>Abwesenheit eintragen</span></li>
+    <li class="toc-section"><span>Automatische Auswirkungen</span></li>
+    <li class="toc-section"><span>Abwesenheit löschen</span></li>
+
+    <li class="toc-chapter"><span>6. Behandlungsarten und MFA-Leistungen</span></li>
+    <li class="toc-section"><span>Arzt-Behandlungsarten</span></li>
+    <li class="toc-section"><span>MFA-Leistungen</span></li>
+    <li class="toc-section"><span>Neue Leistung hinzufügen oder bearbeiten</span></li>
+
+    <li class="toc-chapter"><span>7. Sprechzeiten und Verfügbarkeit</span></li>
+    <li class="toc-section"><span>Individuelle Sprechzeiten pro Behandler</span></li>
+    <li class="toc-section"><span>Buchbarkeit und Versicherungsfilter</span></li>
+
+    <li class="toc-chapter"><span>8. E-Mail-System</span></li>
+    <li class="toc-section"><span>Automatische E-Mails im Überblick</span></li>
+    <li class="toc-section"><span>Patienten ohne E-Mail</span></li>
+
+    <li class="toc-chapter"><span>9. MFA-Slots</span></li>
+    <li class="toc-section"><span>Automatische Generierung</span></li>
+    <li class="toc-section"><span>Manueller Fallback</span></li>
+    <li class="toc-section"><span>Parallelslots</span></li>
+
+    <li class="toc-chapter"><span>10. Häufige Fragen &amp; Problemlösung</span></li>
+  </ul>
+</div>
+
+<!-- ==================== KAPITEL 1 ==================== -->
+<div class="chapter">
+  <div class="chapter-number">Kapitel 1</div>
+  <h2>Einleitung</h2>
+  <p class="chapter-intro">Was das System ist, wie Patienten Termine buchen und wie Sie das Admin Dashboard erreichen.</p>
+
+  <h3>Was ist das Online-Terminbuchungssystem?</h3>
+  <p>
+    Das Online-Terminbuchungssystem der Orthopädie Königstraße ermöglicht es Patienten, rund um die Uhr Termine über die Praxis-Website zu buchen — ganz ohne Anruf. Patienten wählen ihren Wunscharzt (oder eine MFA-Leistung), ihre Versicherungsart, die gewünschte Behandlung und ein freies Zeitfenster. Nach Eingabe ihrer Kontaktdaten erhalten sie eine automatische Bestätigung per E-Mail.
+  </p>
+  <p>
+    Das System unterstützt fünf Sprachen: <strong>Deutsch, Englisch, Türkisch, Russisch und Arabisch.</strong> Patienten können die Sprache frei wählen.
+  </p>
+
+  <h4>Behandler im System</h4>
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Typ</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Dr. med. Yilmaz Ercan</td><td>Arzt</td></tr>
+      <tr><td>Dr. med. Michael Jonda</td><td>Arzt</td></tr>
+      <tr><td>Vladimir Flores</td><td>Arzt</td></tr>
+      <tr><td>MFA / Praxisleistung</td><td>Medizinische Fachangestellte</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Admin Dashboard aufrufen &amp; anmelden</h3>
+
+  <ol class="steps">
+    <li>Öffnen Sie Ihren Browser (Chrome, Firefox, Safari oder Edge).</li>
+    <li>Geben Sie in die Adresszeile ein: <strong>https://orthopaedie-booking.vercel.app/admin.html</strong></li>
+    <li>Geben Sie Ihre <strong>E-Mail-Adresse</strong> und Ihr <strong>Passwort</strong> ein.</li>
+    <li>Klicken Sie auf <span class="button-ref">Anmelden</span>.</li>
+  </ol>
+
+  <div class="info-box warning">
+    <strong>Sicherheitshinweis</strong>
+    Nach 5 fehlgeschlagenen Anmeldeversuchen wird der Zugang für 60 Sekunden gesperrt. Ein Countdown zeigt die verbleibende Wartezeit an.
+  </div>
+
+  <div class="info-box tip">
+    <strong>Tipp</strong>
+    Speichern Sie die Admin-Seite als Lesezeichen in Ihrem Browser, damit Sie sie schnell aufrufen können.
+  </div>
+</div>
+
+<!-- ==================== KAPITEL 2 ==================== -->
+<div class="chapter">
+  <div class="chapter-number">Kapitel 2</div>
+  <h2>Dashboard-Übersicht</h2>
+  <p class="chapter-intro">Was Sie auf der Startseite sehen und wie Sie sich im System zurechtfinden.</p>
+
+  <h3>Aufbau des Dashboards</h3>
+  <p>Nach der Anmeldung sehen Sie das Dashboard mit folgenden Bereichen:</p>
+
+  <table>
+    <thead>
+      <tr><th>Bereich</th><th>Position</th><th>Beschreibung</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Seitenleiste</strong></td>
+        <td>Links</td>
+        <td>Navigation: <em>Kalender</em> (Startseite) und <em>Einstellungen</em></td>
+      </tr>
+      <tr>
+        <td><strong>Kopfzeile</strong></td>
+        <td>Oben</td>
+        <td>Aktuelles Datum, Ihre E-Mail-Adresse, Abmelden-Button</td>
+      </tr>
+      <tr>
+        <td><strong>Statistik-Karten</strong></td>
+        <td>Oben im Hauptbereich</td>
+        <td>Kennzahlen: Buchungen diese Woche, Buchungen heute, Auslastung, beliebte Uhrzeiten</td>
+      </tr>
+      <tr>
+        <td><strong>Kalender</strong></td>
+        <td>Mitte</td>
+        <td>Tages-, Wochen- oder Monatsansicht aller Termine</td>
+      </tr>
+      <tr>
+        <td><strong>Systemstatus</strong></td>
+        <td>Unten</td>
+        <td>Protokoll der letzten 20 Systemereignisse (Buchungen, Stornierungen, E-Mails usw.)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Statistik-Karten</h3>
+
+  <h4>Buchungen diese Woche</h4>
+  <p>Zeigt die Anzahl der nicht-stornierten Termine dieser Woche. Ein Pfeil-Symbol zeigt den Vergleich zur Vorwoche an (z.&nbsp;B. „+15% vs. Vorwoche").</p>
+
+  <h4>Buchungen heute</h4>
+  <p>Anzahl der heutigen Termine auf einen Blick.</p>
+
+  <h4>Auslastung pro Behandler</h4>
+  <p>Ein Balkendiagramm zeigt für jeden Behandler, wie viel Prozent seiner verfügbaren Slots belegt sind. So erkennen Sie sofort, wer noch freie Kapazitäten hat.</p>
+
+  <h4>Beliebteste Uhrzeiten</h4>
+  <p>Zeigt, zu welchen Uhrzeiten die meisten Buchungen stattfinden. Hilfreich, um Engpässe zu erkennen und Sprechzeiten ggf. anzupassen.</p>
+
+  <h3>Kalenderansichten</h3>
+
+  <p>Über die Ansicht-Buttons rechts oben wechseln Sie zwischen drei Ansichten:</p>
+
+  <table>
+    <thead>
+      <tr><th>Ansicht</th><th>Button</th><th>Beschreibung</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Tagesansicht</strong></td>
+        <td><span class="key">Tag</span></td>
+        <td>Detaillierte Übersicht eines Tages von 07:00 bis 18:00 Uhr mit 15-Minuten-Raster. Termine werden als farbige Blöcke dargestellt. Eine rote Linie zeigt die aktuelle Uhrzeit.</td>
+      </tr>
+      <tr>
+        <td><strong>Wochenansicht</strong></td>
+        <td><span class="key">Woche</span></td>
+        <td>Zeigt alle 7 Tage der Woche nebeneinander. Jeder Tag zeigt die Anzahl der Termine und die einzelnen Blöcke.</td>
+      </tr>
+      <tr>
+        <td><strong>Monatsansicht</strong></td>
+        <td><span class="key">Monat</span></td>
+        <td>Kalenderblatt des gesamten Monats. Pro Tag werden bis zu 3 Termine angezeigt. Bei mehr Terminen erscheint „+X weitere".</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Mit den Pfeiltasten <span class="key">&lt;</span> und <span class="key">&gt;</span> navigieren Sie vor und zurück. Der Button <span class="key">Heute</span> springt zum aktuellen Tag.</p>
+
+  <h3>Farbcodierung</h3>
+  <p>Die Farben der Termine verraten Ihnen sofort den Typ und Status:</p>
+
+  <table>
+    <thead>
+      <tr><th>Farbe</th><th>Bedeutung</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="color-swatch" style="background:#FEF3C7; border-color:#F59E0B;"></span> Gelb/Orange</td><td><strong>Offen</strong> — Termin noch nicht bestätigt</td></tr>
+      <tr><td><span class="color-swatch" style="background:#D1FAE5; border-color:#22C55E;"></span> Grün</td><td><strong>Bestätigt</strong> — Termin ist bestätigt</td></tr>
+      <tr><td><span class="color-swatch" style="background:#FEE2E2; border-color:#DC3545;"></span> Rot</td><td><strong>Storniert</strong> — Termin wurde abgesagt</td></tr>
+      <tr><td><span class="color-swatch" style="background:#F3F4F6; border-color:#6B7280;"></span> Grau</td><td><strong>Erledigt</strong> — Termin ist abgeschlossen</td></tr>
+      <tr><td><span class="color-swatch" style="background:#F3E8FF; border-color:#7C3AED;"></span> Lila</td><td><strong>MFA-Termin</strong> — Praxisleistung ohne Arzt</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Filtermöglichkeiten</h3>
+  <p>Über der Kalenderansicht befinden sich zwei Filter-Dropdowns:</p>
+  <ul>
+    <li><strong>Termintyp-Filter:</strong> „Alle Termine", „Arzttermine" oder „MFA-Termine"</li>
+    <li><strong>Behandler-Filter:</strong> „Alle Behandler" oder ein bestimmter Arzt</li>
+  </ul>
+  <p>So können Sie z.&nbsp;B. nur die Termine von Dr. Ercan anzeigen oder sich auf MFA-Termine konzentrieren.</p>
+
+  <h3>Systemstatus</h3>
+  <p>Am unteren Seitenrand finden Sie das Systemstatus-Protokoll mit den letzten 20 Ereignissen. Jeder Eintrag zeigt:</p>
+  <ul>
+    <li>Ein farbiges Label (z.&nbsp;B. <span class="color-swatch" style="background:#2674BB;"></span> Slot-Generierung, <span class="color-swatch" style="background:#22C55E;"></span> Buchung, <span class="color-swatch" style="background:#F59E0B;"></span> Stornierung, <span class="color-swatch" style="background:#8B5CF6;"></span> E-Mail, <span class="color-swatch" style="background:#DC3545;"></span> Fehler)</li>
+    <li>Eine Beschreibung des Ereignisses</li>
+    <li>Den Zeitpunkt (Datum und Uhrzeit)</li>
+  </ul>
+</div>
+
+<!-- ==================== KAPITEL 3 ==================== -->
+<div class="chapter">
+  <div class="chapter-number">Kapitel 3</div>
+  <h2>Termine verwalten</h2>
+  <p class="chapter-intro">Termine einsehen, Status ändern, verlegen und Multi-Slot-Termine verstehen.</p>
+
+  <h3>Termin anklicken und Details ansehen</h3>
+  <p>Klicken Sie auf einen beliebigen Termin im Kalender, um die <strong>Termindetails</strong> zu öffnen. Es erscheint ein Fenster mit folgenden Informationen:</p>
+  <ul>
+    <li><strong>Patient:</strong> Name, E-Mail (als klickbarer Link) und Telefonnummer</li>
+    <li><strong>Datum und Uhrzeit:</strong> Vollständiges Datum, Uhrzeit und Dauer</li>
+    <li><strong>Behandlung:</strong> Terminart, Behandler und Versicherungstyp</li>
+    <li><strong>Status:</strong> Aktueller Terminstatus mit Änderungsmöglichkeit</li>
+    <li><strong>Gebucht am:</strong> Wann der Patient den Termin gebucht hat</li>
+  </ul>
+
+  <div class="info-box tip">
+    <strong>Tipp</strong>
+    Bei MFA-Terminen wird oben im Detailfenster ein lila „MFA"-Label angezeigt, damit Sie den Unterschied sofort erkennen.
+  </div>
+
+  <h3>Terminstatus ändern</h3>
+  <p>Im Detailfenster sehen Sie vier Status-Buttons. Klicken Sie auf den gewünschten Status, um ihn sofort zu ändern:</p>
+
+  <table>
+    <thead>
+      <tr><th>Status</th><th>Button</th><th>Wann verwenden?</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="button-ref amber">Offen</span></td>
+        <td>Gelb</td>
+        <td>Standard nach Online-Buchung. Patient hat gebucht, aber der Termin wurde noch nicht von der Praxis bestätigt.</td>
+      </tr>
+      <tr>
+        <td><span class="button-ref green">Bestätigt</span></td>
+        <td>Grün</td>
+        <td>Termin ist bestätigt und findet statt.</td>
+      </tr>
+      <tr>
+        <td><span class="button-ref red">Storniert</span></td>
+        <td>Rot</td>
+        <td>Termin wurde abgesagt (durch Praxis oder Patient). Der Zeitslot wird wieder freigegeben.</td>
+      </tr>
+      <tr>
+        <td><span class="button-ref gray">Erledigt</span></td>
+        <td>Grau</td>
+        <td>Patient war da, Termin ist abgeschlossen.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box tip">
+    <strong>Tipp</strong>
+    Die Statusänderung wird sofort gespeichert — Sie müssen nicht extra auf „Speichern" klicken.
+  </div>
+
+  <h4>Patientendaten löschen (DSGVO)</h4>
+  <p>Bei stornierten oder erledigten Terminen erscheint ein zusätzlicher Button <span class="button-ref gray">Patientendaten löschen</span>. Damit können Sie die persönlichen Daten des Patienten (Name, E-Mail, Telefon) unwiderruflich löschen. Der Termin bleibt als anonymisierter Eintrag erhalten.</p>
+
+  <div class="info-box important">
+    <strong>Achtung: Nicht rückgängig machbar!</strong>
+    Nach der Löschung werden Name, E-Mail und Telefon durch „Gelöscht" ersetzt. Dieser Vorgang kann nicht rückgängig gemacht werden. Es erscheint eine Sicherheitsabfrage vor der Löschung.
+  </div>
+
+  <h3>Termin verlegen</h3>
+  <p>Offene oder bestätigte Termine können verlegt werden. So geht es:</p>
+
+  <ol class="steps">
+    <li>Klicken Sie auf den Termin im Kalender, um die Details zu öffnen.</li>
+    <li>Klicken Sie auf <span class="button-ref">Verlegen</span> (links unten im Detailfenster).</li>
+    <li>Es öffnet sich der Verlegungsdialog. Oben sehen Sie die bisherigen Termindaten.</li>
+    <li>Wählen Sie ein <strong>neues Datum</strong> im Kalender. Tage ohne freie Slots sind ausgegraut.</li>
+    <li>Wählen Sie eine <strong>neue Uhrzeit</strong> aus den verfügbaren Zeitslots.</li>
+    <li>Klicken Sie auf <span class="button-ref">Termin verlegen</span>.</li>
+  </ol>
+
+  <div class="info-box success">
+    <strong>Automatische Benachrichtigung</strong>
+    Hat der Patient eine E-Mail-Adresse hinterlegt, erhält er automatisch eine Benachrichtigung über die Verlegung mit dem neuen Datum und der neuen Uhrzeit.
+  </div>
+
+  <div class="info-box warning">
+    <strong>Patient ohne E-Mail?</strong>
+    Wenn keine E-Mail-Adresse vorhanden ist, erscheint ein gelber Hinweis: „Patient hat keine E-Mail. Bitte telefonisch benachrichtigen." Bitte informieren Sie den Patienten in diesem Fall persönlich.
+  </div>
+
+  <h3>Unterschied: Arzttermine und MFA-Termine</h3>
+  <table>
+    <thead>
+      <tr><th>Eigenschaft</th><th>Arzttermin</th><th>MFA-Termin</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Farbe im Kalender</td><td>Nach Status (gelb/grün/rot/grau)</td><td>Immer lila</td></tr>
+      <tr><td>Behandler</td><td>Konkreter Arzt (z.&nbsp;B. Dr. Ercan)</td><td>„MFA / Praxisleistung"</td></tr>
+      <tr><td>Dauer</td><td>10–15 Minuten</td><td>5–10 Minuten</td></tr>
+      <tr><td>Parallelbuchungen</td><td>Nein (1 Patient pro Slot)</td><td>Ja (mehrere gleichzeitig möglich)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Multi-Slot-Termine</h3>
+  <p>Manche Behandlungsarten dauern länger als ein einzelner 10-Minuten-Slot. Zum Beispiel belegt eine <strong>Erstuntersuchung (15 Minuten)</strong> automatisch 2 aufeinanderfolgende Slots. Das System prüft beim Buchen automatisch, ob genügend aufeinanderfolgende Slots frei sind.</p>
+
+  <div class="info-box tip">
+    <strong>Tipp</strong>
+    Sie müssen sich keine Sorgen über Multi-Slot-Buchungen machen — das System kümmert sich automatisch darum, dass genug zusammenhängende Zeitfenster verfügbar sind.
+  </div>
+</div>
+
+<!-- ==================== KAPITEL 4 ==================== -->
+<div class="chapter">
+  <div class="chapter-number">Kapitel 4</div>
+  <h2>Neuen Termin manuell anlegen</h2>
+  <p class="chapter-intro">So legen Sie einen Termin direkt im Admin Dashboard an — z.&nbsp;B. für telefonische Anfragen.</p>
+
+  <p>Klicken Sie auf den Button <span class="button-ref">+ Neuer Termin</span> in der Kalender-Symbolleiste. Es öffnet sich ein Fenster zur Terminerstellung.</p>
+
+  <h3>Arzttermin anlegen</h3>
+
+  <ol class="steps">
+    <li>Wählen Sie als Termintyp <strong>„Arzttermin"</strong> (ist standardmäßig ausgewählt).</li>
+    <li>Wählen Sie den <strong>Behandler</strong> aus der Dropdown-Liste (z.&nbsp;B. „Dr. med. Yilmaz Ercan").</li>
+    <li>Wählen Sie das gewünschte <strong>Datum</strong>.</li>
+    <li>Nach Auswahl von Behandler und Datum erscheinen die <strong>verfügbaren Zeitslots</strong> als Buttons. Klicken Sie auf den gewünschten Slot.</li>
+    <li>Wählen Sie die <strong>Behandlungsart</strong> (z.&nbsp;B. „Erstuntersuchung (15 Min.)").</li>
+    <li>Wählen Sie die <strong>Versicherungsart</strong> des Patienten.</li>
+    <li>Geben Sie den <strong>Namen</strong> des Patienten ein (Pflichtfeld).</li>
+    <li>Optional: Geben Sie <strong>E-Mail</strong> und/oder <strong>Telefonnummer</strong> ein.</li>
+    <li>Optional: Geben Sie <strong>Notizen</strong> ein (z.&nbsp;B. „Patient kommt mit Überweisung").</li>
+    <li>Klicken Sie auf <span class="button-ref">Termin buchen</span>.</li>
+  </ol>
+
+  <div class="info-box success">
+    <strong>Erfolg</strong>
+    Bei erfolgreicher Buchung erscheint eine Bestätigungsseite mit einem Häkchen und der Meldung „Termin erfolgreich erstellt". Der Termin wird automatisch als „Bestätigt" gespeichert. Hat der Patient eine E-Mail angegeben, erhält er eine Bestätigung.
+  </div>
+
+  <h3>MFA-Termin anlegen</h3>
+
+  <ol class="steps">
+    <li>Wählen Sie als Termintyp <strong>„MFA-Leistung (Praxisleistung)"</strong>.</li>
+    <li>Wählen Sie das gewünschte <strong>Datum</strong>.</li>
+    <li>Wählen Sie einen <strong>verfügbaren Zeitslot</strong>.</li>
+    <li>Wählen Sie die <strong>MFA-Leistung</strong> (z.&nbsp;B. „Rezeptvergabe (10 Min.)").</li>
+    <li>Wählen Sie die <strong>Versicherungsart</strong>.</li>
+    <li>Geben Sie die <strong>Patientendaten</strong> ein (Name ist Pflicht).</li>
+    <li>Klicken Sie auf <span class="button-ref">Termin buchen</span>.</li>
+  </ol>
+
+  <div class="info-box tip">
+    <strong>Unterschied zur Online-Buchung</strong>
+    Manuell angelegte Termine werden direkt als „Bestätigt" gespeichert, während Online-Buchungen zunächst den Status „Offen" erhalten.
+  </div>
+</div>
+
+<!-- ==================== KAPITEL 5 ==================== -->
+<div class="chapter">
+  <div class="chapter-number">Kapitel 5</div>
+  <h2>Abwesenheitsverwaltung</h2>
+  <p class="chapter-intro">Urlaub, Krankheit oder Fortbildung eines Behandlers eintragen und verwalten.</p>
+
+  <h3>Abwesenheit eintragen</h3>
+
+  <ol class="steps">
+    <li>Navigieren Sie zu <strong>Einstellungen</strong> in der Seitenleiste.</li>
+    <li>Im Bereich <strong>„Behandler-Abwesenheiten"</strong> klicken Sie auf <span class="button-ref">+ Abwesenheit eintragen</span>.</li>
+    <li>Wählen Sie den <strong>Behandler</strong> (z.&nbsp;B. Dr. Jonda).</li>
+    <li>Wählen Sie den <strong>Grund</strong>: Urlaub, Krankheit oder Sonstiges.</li>
+    <li>Legen Sie den <strong>Zeitraum</strong> fest (Von–Bis).</li>
+    <li>Optional: Fügen Sie eine <strong>Notiz</strong> hinzu (z.&nbsp;B. „Vertretung durch Dr. Ercan").</li>
+    <li>Aktivieren Sie <strong>„Auf Website anzeigen"</strong>, wenn ein Hinweis auf der Praxis-Website erscheinen soll. Sie können einen eigenen Hinweistext eingeben.</li>
+    <li>Klicken Sie auf <span class="button-ref">Abwesenheit eintragen</span>.</li>
+  </ol>
+
+  <div class="info-box important">
+    <strong>Wichtig: Automatische Stornierung!</strong>
+    Beim Speichern einer Abwesenheit werden <strong>alle betroffenen Termine automatisch storniert</strong> und die Patienten per E-Mail benachrichtigt. Prüfen Sie daher den Zeitraum sorgfältig, bevor Sie speichern.
+  </div>
+
+  <h3>Was passiert automatisch?</h3>
+  <ul>
+    <li>Alle Termine des Behandlers im Abwesenheitszeitraum werden storniert.</li>
+    <li>Patienten mit E-Mail-Adresse erhalten eine Stornierungsbenachrichtigung.</li>
+    <li>Im Buchungssystem können für diesen Behandler und Zeitraum keine neuen Termine gebucht werden.</li>
+    <li>Wenn aktiviert: Auf der Praxis-Website erscheint ein Hinweisbanner (z.&nbsp;B. „Dr. Jonda befindet sich vom 10.03. bis 14.03. im Urlaub. Vertretung durch Dr. Ercan.").</li>
+  </ul>
+
+  <h3>Abwesenheiten in der Übersicht</h3>
+  <p>Alle eingetragenen Abwesenheiten werden als farbige Karten dargestellt:</p>
+  <table>
+    <thead>
+      <tr><th>Farbe</th><th>Grund</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="color-swatch" style="background:#FEE2E2;"></span> Hellrot</td><td>Krankheit</td></tr>
+      <tr><td><span class="color-swatch" style="background:#DBEAFE;"></span> Hellblau</td><td>Urlaub</td></tr>
+      <tr><td><span class="color-swatch" style="background:#F3F4F6;"></span> Hellgrau</td><td>Sonstiges</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Abwesenheit löschen</h3>
+  <p>Klicken Sie auf das <strong>×</strong>-Symbol an der jeweiligen Abwesenheitskarte. Es erscheint eine Sicherheitsabfrage. Nach dem Löschen ist der Behandler wieder buchbar. Bereits stornierte Termine werden jedoch <strong>nicht</strong> automatisch wiederhergestellt — diese müssen ggf. manuell neu angelegt werden.</p>
+</div>
+
+<!-- ==================== KAPITEL 6 ==================== -->
+<div class="chapter">
+  <div class="chapter-number">Kapitel 6</div>
+  <h2>Behandlungsarten und MFA-Leistungen</h2>
+  <p class="chapter-intro">Welche Terminarten und Praxisleistungen verfügbar sind und wie Sie diese verwalten.</p>
+
+  <h3>Arzt-Behandlungsarten</h3>
+  <p>Die folgenden Behandlungsarten stehen Patienten bei Arztterminen zur Auswahl:</p>
+
+  <table>
+    <thead>
+      <tr><th>Behandlungsart</th><th>Dauer</th><th>Beschreibung</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Erstuntersuchung</td><td>15 Min.</td><td>Erste Konsultation bei einem neuen Anliegen (belegt 2 Slots)</td></tr>
+      <tr><td>Sprechstunde</td><td>10 Min.</td><td>Reguläre Sprechstunde / Kontrolltermin</td></tr>
+      <tr><td>Stoßwellentherapie</td><td>10 Min.</td><td>Therapeutische Behandlung</td></tr>
+    </tbody>
+  </table>
+
+  <h3>MFA-Leistungen</h3>
+  <p>MFA-Leistungen sind Praxisleistungen, die ohne Arzt durchgeführt werden:</p>
+
+  <table>
+    <thead>
+      <tr><th>MFA-Leistung</th><th>Dauer</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Rezeptvergabe</td><td>5 Min.</td></tr>
+      <tr><td>Medikamente</td><td>5 Min.</td></tr>
+      <tr><td>Physio-Überweisung</td><td>5 Min.</td></tr>
+      <tr><td>PRP</td><td>10 Min.</td></tr>
+      <tr><td>Hyaluronsäure</td><td>10 Min.</td></tr>
+      <tr><td>Knochendichte</td><td>10 Min.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Behandlungsart oder MFA-Leistung bearbeiten</h3>
+
+  <ol class="steps">
+    <li>Navigieren Sie zu <strong>Einstellungen</strong>.</li>
+    <li>Scrollen Sie zum Bereich <strong>„Behandlungsarten"</strong> oder <strong>„MFA-Leistungen"</strong>.</li>
+    <li>Klicken Sie auf <span class="button-ref gray">Bearbeiten</span> neben dem gewünschten Eintrag.</li>
+    <li>Ändern Sie Name, Dauer oder Beschreibung.</li>
+    <li>Klicken Sie auf <span class="button-ref">Speichern</span>.</li>
+  </ol>
+
+  <h4>Neue Leistung hinzufügen</h4>
+  <ol class="steps">
+    <li>Klicken Sie auf <span class="button-ref">+ Neue Behandlungsart</span> bzw. <span class="button-ref">+ Neue MFA-Leistung</span>.</li>
+    <li>Geben Sie den <strong>Namen</strong> ein (bei MFA-Leistungen auch Englisch und Türkisch).</li>
+    <li>Wählen Sie die <strong>Dauer</strong> in Minuten.</li>
+    <li>Optional: Fügen Sie eine <strong>Beschreibung</strong> oder ein <strong>Fachgebiet</strong> hinzu.</li>
+    <li>Klicken Sie auf <span class="button-ref">Speichern</span>.</li>
+  </ol>
+
+  <h4>Leistung deaktivieren</h4>
+  <p>Klicken Sie auf den Status-Button <span class="button-ref green">Aktiv</span>, um die Leistung zu deaktivieren. Sie wird dann nicht mehr im Buchungssystem angezeigt, bleibt aber im System erhalten und kann jederzeit wieder aktiviert werden.</p>
+
+  <div class="info-box tip">
+    <strong>Tipp</strong>
+    Deaktivieren Sie eine Leistung, anstatt sie zu löschen. So bleiben bestehende Termine mit dieser Leistung korrekt zugeordnet.
+  </div>
+</div>
+
+<!-- ==================== KAPITEL 7 ==================== -->
+<div class="chapter">
+  <div class="chapter-number">Kapitel 7</div>
+  <h2>Sprechzeiten und Verfügbarkeit</h2>
+  <p class="chapter-intro">Individuelle Sprechzeiten verwalten und verstehen, was online buchbar ist.</p>
+
+  <h3>Individuelle Sprechzeiten pro Behandler</h3>
+  <p>Jeder Behandler kann eigene Sprechzeiten haben, die von den allgemeinen Öffnungszeiten abweichen. So richten Sie individuelle Sprechzeiten ein:</p>
+
+  <ol class="steps">
+    <li>Navigieren Sie zu <strong>Einstellungen</strong>.</li>
+    <li>Im Bereich <strong>„Individuelle Sprechzeiten"</strong> wählen Sie einen <strong>Behandler</strong> aus der Dropdown-Liste.</li>
+    <li>Es erscheint eine Wochenübersicht (Montag bis Sonntag) mit den aktuellen Einträgen.</li>
+    <li>Klicken Sie auf <span class="button-ref">+ Sprechzeit anlegen</span>, um einen neuen Eintrag zu erstellen.</li>
+    <li>Wählen Sie den <strong>Wochentag</strong>, <strong>Startzeit</strong> und <strong>Endzeit</strong>.</li>
+    <li>Setzen Sie den Haken bei <strong>„Online buchbar"</strong>, wenn Patienten diesen Zeitraum online buchen können sollen.</li>
+    <li>Optional: Wählen Sie einen <strong>Versicherungsfilter</strong> (z.&nbsp;B. „Nur Privatpatienten").</li>
+    <li>Optional: Geben Sie eine <strong>Bezeichnung</strong> ein (z.&nbsp;B. „Sprechstunde", „OP-Tag").</li>
+    <li>Klicken Sie auf <span class="button-ref">Sprechzeit anlegen</span>.</li>
+  </ol>
+
+  <h3>Buchbarkeit und Versicherungsfilter</h3>
+  <p>Jeder Sprechzeiten-Eintrag hat einen von drei Status:</p>
+
+  <table>
+    <thead>
+      <tr><th>Status</th><th>Anzeige</th><th>Bedeutung</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="button-ref green">Buchbar</span></td>
+        <td>Grüne Karte</td>
+        <td>Alle Patienten können online Termine buchen.</td>
+      </tr>
+      <tr>
+        <td><span class="button-ref">Nur privat</span></td>
+        <td>Blaue Karte</td>
+        <td>Nur Privatpatienten sehen diese Zeitfenster im Buchungssystem. Kassenpatienten sehen sie nicht.</td>
+      </tr>
+      <tr>
+        <td><span class="button-ref gray">Nicht buchbar</span></td>
+        <td>Graue Karte</td>
+        <td>Dieser Zeitraum ist nicht online buchbar (z.&nbsp;B. OP-Tage, offene Sprechstunde ohne Terminbuchung). Nur intern sichtbar.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box tip">
+    <strong>Beispiel: Dr. Ercan</strong>
+    <ul style="margin-top: 4px;">
+      <li>Mo 09:00–12:00 — Sprechstunde (buchbar, alle Patienten)</li>
+      <li>Mo 14:00–16:00 — Privatsprechstunde (buchbar, nur Privatpatienten)</li>
+      <li>Di 08:00–13:00 — OP-Tag (nicht buchbar)</li>
+      <li>Mi 09:00–12:00 — Sprechstunde (buchbar, alle Patienten)</li>
+    </ul>
+  </div>
+
+  <h4>Sprechzeit löschen</h4>
+  <p>Klicken Sie auf das <strong>×</strong>-Symbol an der jeweiligen Sprechzeit-Karte. Es erscheint eine Sicherheitsabfrage. Bereits gebuchte Termine in diesem Zeitraum bleiben bestehen.</p>
+
+  <h4>Gültigkeitszeitraum</h4>
+  <p>Sprechzeiten können mit einem Gültigkeitszeitraum versehen werden (Gültig ab / Gültig bis). So können Sie z.&nbsp;B. neue Sprechzeiten schon heute anlegen, die erst ab einem zukünftigen Datum gelten. Lassen Sie „Gültig bis" leer, gilt die Sprechzeit unbegrenzt.</p>
+</div>
+
+<!-- ==================== KAPITEL 8 ==================== -->
+<div class="chapter">
+  <div class="chapter-number">Kapitel 8</div>
+  <h2>E-Mail-System</h2>
+  <p class="chapter-intro">Welche automatischen E-Mails das System versendet und was bei Patienten ohne E-Mail zu beachten ist.</p>
+
+  <h3>Automatische E-Mails im Überblick</h3>
+  <p>Das System versendet automatisch E-Mails an Patienten, wenn diese eine E-Mail-Adresse angegeben haben:</p>
+
+  <table>
+    <thead>
+      <tr><th>Anlass</th><th>Zeitpunkt</th><th>Inhalt</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Buchungsbestätigung</strong></td>
+        <td>Sofort nach Buchung</td>
+        <td>Termindetails (Datum, Uhrzeit, Behandlung, Arzt), Stornierungslink, Praxisadresse</td>
+      </tr>
+      <tr>
+        <td><strong>Erinnerung (24h)</strong></td>
+        <td>24 Stunden vor dem Termin</td>
+        <td>Freundliche Erinnerung an den bevorstehenden Termin</td>
+      </tr>
+      <tr>
+        <td><strong>Erinnerung (6h)</strong></td>
+        <td>6 Stunden vor dem Termin</td>
+        <td>Letzte Erinnerung vor dem Termin</td>
+      </tr>
+      <tr>
+        <td><strong>Verlegungsbestätigung</strong></td>
+        <td>Sofort nach Verlegung</td>
+        <td>Neues Datum und neue Uhrzeit</td>
+      </tr>
+      <tr>
+        <td><strong>Stornierungsbestätigung</strong></td>
+        <td>Sofort nach Stornierung</td>
+        <td>Bestätigung der Absage, Hinweis auf Neubuchung</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box tip">
+    <strong>Praxis-Benachrichtigung</strong>
+    Bei jeder Buchung und Stornierung erhält auch die Praxis automatisch eine Benachrichtigungs-E-Mail, damit Sie immer informiert sind.
+  </div>
+
+  <h3>Patienten ohne E-Mail-Adresse</h3>
+  <p>Patienten können bei der Online-Buchung statt einer E-Mail auch nur eine Telefonnummer angeben. In diesem Fall:</p>
+
+  <ul>
+    <li>Es werden <strong>keine automatischen E-Mails</strong> versendet (keine Bestätigung, keine Erinnerung).</li>
+    <li>Bei Verlegung oder Stornierung erscheint im Admin Dashboard ein gelber Hinweis: <strong>„Patient hat keine E-Mail. Bitte telefonisch benachrichtigen."</strong></li>
+    <li>Bitte informieren Sie den Patienten in solchen Fällen telefonisch.</li>
+  </ul>
+
+  <div class="info-box warning">
+    <strong>Wichtiger Hinweis</strong>
+    Prüfen Sie bei Terminverlegungen und Stornierungen immer, ob der Patient eine E-Mail-Adresse hat. Falls nicht, müssen Sie den Patienten telefonisch informieren.
+  </div>
+
+  <h3>Stornierung durch den Patienten</h3>
+  <p>Patienten können ihren Termin selbst stornieren, indem sie auf den Stornierungslink in ihrer Bestätigungs-E-Mail klicken. Die Stornierung ist nur bis <strong>24 Stunden vor dem Termin</strong> möglich. Nach der Selbst-Stornierung wird der Zeitslot automatisch wieder freigegeben.</p>
+</div>
+
+<!-- ==================== KAPITEL 9 ==================== -->
+<div class="chapter">
+  <div class="chapter-number">Kapitel 9</div>
+  <h2>MFA-Slots</h2>
+  <p class="chapter-intro">Wie MFA-Zeitslots generiert werden, wann automatisch und wann manuell.</p>
+
+  <h3>Automatische Generierung</h3>
+  <p>MFA-Zeitslots werden <strong>automatisch jede Woche</strong> generiert:</p>
+  <ul>
+    <li><strong>Wann:</strong> Jeden Sonntag um 02:15 Uhr nachts</li>
+    <li><strong>Was:</strong> Slots für die nächsten 4 Wochen werden erstellt</li>
+    <li><strong>Basierend auf:</strong> Den hinterlegten Praxisöffnungszeiten</li>
+    <li><strong>Slot-Länge:</strong> 10 Minuten pro Slot</li>
+  </ul>
+  <p>Das System berücksichtigt automatisch Mittagspausen und erstellt keine doppelten Slots (bereits vorhandene Slots bleiben unverändert).</p>
+
+  <div class="info-box tip">
+    <strong>Analog zur Arzt-Slot-Generierung</strong>
+    Die Arzt-Slots werden jeden Montag um 02:00 Uhr generiert. Die MFA-Slots folgen 15 Minuten später am Sonntag davor. Beide Prozesse laufen vollständig automatisch.
+  </div>
+
+  <h3>Manueller Fallback</h3>
+  <p>Falls die automatische Generierung einmal nicht funktioniert hat oder Sie zusätzliche Slots benötigen:</p>
+
+  <ol class="steps">
+    <li>Navigieren Sie zu <strong>Einstellungen</strong>.</li>
+    <li>Im Bereich <strong>„Zeitslots generieren"</strong> wählen Sie die Anzahl der Wochen (1, 2, 4 oder 8 Wochen).</li>
+    <li>Klicken Sie auf <span class="button-ref">Slots generieren</span>.</li>
+    <li>Eine Erfolgsmeldung zeigt die Anzahl der generierten Slots und den Zeitraum an.</li>
+  </ol>
+
+  <div class="info-box tip">
+    <strong>Kein Risiko bei mehrfacher Generierung</strong>
+    Sie können die manuelle Generierung bedenkenlos mehrfach ausführen. Bereits vorhandene Slots werden nicht doppelt angelegt.
+  </div>
+
+  <h3>Parallelslots</h3>
+  <p>Im Gegensatz zu Arztterminen können <strong>mehrere MFA-Termine zur gleichen Uhrzeit</strong> stattfinden. Das System erlaubt standardmäßig mehrere parallele MFA-Buchungen pro Zeitslot. So können z.&nbsp;B. um 09:00 Uhr gleichzeitig eine Rezeptvergabe und eine Blutabnahme stattfinden.</p>
+</div>
+
+<!-- ==================== KAPITEL 10 ==================== -->
+<div class="chapter">
+  <div class="chapter-number">Kapitel 10</div>
+  <h2>Häufige Fragen &amp; Problemlösung</h2>
+  <p class="chapter-intro">Antworten auf die häufigsten Fragen im Praxisalltag.</p>
+
+  <h3>Patient findet keinen freien Termin</h3>
+  <p><strong>Mögliche Ursachen:</strong></p>
+  <ul>
+    <li><strong>Abwesenheit eingetragen:</strong> Der gewählte Arzt ist im gewünschten Zeitraum abwesend. Prüfen Sie unter Einstellungen → Abwesenheiten.</li>
+    <li><strong>Keine Slots generiert:</strong> Die Zeitslots für den gewünschten Zeitraum wurden noch nicht erstellt. Generieren Sie manuell neue Slots (Einstellungen → Zeitslots generieren).</li>
+    <li><strong>Alle Slots belegt:</strong> Die verfügbaren Termine sind bereits ausgebucht. Der Patient muss eine andere Woche wählen.</li>
+    <li><strong>Sprechzeiten nicht konfiguriert:</strong> Der Behandler hat für den gewünschten Tag keine buchbare Sprechzeit hinterlegt. Prüfen Sie unter Einstellungen → Individuelle Sprechzeiten.</li>
+    <li><strong>Versicherungsfilter:</strong> Kassenpatienten sehen keine Privatsprechstunden-Slots. Prüfen Sie, ob der Patient die richtige Versicherungsart gewählt hat.</li>
+  </ul>
+
+  <div class="info-box tip">
+    <strong>Schnelltest</strong>
+    Öffnen Sie das Buchungs-Widget unter <strong>https://orthopaedie-booking.vercel.app</strong> und durchlaufen Sie den Buchungsprozess als Patient, um das Problem nachzuvollziehen.
+  </div>
+
+  <h3>Patient hat keine Bestätigungs-E-Mail erhalten</h3>
+  <p><strong>Mögliche Ursachen:</strong></p>
+  <ul>
+    <li><strong>Keine E-Mail angegeben:</strong> Wenn der Patient nur eine Telefonnummer eingegeben hat, wird keine E-Mail versendet.</li>
+    <li><strong>E-Mail-Adresse falsch:</strong> Tippfehler in der E-Mail-Adresse. Prüfen Sie die Adresse in den Termindetails.</li>
+    <li><strong>Spam-Ordner:</strong> Bitten Sie den Patienten, den Spam-/Junk-Ordner zu prüfen.</li>
+  </ul>
+
+  <h3>Wie storniert ein Patient selbst?</h3>
+  <ol class="steps">
+    <li>Der Patient öffnet seine <strong>Bestätigungs-E-Mail</strong>.</li>
+    <li>Er klickt auf den <strong>Stornierungslink</strong> in der E-Mail.</li>
+    <li>Es öffnet sich eine Seite mit den Termindetails und einem Button <span class="button-ref red">Termin stornieren</span>.</li>
+    <li>Nach Bestätigung wird der Termin storniert und der Slot freigegeben.</li>
+  </ol>
+
+  <div class="info-box warning">
+    <strong>24-Stunden-Frist</strong>
+    Die Selbst-Stornierung ist nur bis <strong>24 Stunden vor dem Termin</strong> möglich. Danach muss die Stornierung über das Admin Dashboard erfolgen oder der Patient muss in der Praxis anrufen.
+  </div>
+
+  <h3>Termin wurde doppelt gebucht — was tun?</h3>
+  <p>Das System verhindert Doppelbuchungen automatisch. Falls dennoch ein Konflikt auftreten sollte:</p>
+  <ol class="steps">
+    <li>Öffnen Sie beide Termine in der Tagesansicht.</li>
+    <li>Verlegen Sie einen der Termine auf einen freien Slot.</li>
+    <li>Informieren Sie den betroffenen Patienten über die Änderung.</li>
+  </ol>
+
+  <h3>Sprechzeiten ändern sich dauerhaft</h3>
+  <p>Wenn sich die Sprechzeiten eines Arztes dauerhaft ändern:</p>
+  <ol class="steps">
+    <li>Navigieren Sie zu <strong>Einstellungen → Individuelle Sprechzeiten</strong>.</li>
+    <li>Wählen Sie den betroffenen Behandler.</li>
+    <li>Setzen Sie bei der alten Sprechzeit ein <strong>„Gültig bis"</strong>-Datum (letzter Tag der alten Regelung).</li>
+    <li>Legen Sie die neue Sprechzeit mit einem <strong>„Gültig ab"</strong>-Datum an (erster Tag der neuen Regelung).</li>
+    <li>Generieren Sie neue Zeitslots (Einstellungen → Zeitslots generieren).</li>
+  </ol>
+
+  <h3>Noch Fragen?</h3>
+  <p>Bei technischen Problemen oder Fragen zum System wenden Sie sich bitte an Ihre IT-Betreuung oder das Praxismanagement.</p>
+
+  <div class="info-box tip" style="margin-top: 32px;">
+    <strong>Wichtige Links</strong>
+    <ul style="margin-top: 4px;">
+      <li><strong>Admin Dashboard:</strong> https://orthopaedie-booking.vercel.app/admin.html</li>
+      <li><strong>Buchungs-Widget (Patientensicht):</strong> https://orthopaedie-booking.vercel.app</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>
