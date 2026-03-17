@@ -107,23 +107,28 @@ export function AppointmentModal({
               <span className={styles.value}>{appointment.patient?.name}</span>
             </div>
             <div className={styles.field}>
+              <span className={styles.label}>Telefon</span>
+              <a href={`tel:${appointment.patient?.phone}`} className={styles.link}>
+                {appointment.patient?.phone}
+              </a>
+            </div>
+            <div className={styles.field}>
               <span className={styles.label}>E-Mail</span>
               {appointment.patient?.email ? (
                 <a href={`mailto:${appointment.patient.email}`} className={styles.link}>
                   {appointment.patient.email}
                 </a>
               ) : (
-                <span className={styles.value}>–</span>
+                <span className={styles.noEmailWarning} style={{ color: '#D97706', display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                  Keine E-Mail hinterlegt
+                </span>
               )}
             </div>
-            {appointment.patient?.phone && (
-              <div className={styles.field}>
-                <span className={styles.label}>Telefon</span>
-                <a href={`tel:${appointment.patient?.phone}`} className={styles.link}>
-                  {appointment.patient?.phone}
-                </a>
-              </div>
-            )}
           </section>
 
           {/* Appointment Section */}

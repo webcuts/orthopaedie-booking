@@ -318,7 +318,7 @@ export function ContactStep({ state, steps, onUpdateContact, onComplete, onBack,
           fullWidth
         />
 
-        <p className={contactStyles.contactHint}>{t('contact.contactHint')}</p>
+        <p className={contactStyles.contactHint}>{t('contact.contactHint.phoneRequired')}</p>
       </div>
 
       {/* DSGVO Consent Checkbox */}

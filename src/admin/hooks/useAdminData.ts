@@ -7,8 +7,8 @@ export interface AppointmentWithDetails extends Appointment {
   patient: {
     id: string;
     name: string;
-    email: string;
-    phone: string | null;
+    email: string | null;
+    phone: string;
   };
   treatment_type: {
     id: string;
