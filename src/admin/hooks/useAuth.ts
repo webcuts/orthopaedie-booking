@@ -31,57 +31,62 @@ export function useAuth(): UseAuthReturn {
     role: null,
   });
 
-  const fetchRole = useCallback(async (userId: string): Promise<AdminRole> => {
-    try {
-      const { data, error } = await supabase
-        .from('admin_profiles')
-        .select('role, is_active')
-        .eq('id', userId)
-        .single();
-
-      if (!error && data?.is_active) {
-        return data.role as AdminRole;
-      }
-    } catch {
-      // Tabelle existiert möglicherweise noch nicht
-    }
-    // Fallback: User ohne admin_profiles Eintrag = admin (Abwärtskompatibilität)
-    return 'admin';
-  }, []);
-
   useEffect(() => {
     // Initial session check
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      let role: AdminRole | null = null;
-      if (session?.user) {
-        role = await fetchRole(session.user.id);
-      }
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setState({
         session,
         user: session?.user ?? null,
         loading: false,
-        role,
+        role: null,
       });
+
+      // Rolle asynchron nachladen (blockiert nicht das Laden)
+      if (session?.user) {
+        supabase
+          .from('admin_profiles')
+          .select('role, is_active')
+          .eq('id', session.user.id)
+          .single()
+          .then(({ data }) => {
+            const role: AdminRole = data?.is_active ? (data.role as AdminRole) : 'admin';
+            setState(prev => ({ ...prev, role }));
+          })
+          .catch(() => {
+            setState(prev => ({ ...prev, role: 'admin' }));
+          });
+      }
     });
 
-    // Listen for auth changes
+    // Listen for auth changes (synchroner Callback!)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        let role: AdminRole | null = null;
-        if (session?.user) {
-          role = await fetchRole(session.user.id);
-        }
+      (_event, session) => {
         setState({
           session,
           user: session?.user ?? null,
           loading: false,
-          role,
+          role: null,
         });
+
+        if (session?.user) {
+          supabase
+            .from('admin_profiles')
+            .select('role, is_active')
+            .eq('id', session.user.id)
+            .single()
+            .then(({ data }) => {
+              const role: AdminRole = data?.is_active ? (data.role as AdminRole) : 'admin';
+              setState(prev => ({ ...prev, role }));
+            })
+            .catch(() => {
+              setState(prev => ({ ...prev, role: 'admin' }));
+            });
+        }
       }
     );
 
     return () => subscription.unsubscribe();
-  }, [fetchRole]);
+  }, []);
 
   const login = useCallback(async (credentials: LoginCredentials) => {
     const { error } = await supabase.auth.signInWithPassword({
