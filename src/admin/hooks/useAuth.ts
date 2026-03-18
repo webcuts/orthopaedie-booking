@@ -9,6 +9,7 @@ interface AuthState {
   user: User | null;
   loading: boolean;
   role: AdminRole | null;
+  roleLoading: boolean;
 }
 
 interface LoginCredentials {
@@ -23,42 +24,46 @@ interface UseAuthReturn extends AuthState {
   isAdmin: boolean;
 }
 
+function loadRole(userId: string, setState: React.Dispatch<React.SetStateAction<AuthState>>) {
+  setState(prev => ({ ...prev, roleLoading: true }));
+  supabase
+    .from('admin_profiles')
+    .select('role, is_active')
+    .eq('id', userId)
+    .single()
+    .then(({ data }) => {
+      const role: AdminRole = data?.is_active ? (data.role as AdminRole) : 'admin';
+      setState(prev => ({ ...prev, role, roleLoading: false }));
+    })
+    .then(null, () => {
+      setState(prev => ({ ...prev, role: 'admin', roleLoading: false }));
+    });
+}
+
 export function useAuth(): UseAuthReturn {
   const [state, setState] = useState<AuthState>({
     session: null,
     user: null,
     loading: true,
     role: null,
+    roleLoading: false,
   });
 
   useEffect(() => {
-    // Initial session check
     supabase.auth.getSession().then(({ data: { session } }) => {
       setState({
         session,
         user: session?.user ?? null,
         loading: false,
         role: null,
+        roleLoading: !!session?.user,
       });
 
-      // Rolle asynchron nachladen (blockiert nicht das Laden)
       if (session?.user) {
-        supabase
-          .from('admin_profiles')
-          .select('role, is_active')
-          .eq('id', session.user.id)
-          .single()
-          .then(({ data }) => {
-            const role: AdminRole = data?.is_active ? (data.role as AdminRole) : 'admin';
-            setState(prev => ({ ...prev, role }));
-          })
-          .then(null, () => {
-            setState(prev => ({ ...prev, role: 'admin' }));
-          });
+        loadRole(session.user.id, setState);
       }
     });
 
-    // Listen for auth changes (synchroner Callback!)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setState({
@@ -66,21 +71,11 @@ export function useAuth(): UseAuthReturn {
           user: session?.user ?? null,
           loading: false,
           role: null,
+          roleLoading: !!session?.user,
         });
 
         if (session?.user) {
-          supabase
-            .from('admin_profiles')
-            .select('role, is_active')
-            .eq('id', session.user.id)
-            .single()
-            .then(({ data }) => {
-              const role: AdminRole = data?.is_active ? (data.role as AdminRole) : 'admin';
-              setState(prev => ({ ...prev, role }));
-            })
-            .then(null, () => {
-              setState(prev => ({ ...prev, role: 'admin' }));
-            });
+          loadRole(session.user.id, setState);
         }
       }
     );

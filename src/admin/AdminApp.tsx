@@ -26,9 +26,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 /** Route die nur für Admins zugänglich ist. MFAs werden zum Kalender umgeleitet. */
 function AdminOnlyRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, loading, isAdmin } = useAuth();
+  const { isAuthenticated, loading, isAdmin, roleLoading } = useAuth();
 
-  if (loading) {
+  if (loading || roleLoading) {
     return (
       <div className="admin-loading">
         <div className="admin-loading-spinner" />
