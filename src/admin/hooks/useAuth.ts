@@ -31,18 +31,22 @@ export function useAuth(): UseAuthReturn {
     role: null,
   });
 
-  const fetchRole = useCallback(async (userId: string) => {
-    const { data } = await supabase
-      .from('admin_profiles')
-      .select('role, is_active')
-      .eq('id', userId)
-      .single();
+  const fetchRole = useCallback(async (userId: string): Promise<AdminRole> => {
+    try {
+      const { data, error } = await supabase
+        .from('admin_profiles')
+        .select('role, is_active')
+        .eq('id', userId)
+        .single();
 
-    if (data?.is_active) {
-      return data.role as AdminRole;
+      if (!error && data?.is_active) {
+        return data.role as AdminRole;
+      }
+    } catch {
+      // Tabelle existiert möglicherweise noch nicht
     }
     // Fallback: User ohne admin_profiles Eintrag = admin (Abwärtskompatibilität)
-    return 'admin' as AdminRole;
+    return 'admin';
   }, []);
 
   useEffect(() => {
