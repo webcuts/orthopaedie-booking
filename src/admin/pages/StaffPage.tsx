@@ -106,8 +106,11 @@ export function StaffPage() {
       const response = await supabase.functions.invoke('manage-staff', {
         body: { action: 'create', email: newEmail.trim(), password: newPassword, displayName: newName.trim(), role: newRole },
       });
-      if (response.error || !response.data?.success) {
-        setFormError(response.data?.error || response.error?.message || 'Fehler beim Erstellen');
+      // Fehler extrahieren - data kann JSON oder String sein
+      const data = response.data;
+      const errorMsg = data?.error || (typeof data === 'string' ? data : null) || response.error?.message;
+      if (response.error || !data?.success) {
+        setFormError(errorMsg || 'Fehler beim Erstellen');
         return;
       }
       setShowForm(false);
