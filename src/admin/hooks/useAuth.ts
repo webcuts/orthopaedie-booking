@@ -52,7 +52,7 @@ export function useAuth(): UseAuthReturn {
             const role: AdminRole = data?.is_active ? (data.role as AdminRole) : 'admin';
             setState(prev => ({ ...prev, role }));
           })
-          .catch(() => {
+          .then(null, () => {
             setState(prev => ({ ...prev, role: 'admin' }));
           });
       }
