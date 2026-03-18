@@ -231,8 +231,17 @@ export function usePractitioners(specialtyId: string | null) {
 // Hook: Alle Behandler ohne Fachgebiet-Filter (ORTHO-042)
 // =====================================================
 
+export interface PractitionerAbsenceInfo {
+  practitioner_id: string;
+  start_date: string;
+  end_date: string;
+  reason: string;
+  public_message: string | null;
+}
+
 export function useAllPractitioners() {
   const [data, setData] = useState<Practitioner[]>([]);
+  const [absentMap, setAbsentMap] = useState<Map<string, PractitionerAbsenceInfo>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -252,16 +261,21 @@ export function useAllPractitioners() {
 
         if (practError) throw practError;
 
-        // Abwesende Behandler filtern
+        // Abwesende Behandler laden (nicht filtern, sondern markieren)
         const { data: absences } = await supabase
           .from('practitioner_absences')
-          .select('practitioner_id')
+          .select('practitioner_id, start_date, end_date, reason, public_message')
           .lte('start_date', today)
           .gte('end_date', today);
 
-        const absentIds = new Set((absences || []).map(a => a.practitioner_id));
+        const absMap = new Map<string, PractitionerAbsenceInfo>();
+        (absences || []).forEach(a => absMap.set(a.practitioner_id, a));
+        setAbsentMap(absMap);
 
-        setData((practitioners || []).filter(p => !absentIds.has(p.id)));
+        // Sortierung: Verfügbare vor Abwesenden
+        const available = (practitioners || []).filter(p => !absMap.has(p.id));
+        const absent = (practitioners || []).filter(p => absMap.has(p.id));
+        setData([...available, ...absent]);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Fehler beim Laden der Behandler');
       } finally {
@@ -271,7 +285,7 @@ export function useAllPractitioners() {
     fetch();
   }, []);
 
-  return { data, loading, error };
+  return { data, absentMap, loading, error };
 }
 
 // =====================================================

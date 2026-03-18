@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useAllPractitioners } from '../../../hooks/useSupabase';
 import { getPractitionerFullName } from '../../../types/database';
 import { useTranslation } from '../../../i18n';
+import type { PractitionerAbsenceInfo } from '../../../hooks/useSupabase';
 import styles from '../BookingWizard.module.css';
 
 interface DoctorSelectStepProps {
@@ -8,9 +10,41 @@ interface DoctorSelectStepProps {
   onSelectMfa: () => void;
 }
 
+const REASON_KEYS: Record<string, string> = {
+  sick: 'doctorSelect.reasonSick',
+  vacation: 'doctorSelect.reasonVacation',
+  other: 'doctorSelect.reasonOther',
+};
+
 export function DoctorSelectStep({ onSelectDoctor, onSelectMfa }: DoctorSelectStepProps) {
-  const { data: practitioners, loading, error } = useAllPractitioners();
-  const { t } = useTranslation();
+  const { data: practitioners, absentMap, loading, error } = useAllPractitioners();
+  const { t, language } = useTranslation();
+  const [absenceOverlay, setAbsenceOverlay] = useState<{
+    name: string;
+    absence: PractitionerAbsenceInfo;
+  } | null>(null);
+
+  const localeMap: Record<string, string> = {
+    de: 'de-DE', en: 'en-US', tr: 'tr-TR', ru: 'ru-RU', ar: 'ar-SA',
+  };
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr + 'T00:00:00');
+    return date.toLocaleDateString(localeMap[language] || 'de-DE', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
+  const getReturnDate = (endDate: string) => {
+    const date = new Date(endDate + 'T00:00:00');
+    date.setDate(date.getDate() + 1);
+    return date.toLocaleDateString(localeMap[language] || 'de-DE', {
+      day: 'numeric',
+      month: 'long',
+    });
+  };
 
   if (loading) {
     return (
@@ -40,34 +74,51 @@ export function DoctorSelectStep({ onSelectDoctor, onSelectMfa }: DoctorSelectSt
       </div>
 
       <div className={styles.doctorGrid}>
-        {practitioners.map((practitioner) => (
-          <button
-            key={practitioner.id}
-            className={styles.doctorCard}
-            onClick={() => onSelectDoctor(practitioner.id, practitioner.specialty_id!)}
-          >
-            {practitioner.image_url ? (
-              <div className={styles.doctorCardImage}>
-                <img
-                  src={practitioner.image_url}
-                  alt={getPractitionerFullName(practitioner)}
-                  loading="lazy"
-                />
+        {practitioners.map((practitioner) => {
+          const absence = absentMap.get(practitioner.id);
+          const isAbsent = !!absence;
+          const fullName = getPractitionerFullName(practitioner);
+
+          return (
+            <button
+              key={practitioner.id}
+              className={`${styles.doctorCard} ${isAbsent ? styles.doctorCardAbsent : ''}`}
+              onClick={() => {
+                if (isAbsent) {
+                  setAbsenceOverlay({ name: fullName, absence });
+                } else {
+                  onSelectDoctor(practitioner.id, practitioner.specialty_id!);
+                }
+              }}
+            >
+              {practitioner.image_url ? (
+                <div className={styles.doctorCardImage}>
+                  <img
+                    src={practitioner.image_url}
+                    alt={fullName}
+                    loading="lazy"
+                  />
+                </div>
+              ) : (
+                <div className={styles.doctorCardInitials}>
+                  <span>
+                    {practitioner.first_name[0]}{practitioner.last_name[0]}
+                  </span>
+                </div>
+              )}
+              <div className={styles.doctorCardInfo}>
+                <div className={styles.doctorCardName}>
+                  {fullName}
+                </div>
+                {isAbsent && (
+                  <div className={styles.doctorCardUnavailable}>
+                    {t('doctorSelect.unavailable')}
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className={styles.doctorCardInitials}>
-                <span>
-                  {practitioner.first_name[0]}{practitioner.last_name[0]}
-                </span>
-              </div>
-            )}
-            <div className={styles.doctorCardInfo}>
-              <div className={styles.doctorCardName}>
-                {getPractitionerFullName(practitioner)}
-              </div>
-            </div>
-          </button>
-        ))}
+            </button>
+          );
+        })}
 
         {/* MFA Card */}
         <button
@@ -91,6 +142,45 @@ export function DoctorSelectStep({ onSelectDoctor, onSelectMfa }: DoctorSelectSt
           </div>
         </button>
       </div>
+
+      {/* Absence Info Overlay */}
+      {absenceOverlay && (
+        <div className={styles.absenceOverlay} onClick={() => setAbsenceOverlay(null)}>
+          <div className={styles.absenceModal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.absenceHeader}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 8v4M12 16h.01"/>
+              </svg>
+              <span>{t('doctorSelect.unavailableTitle')}</span>
+            </div>
+            <p className={styles.absenceText}>
+              {t('doctorSelect.unavailableMessage', {
+                name: absenceOverlay.name,
+                start: formatDate(absenceOverlay.absence.start_date),
+                end: formatDate(absenceOverlay.absence.end_date),
+                reason: t(REASON_KEYS[absenceOverlay.absence.reason] || 'doctorSelect.reasonOther'),
+              })}
+            </p>
+            {absenceOverlay.absence.public_message && (
+              <p className={styles.absencePublicMessage}>
+                {absenceOverlay.absence.public_message}
+              </p>
+            )}
+            <p className={styles.absenceHint}>
+              {t('doctorSelect.unavailableHint', {
+                returnDate: getReturnDate(absenceOverlay.absence.end_date),
+              })}
+            </p>
+            <button
+              className={styles.absenceCloseButton}
+              onClick={() => setAbsenceOverlay(null)}
+            >
+              {t('doctorSelect.understood')}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
