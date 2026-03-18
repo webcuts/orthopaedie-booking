@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks';
 import { AdminLayout } from './components';
 import { LoginPage, DashboardPage, SettingsPage, DataImportPage, PrescriptionsPage, StaffPage } from './pages';
+import { AbsencesPage } from './pages/AbsencesPage';
 import './AdminApp.css';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -18,6 +19,30 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (!isAuthenticated) {
     return <Navigate to="/admin/login" replace />;
+  }
+
+  return <AdminLayout>{children}</AdminLayout>;
+}
+
+/** Route die nur für Admins zugänglich ist. MFAs werden zum Kalender umgeleitet. */
+function AdminOnlyRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, loading, isAdmin } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="admin-loading">
+        <div className="admin-loading-spinner" />
+        <span>Lade...</span>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  if (!isAdmin) {
+    return <Navigate to="/admin/calendar" replace />;
   }
 
   return <AdminLayout>{children}</AdminLayout>;
@@ -56,20 +81,12 @@ export function AdminApp() {
           }
         />
 
-        {/* Protected routes */}
+        {/* Für alle authentifizierten Nutzer (MFA + Admin) */}
         <Route
           path="/admin/calendar"
           element={
             <ProtectedRoute>
               <DashboardPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/settings"
-          element={
-            <ProtectedRoute>
-              <SettingsPage />
             </ProtectedRoute>
           }
         />
@@ -82,19 +99,37 @@ export function AdminApp() {
           }
         />
         <Route
-          path="/admin/staff"
+          path="/admin/absences"
           element={
             <ProtectedRoute>
-              <StaffPage />
+              <AbsencesPage />
             </ProtectedRoute>
+          }
+        />
+
+        {/* Nur für Admins */}
+        <Route
+          path="/admin/settings"
+          element={
+            <AdminOnlyRoute>
+              <SettingsPage />
+            </AdminOnlyRoute>
+          }
+        />
+        <Route
+          path="/admin/staff"
+          element={
+            <AdminOnlyRoute>
+              <StaffPage />
+            </AdminOnlyRoute>
           }
         />
         <Route
           path="/admin/import"
           element={
-            <ProtectedRoute>
+            <AdminOnlyRoute>
               <DataImportPage />
-            </ProtectedRoute>
+            </AdminOnlyRoute>
           }
         />
 

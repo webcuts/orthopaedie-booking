@@ -58,6 +58,12 @@
   flex-shrink: 0;
 }
 
+.navDivider {
+  height: 1px;
+  background: #E5E7EB;
+  margin: 0.25rem 0;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     width: 64px;
