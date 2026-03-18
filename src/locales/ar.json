@@ -144,5 +144,34 @@
   "contact.mfaProvider": "خدمة العيادة (MFA)",
 
   "booking.practitionerBanner": "حجز موعد مع {name}",
-  "success.titleWithPractitioner": "تم تأكيد الموعد مع {name}"
+  "success.titleWithPractitioner": "تم تأكيد الموعد مع {name}",
+
+  "choice.title": "مرحباً",
+  "choice.booking": "حجز موعد",
+  "choice.bookingDesc": "احجز موعداً مع طبيب أو لخدمة العيادة",
+  "choice.prescription": "طلب وصفة طبية",
+  "choice.prescriptionDesc": "طلب وصفة طبية أو إحالة أو علاج طبيعي",
+
+  "prescription.title": "طلب وصفة طبية",
+  "prescription.selectType": "ماذا تريد أن تطلب؟",
+  "prescription.selectTypeDesc": "اختر نوع الطلب",
+  "prescription.typeRezept": "وصفة طبية / أدوية",
+  "prescription.typeRezeptDesc": "وصفة متابعة لأدويتك",
+  "prescription.typeHeilmittel": "طلب علاج طبيعي",
+  "prescription.typeHeilmittelDesc": "تمارين علاجية، علاج طبيعي",
+  "prescription.typeUeberweisung": "إحالة",
+  "prescription.typeUeberweisungDesc": "إحالة إلى طبيب متخصص",
+  "prescription.contactTitle": "بيانات الاتصال الخاصة بك",
+  "prescription.selectedType": "تم الاختيار",
+  "prescription.noteLabel": "ملاحظة (اختياري)",
+  "prescription.notePlaceholder": "مثال: اسم الدواء، الجرعة",
+  "prescription.pickupHint": "الاستلام: الأربعاء من 13 إلى 15",
+  "prescription.submit": "إرسال الطلب",
+  "prescription.submitting": "جارٍ الإرسال...",
+  "prescription.successTitle": "تم استلام الطلب!",
+  "prescription.successText": "يتم معالجة طلبك. سنتصل بك هاتفياً إذا لزم الأمر.",
+  "prescription.pickupTitle": "الاستلام",
+  "prescription.pickupTime": "الأربعاء من 13 إلى 15",
+  "prescription.backToChoice": "العودة للاختيار",
+  "prescription.backToStart": "العودة للصفحة الرئيسية"
 }

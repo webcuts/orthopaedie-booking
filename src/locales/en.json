@@ -144,5 +144,34 @@
   "contact.mfaProvider": "Practice Service (MFA)",
 
   "booking.practitionerBanner": "Book appointment with {name}",
-  "success.titleWithPractitioner": "Appointment confirmed with {name}"
+  "success.titleWithPractitioner": "Appointment confirmed with {name}",
+
+  "choice.title": "Welcome",
+  "choice.booking": "Book Appointment",
+  "choice.bookingDesc": "Book an appointment with a doctor or for a practice service",
+  "choice.prescription": "Order Prescription",
+  "choice.prescriptionDesc": "Request prescription, referral, or physiotherapy order",
+
+  "prescription.title": "Order Prescription",
+  "prescription.selectType": "What would you like to order?",
+  "prescription.selectTypeDesc": "Select the type of order",
+  "prescription.typeRezept": "Prescription / Medication",
+  "prescription.typeRezeptDesc": "Repeat prescription for your medication",
+  "prescription.typeHeilmittel": "Physiotherapy Order",
+  "prescription.typeHeilmittelDesc": "Physiotherapy, physical therapy",
+  "prescription.typeUeberweisung": "Referral",
+  "prescription.typeUeberweisungDesc": "Referral to a specialist",
+  "prescription.contactTitle": "Your Contact Details",
+  "prescription.selectedType": "Selected",
+  "prescription.noteLabel": "Note (optional)",
+  "prescription.notePlaceholder": "e.g. medication name, dosage",
+  "prescription.pickupHint": "Pickup: Wednesday 1 to 3 PM",
+  "prescription.submit": "Submit Order",
+  "prescription.submitting": "Submitting...",
+  "prescription.successTitle": "Order Received!",
+  "prescription.successText": "Your order is being processed. We will contact you by phone if needed.",
+  "prescription.pickupTitle": "Pickup",
+  "prescription.pickupTime": "Wednesday 1 to 3 PM",
+  "prescription.backToChoice": "Back to selection",
+  "prescription.backToStart": "Back to start"
 }

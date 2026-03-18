@@ -144,5 +144,34 @@
   "contact.mfaProvider": "Услуга клиники (MFA)",
 
   "booking.practitionerBanner": "Запись на приём к {name}",
-  "success.titleWithPractitioner": "Приём подтверждён у {name}"
+  "success.titleWithPractitioner": "Приём подтверждён у {name}",
+
+  "choice.title": "Добро пожаловать",
+  "choice.booking": "Записаться на приём",
+  "choice.bookingDesc": "Записаться к врачу или на услугу клиники",
+  "choice.prescription": "Заказать рецепт",
+  "choice.prescriptionDesc": "Запросить рецепт, направление или физиотерапию",
+
+  "prescription.title": "Заказать рецепт",
+  "prescription.selectType": "Что вы хотите заказать?",
+  "prescription.selectTypeDesc": "Выберите тип заказа",
+  "prescription.typeRezept": "Рецепт / Лекарства",
+  "prescription.typeRezeptDesc": "Повторный рецепт на лекарства",
+  "prescription.typeHeilmittel": "Направление на физиотерапию",
+  "prescription.typeHeilmittelDesc": "Лечебная гимнастика, физиотерапия",
+  "prescription.typeUeberweisung": "Направление",
+  "prescription.typeUeberweisungDesc": "Направление к узкому специалисту",
+  "prescription.contactTitle": "Ваши контактные данные",
+  "prescription.selectedType": "Выбрано",
+  "prescription.noteLabel": "Примечание (необязательно)",
+  "prescription.notePlaceholder": "напр. название лекарства, дозировка",
+  "prescription.pickupHint": "Получение: Среда с 13 до 15 часов",
+  "prescription.submit": "Отправить заказ",
+  "prescription.submitting": "Отправка...",
+  "prescription.successTitle": "Заказ принят!",
+  "prescription.successText": "Ваш заказ обрабатывается. При необходимости мы свяжемся с вами по телефону.",
+  "prescription.pickupTitle": "Получение",
+  "prescription.pickupTime": "Среда с 13 до 15 часов",
+  "prescription.backToChoice": "Назад к выбору",
+  "prescription.backToStart": "На главную"
 }

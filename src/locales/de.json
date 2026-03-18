@@ -144,5 +144,34 @@
   "contact.mfaProvider": "Praxisleistung (MFA)",
 
   "booking.practitionerBanner": "Termin buchen bei {name}",
-  "success.titleWithPractitioner": "Termin bestätigt bei {name}"
+  "success.titleWithPractitioner": "Termin bestätigt bei {name}",
+
+  "choice.title": "Willkommen",
+  "choice.booking": "Termin buchen",
+  "choice.bookingDesc": "Termin bei einem Arzt oder für eine Praxisleistung buchen",
+  "choice.prescription": "Rezept vorbestellen",
+  "choice.prescriptionDesc": "Rezept, Heilmittelverordnung oder Überweisung anfordern",
+
+  "prescription.title": "Rezept vorbestellen",
+  "prescription.selectType": "Was möchten Sie vorbestellen?",
+  "prescription.selectTypeDesc": "Wählen Sie die Art der Vorbestellung",
+  "prescription.typeRezept": "Rezept / Medikamente",
+  "prescription.typeRezeptDesc": "Folgerezept für Ihre Medikamente",
+  "prescription.typeHeilmittel": "Heilmittelverordnung",
+  "prescription.typeHeilmittelDesc": "Krankengymnastik, Physiotherapie",
+  "prescription.typeUeberweisung": "Überweisung",
+  "prescription.typeUeberweisungDesc": "Überweisung an einen Facharzt",
+  "prescription.contactTitle": "Ihre Kontaktdaten",
+  "prescription.selectedType": "Gewählt",
+  "prescription.noteLabel": "Bemerkung (optional)",
+  "prescription.notePlaceholder": "z.B. Medikamentenname, Dosierung",
+  "prescription.pickupHint": "Rezeptabholung: Mittwoch 13 bis 15 Uhr",
+  "prescription.submit": "Vorbestellung absenden",
+  "prescription.submitting": "Wird gesendet...",
+  "prescription.successTitle": "Vorbestellung eingegangen!",
+  "prescription.successText": "Ihre Vorbestellung wird bearbeitet. Wir melden uns bei Rückfragen telefonisch.",
+  "prescription.pickupTitle": "Abholung",
+  "prescription.pickupTime": "Mittwoch 13 bis 15 Uhr",
+  "prescription.backToChoice": "Zurück zur Auswahl",
+  "prescription.backToStart": "Zurück zur Startseite"
 }

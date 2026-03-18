@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks';
 import { AdminLayout } from './components';
-import { LoginPage, DashboardPage, SettingsPage, DataImportPage } from './pages';
+import { LoginPage, DashboardPage, SettingsPage, DataImportPage, PrescriptionsPage } from './pages';
 import './AdminApp.css';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -70,6 +70,14 @@ export function AdminApp() {
           element={
             <ProtectedRoute>
               <SettingsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/prescriptions"
+          element={
+            <ProtectedRoute>
+              <PrescriptionsPage />
             </ProtectedRoute>
           }
         />

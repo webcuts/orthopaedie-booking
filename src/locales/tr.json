@@ -144,5 +144,34 @@
   "contact.mfaProvider": "Muayenehane Hizmeti (MFA)",
 
   "booking.practitionerBanner": "{name} ile randevu al",
-  "success.titleWithPractitioner": "{name} ile randevu onaylandı"
+  "success.titleWithPractitioner": "{name} ile randevu onaylandı",
+
+  "choice.title": "Hoş Geldiniz",
+  "choice.booking": "Randevu Al",
+  "choice.bookingDesc": "Doktor veya muayenehane hizmeti için randevu alın",
+  "choice.prescription": "Reçete Sipariş Et",
+  "choice.prescriptionDesc": "Reçete, sevk veya fizyoterapi talebi",
+
+  "prescription.title": "Reçete Sipariş Et",
+  "prescription.selectType": "Ne sipariş etmek istiyorsunuz?",
+  "prescription.selectTypeDesc": "Sipariş türünü seçin",
+  "prescription.typeRezept": "Reçete / İlaç",
+  "prescription.typeRezeptDesc": "İlaçlarınız için takip reçetesi",
+  "prescription.typeHeilmittel": "Fizyoterapi Talebi",
+  "prescription.typeHeilmittelDesc": "Krankengymnastik, fizyoterapi",
+  "prescription.typeUeberweisung": "Sevk",
+  "prescription.typeUeberweisungDesc": "Uzman doktora sevk",
+  "prescription.contactTitle": "İletişim Bilgileriniz",
+  "prescription.selectedType": "Seçildi",
+  "prescription.noteLabel": "Not (isteğe bağlı)",
+  "prescription.notePlaceholder": "örn. ilaç adı, dozaj",
+  "prescription.pickupHint": "Teslim alma: Çarşamba 13-15 arası",
+  "prescription.submit": "Sipariş Gönder",
+  "prescription.submitting": "Gönderiliyor...",
+  "prescription.successTitle": "Sipariş Alındı!",
+  "prescription.successText": "Siparişiniz işleniyor. Gerekirse sizi telefonla arayacağız.",
+  "prescription.pickupTitle": "Teslim Alma",
+  "prescription.pickupTime": "Çarşamba 13-15 arası",
+  "prescription.backToChoice": "Seçime geri dön",
+  "prescription.backToStart": "Ana sayfaya dön"
 }
