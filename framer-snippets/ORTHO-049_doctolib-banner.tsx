@@ -2,7 +2,9 @@
 // Einbindung: Framer → Code → New File → Inhalt einfügen
 // Platzierung: Ganz oben auf der Startseite, sichtbar ohne Scrollen
 
-export default function DoctolibBanner() {
+import { addPropertyControls, ControlType } from "framer"
+
+export default function DoctolibBanner({ borderRadius = 0 }: { borderRadius?: number }) {
     return (
         <div
             style={{
@@ -14,6 +16,7 @@ export default function DoctolibBanner() {
                     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
                 boxShadow: "0 2px 8px rgba(38, 116, 187, 0.3)",
                 width: "100%",
+                borderRadius,
             }}
         >
             <div
@@ -94,3 +97,14 @@ export default function DoctolibBanner() {
         </div>
     )
 }
+
+addPropertyControls(DoctolibBanner, {
+    borderRadius: {
+        type: ControlType.Number,
+        title: "Border Radius",
+        defaultValue: 0,
+        min: 0,
+        max: 32,
+        step: 1,
+    },
+})
