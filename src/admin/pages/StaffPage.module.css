@@ -1,0 +1,236 @@
+.container {
+  max-width: 700px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.noAccess {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.addButton {
+  padding: 0.5rem 1rem;
+  background: #2674BB;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.addButton:hover {
+  background: #1a5a9a;
+}
+
+/* Card / Form */
+.card {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.cardTitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 1rem 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.formLabel {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.formInput {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  background: white;
+}
+
+.formError {
+  padding: 0.625rem;
+  background: #FEF2F2;
+  color: #DC2626;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.cancelButton {
+  padding: 0.5rem 1rem;
+  background: white;
+  color: #374151;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.submitButton {
+  padding: 0.5rem 1rem;
+  background: #2674BB;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.submitButton:disabled {
+  background: #9CA3AF;
+  cursor: not-allowed;
+}
+
+/* List */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #9CA3AF;
+  font-size: 0.875rem;
+}
+
+.sectionTitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.75rem 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.staffCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+}
+
+.staffCard.archived {
+  opacity: 0.6;
+}
+
+.staffInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.staffName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.roleBadge {
+  padding: 0.125rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+.archivedBadge {
+  padding: 0.125rem 0.5rem;
+  background: #F3F4F6;
+  color: #6b7280;
+  border-radius: 100px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+.staffActions {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.archiveButton {
+  padding: 0.375rem 0.625rem;
+  background: #FEF2F2;
+  color: #DC2626;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.archiveButton:hover {
+  background: #FEE2E2;
+}
+
+.reactivateButton {
+  padding: 0.375rem 0.625rem;
+  background: #D1FAE5;
+  color: #065F46;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.reactivateButton:hover {
+  background: #A7F3D0;
+}
+
+.archivedSection {
+  margin-top: 1.5rem;
+}
+
+.toggleArchived {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 0.75rem;
+}
+
+.toggleArchived:hover {
+  color: #374151;
+}

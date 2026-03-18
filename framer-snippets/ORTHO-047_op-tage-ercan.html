@@ -1,0 +1,169 @@
+<!--
+  ORTHO-047: OP-Tage Dr. Ercan dynamisch auf Website
+  Einbindung: Framer → Startseite → Custom Code Block (Mitte der Seite, oberhalb Terminbuchung)
+  Datenquelle: practitioner_schedules (label enthält 'OP-Tag') + absences
+
+  Konfiguration:
+  - SUPABASE_URL und SUPABASE_ANON_KEY unten anpassen wenn nötig
+  - Texte können in den MESSAGES-Objekt angepasst werden
+-->
+<style>
+  .op-tag-hinweis {
+    max-width: 680px;
+    margin: 1.5rem auto;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    border-left: 4px solid #D97706;
+    background: #FFFBEB;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: none; /* hidden by default, shown by JS */
+  }
+
+  .op-tag-hinweis.visible {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .op-tag-hinweis__icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .op-tag-hinweis__content {
+    flex: 1;
+  }
+
+  .op-tag-hinweis__title {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: #92400E;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .op-tag-hinweis__text {
+    font-size: 0.875rem;
+    color: #78350F;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .op-tag-hinweis--absence {
+    border-left-color: #2674BB;
+    background: #EFF6FF;
+  }
+
+  .op-tag-hinweis--absence .op-tag-hinweis__title {
+    color: #1E40AF;
+  }
+
+  .op-tag-hinweis--absence .op-tag-hinweis__text {
+    color: #1E3A5F;
+  }
+</style>
+
+<div id="op-tag-container" class="op-tag-hinweis">
+  <div class="op-tag-hinweis__icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 8v4M12 16h.01"/>
+    </svg>
+  </div>
+  <div class="op-tag-hinweis__content">
+    <p class="op-tag-hinweis__title" id="op-tag-title"></p>
+    <p class="op-tag-hinweis__text" id="op-tag-text"></p>
+  </div>
+</div>
+
+<script>
+(function() {
+  // === KONFIGURATION ===
+  const SUPABASE_URL = 'https://jgammhrdgoxxbcwvlqcd.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_Ww1hByyP9FrP4mCoj7-Uvg_tDPmW1Hg';
+
+  // Texte – leicht anpassbar
+  const MESSAGES = {
+    // Montag (ganzer Tag OP)
+    monday: {
+      title: 'Hinweis',
+      text: 'Dr. med. Yilmaz Ercan ist heute im OP und in der Praxis nicht verfügbar.',
+    },
+    // Mittwoch (nachmittag OP)
+    wednesday: {
+      title: 'Hinweis',
+      text: 'Dr. med. Yilmaz Ercan ist ab Nachmittag im OP.',
+    },
+    // Urlaub / Abwesenheit (hat Vorrang)
+    absence: {
+      title: 'Abwesenheit',
+    },
+  };
+  // === ENDE KONFIGURATION ===
+
+  const container = document.getElementById('op-tag-container');
+  const titleEl = document.getElementById('op-tag-title');
+  const textEl = document.getElementById('op-tag-text');
+
+  async function fetchAndDisplay() {
+    try {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon, ...
+
+      // 1. Prüfe Abwesenheit (hat Vorrang)
+      const absenceRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/practitioner_absences?select=start_date,end_date,reason,public_message,practitioner_id,practitioner:practitioners!inner(last_name)&start_date=lte.${todayStr}&end_date=gte.${todayStr}&practitioner.last_name=eq.Ercan`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+
+      if (absenceRes.ok) {
+        const absences = await absenceRes.json();
+        if (absences.length > 0) {
+          const absence = absences[0];
+          const endDate = new Date(absence.end_date + 'T00:00:00');
+          const formattedEnd = endDate.toLocaleDateString('de-DE', { day: 'numeric', month: 'long' });
+
+          container.classList.add('op-tag-hinweis--absence');
+          titleEl.textContent = MESSAGES.absence.title;
+          textEl.textContent = absence.public_message
+            || `Dr. med. Yilmaz Ercan ist bis ${formattedEnd} nicht in der Praxis.`;
+          container.classList.add('visible');
+          return; // Abwesenheit hat Vorrang
+        }
+      }
+
+      // 2. Prüfe OP-Tag Schedules
+      const schedRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/practitioner_schedules?select=label,start_time,end_time,practitioner_id,practitioner:practitioners!inner(last_name)&day_of_week=eq.${dayOfWeek}&is_bookable=eq.false&label=like.*OP*&practitioner.last_name=eq.Ercan&valid_from=lte.${todayStr}&or=(valid_until.is.null,valid_until.gte.${todayStr})`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+
+      if (!schedRes.ok) return;
+      const schedules = await schedRes.json();
+
+      if (schedules.length === 0) return; // Kein OP-Tag heute
+
+      // Montag = ganzer Tag, Mittwoch = ab Nachmittag
+      if (dayOfWeek === 1) {
+        titleEl.textContent = MESSAGES.monday.title;
+        textEl.textContent = MESSAGES.monday.text;
+        container.classList.add('visible');
+      } else if (dayOfWeek === 3) {
+        titleEl.textContent = MESSAGES.wednesday.title;
+        textEl.textContent = MESSAGES.wednesday.text;
+        container.classList.add('visible');
+      } else {
+        // Andere OP-Tage (falls in Zukunft hinzugefügt)
+        const sched = schedules[0];
+        titleEl.textContent = 'Hinweis';
+        textEl.textContent = `Dr. med. Yilmaz Ercan: ${sched.label}`;
+        container.classList.add('visible');
+      }
+    } catch (err) {
+      console.error('[OP-Tag Hinweis]', err);
+    }
+  }
+
+  fetchAndDisplay();
+})();
+</script>

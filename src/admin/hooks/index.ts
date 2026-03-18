@@ -1,4 +1,5 @@
 export { useAuth } from './useAuth';
+export type { AdminRole } from './useAuth';
 export {
   useAppointments,
   useAppointmentDetails,
