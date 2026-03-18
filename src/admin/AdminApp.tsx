@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks';
 import { AdminLayout } from './components';
-import { LoginPage, DashboardPage, SettingsPage, DataImportPage, PrescriptionsPage, StaffPage } from './pages';
+import { LoginPage, DashboardPage, SettingsPage, DataImportPage, PrescriptionsPage, StaffPage, ActivityLogPage } from './pages';
 import { AbsencesPage } from './pages/AbsencesPage';
 import './AdminApp.css';
 
@@ -113,6 +113,14 @@ export function AdminApp() {
           element={
             <AdminOnlyRoute>
               <SettingsPage />
+            </AdminOnlyRoute>
+          }
+        />
+        <Route
+          path="/admin/activity"
+          element={
+            <AdminOnlyRoute>
+              <ActivityLogPage />
             </AdminOnlyRoute>
           }
         />
