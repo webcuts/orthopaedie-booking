@@ -1122,11 +1122,11 @@ export function useAdminCreateMfaBooking() {
         });
       }
 
-      return { success: true, appointmentId: appointment.id };
+      return { success: true, appointmentId: appointment.id, patientId: patient.id };
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Fehler bei der MFA-Buchung';
       setError(message);
-      return { success: false, error: message };
+      return { success: false as const, error: message, appointmentId: undefined, patientId: undefined };
     } finally {
       setLoading(false);
     }

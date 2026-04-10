@@ -44,6 +44,7 @@ export interface TreatmentType {
   description_ru?: string | null;
   description_ar?: string | null;
   is_active: boolean;
+  patient_visible: boolean;
   created_at: string;
 }
 
@@ -132,6 +133,8 @@ export interface MfaTreatmentType {
   name_ar?: string | null;
   duration_minutes: number;
   is_active: boolean;
+  patient_visible: boolean;
+  follow_up_count: number;
   sort_order: number;
   specialty_id?: string | null;
   created_at: string;
@@ -151,6 +154,7 @@ export interface MfaAppointment {
   patient_id: string;
   mfa_treatment_type_id: string;
   mfa_time_slot_id: string;
+  parent_appointment_id: string | null;
   status: AppointmentStatus;
   notes: string | null;
   cancel_token: string | null;

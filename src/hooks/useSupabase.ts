@@ -148,6 +148,7 @@ export function useTreatmentTypes() {
         .from('treatment_types')
         .select('*')
         .eq('is_active', true)
+        .eq('patient_visible', true)
         .order('duration_minutes');
 
       if (error) throw error;
@@ -572,6 +573,7 @@ export function useMfaTreatmentTypes(specialtyId?: string | null) {
         .from('mfa_treatment_types')
         .select('*')
         .eq('is_active', true)
+        .eq('patient_visible', true)
         .or(specialtyId ? `specialty_id.is.null,specialty_id.eq.${specialtyId}` : 'specialty_id.is.null,specialty_id.not.is.null')
         .order('sort_order');
 

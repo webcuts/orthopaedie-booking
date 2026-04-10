@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../../../lib/supabaseClient';
 import { useUpdateAppointmentStatus, useUpdateMfaAppointmentStatus, useAnonymizePatient, type AppointmentWithDetails } from '../../hooks';
 import styles from './AppointmentModal.module.css';
 
@@ -24,6 +25,9 @@ export function AppointmentModal({
 }: AppointmentModalProps) {
   const [status, setStatus] = useState(appointment.status);
   const [showAnonymizeConfirm, setShowAnonymizeConfirm] = useState(false);
+  const [linkedFollowUps, setLinkedFollowUps] = useState(0);
+  const [showCancelWarning, setShowCancelWarning] = useState(false);
+  const [pendingStatus, setPendingStatus] = useState<string | null>(null);
   const { updateStatus: updateDoctorStatus, loading: doctorLoading } = useUpdateAppointmentStatus();
   const { updateStatus: updateMfaStatus, loading: mfaLoading } = useUpdateMfaAppointmentStatus();
   const { anonymize, loading: anonymizing } = useAnonymizePatient();
@@ -34,7 +38,21 @@ export function AppointmentModal({
   const isAnonymized = appointment.patient?.name === 'Gelöscht';
   const canAnonymize = (status === 'cancelled' || status === 'completed') && !isAnonymized;
 
-  const handleStatusChange = async (newStatus: string) => {
+  // Check for linked follow-up appointments (ORTHO-058)
+  useEffect(() => {
+    if (!isMfa) return;
+    async function checkFollowUps() {
+      const { count } = await supabase
+        .from('mfa_appointments')
+        .select('id', { count: 'exact', head: true })
+        .eq('parent_appointment_id', appointment.id)
+        .neq('status', 'cancelled');
+      setLinkedFollowUps(count || 0);
+    }
+    checkFollowUps();
+  }, [appointment.id, isMfa]);
+
+  const executeStatusChange = async (newStatus: string) => {
     setStatus(newStatus as typeof status);
     const updateFn = isMfa ? updateMfaStatus : updateDoctorStatus;
     const result = await updateFn(
@@ -43,6 +61,24 @@ export function AppointmentModal({
     );
     if (result.success) {
       onStatusUpdate();
+    }
+  };
+
+  const handleStatusChange = async (newStatus: string) => {
+    // Warn if cancelling an MFA appointment with linked follow-ups
+    if (newStatus === 'cancelled' && isMfa && linkedFollowUps > 0) {
+      setPendingStatus(newStatus);
+      setShowCancelWarning(true);
+      return;
+    }
+    executeStatusChange(newStatus);
+  };
+
+  const handleConfirmCancel = () => {
+    setShowCancelWarning(false);
+    if (pendingStatus) {
+      executeStatusChange(pendingStatus);
+      setPendingStatus(null);
     }
   };
 
@@ -276,6 +312,37 @@ export function AppointmentModal({
           </button>
         </div>
       </div>
+
+      {/* ORTHO-058: Warning when cancelling appointment with linked follow-ups */}
+      {showCancelWarning && (
+        <div className={styles.overlay} onClick={() => setShowCancelWarning(false)} style={{ zIndex: 1001 }}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()} style={{ maxWidth: 400 }}>
+            <div className={styles.header}>
+              <h2 className={styles.title}>Stornierung mit Folgeterminen</h2>
+            </div>
+            <div className={styles.content} style={{ padding: '1.5rem' }}>
+              <p style={{ fontSize: '0.875rem', color: '#374151', margin: 0, lineHeight: 1.6 }}>
+                Dieser Termin hat <strong>{linkedFollowUps} verknüpfte Folgetermin{linkedFollowUps > 1 ? 'e' : ''}</strong>.
+                Bitte beachten Sie, dass die Folgetermine separat storniert werden müssen.
+              </p>
+            </div>
+            <div className={styles.footer}>
+              <button
+                onClick={() => setShowCancelWarning(false)}
+                style={{ padding: '0.5rem 1rem', background: 'none', border: '1px solid #D1D5DB', borderRadius: 8, cursor: 'pointer', fontSize: '0.875rem' }}
+              >
+                Abbrechen
+              </button>
+              <button
+                onClick={handleConfirmCancel}
+                style={{ padding: '0.5rem 1rem', background: '#DC2626', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 500, fontSize: '0.875rem' }}
+              >
+                Trotzdem stornieren
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

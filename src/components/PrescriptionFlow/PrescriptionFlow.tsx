@@ -5,13 +5,12 @@ import { supabase } from '../../lib/supabaseClient';
 import { sanitizeInput, validateName, validatePhone, validateEmail, FIELD_LIMITS } from '../../utils/validation';
 import styles from './PrescriptionFlow.module.css';
 
-type OrderType = 'rezept' | 'heilmittel' | 'ueberweisung';
-type FlowStep = 'type' | 'contact' | 'success';
+type OrderType = 'rezept' | 'heilmittel';
+type FlowStep = 'type' | 'quarterly' | 'contact' | 'success';
 
-const ORDER_TYPES: { value: OrderType; labelKey: string; descKey: string; icon: string }[] = [
-  { value: 'rezept', labelKey: 'prescription.typeRezept', descKey: 'prescription.typeRezeptDesc', icon: '💊' },
-  { value: 'heilmittel', labelKey: 'prescription.typeHeilmittel', descKey: 'prescription.typeHeilmittelDesc', icon: '🏥' },
-  { value: 'ueberweisung', labelKey: 'prescription.typeUeberweisung', descKey: 'prescription.typeUeberweisungDesc', icon: '📋' },
+const ORDER_TYPES: { value: OrderType; labelKey: string; descKey: string; hintKey?: string; icon: string }[] = [
+  { value: 'rezept', labelKey: 'prescription.typeRezept', descKey: 'prescription.typeRezeptDesc', hintKey: 'prescription.hintRezept', icon: '💊' },
+  { value: 'heilmittel', labelKey: 'prescription.typeHeilmittel', descKey: 'prescription.typeHeilmittelDesc', hintKey: 'prescription.hintHeilmittel', icon: '🏥' },
 ];
 
 function PrescriptionFlowInner({ onBack }: { onBack: () => void }) {
@@ -29,7 +28,7 @@ function PrescriptionFlowInner({ onBack }: { onBack: () => void }) {
 
   const handleSelectType = (type: OrderType) => {
     setOrderType(type);
-    setStep('contact');
+    setStep('quarterly');
   };
 
   const validate = () => {
@@ -126,7 +125,7 @@ function PrescriptionFlowInner({ onBack }: { onBack: () => void }) {
             </div>
 
             <div className={styles.typeGrid}>
-              {ORDER_TYPES.map(({ value, labelKey, descKey, icon }) => (
+              {ORDER_TYPES.map(({ value, labelKey, descKey, hintKey, icon }) => (
                 <button
                   key={value}
                   className={styles.typeCard}
@@ -135,6 +134,9 @@ function PrescriptionFlowInner({ onBack }: { onBack: () => void }) {
                   <span className={styles.typeIcon}>{icon}</span>
                   <span className={styles.typeLabel}>{t(labelKey)}</span>
                   <span className={styles.typeDesc}>{t(descKey)}</span>
+                  {hintKey && (
+                    <span className={styles.typeHint}>{t(hintKey)}</span>
+                  )}
                 </button>
               ))}
             </div>
@@ -145,6 +147,47 @@ function PrescriptionFlowInner({ onBack }: { onBack: () => void }) {
               </svg>
               {t('prescription.backToChoice')}
             </button>
+          </div>
+        )}
+
+        {step === 'quarterly' && (
+          <div>
+            <div className={styles.stepHeader}>
+              <h2 className={styles.stepTitle}>{t('prescription.quarterlyTitle')}</h2>
+              <p className={styles.stepDesc}>{t('prescription.quarterlyDesc')}</p>
+            </div>
+
+            <div className={styles.quarterlyActions}>
+              <button
+                className={styles.quarterlyYes}
+                onClick={() => setStep('contact')}
+              >
+                {t('prescription.quarterlyYes')}
+              </button>
+              <button
+                className={styles.quarterlyNo}
+                disabled
+              >
+                {t('prescription.quarterlyNo')}
+              </button>
+            </div>
+
+            <div className={styles.quarterlyWarning}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 16v-4M12 8h.01"/>
+              </svg>
+              <span>{t('prescription.quarterlyWarning')}</span>
+            </div>
+
+            <div className={styles.actions}>
+              <button className={styles.backButton} onClick={() => { setStep('type'); setOrderType(null); }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M15 18l-6-6 6-6"/>
+                </svg>
+                {t('common.back')}
+              </button>
+            </div>
           </div>
         )}
 

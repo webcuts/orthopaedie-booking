@@ -1,0 +1,286 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1001;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6B7280;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.closeButton:hover {
+  background: #F3F4F6;
+}
+
+.closeButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.content {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #EFF6FF;
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.info svg {
+  flex-shrink: 0;
+  color: #2563EB;
+  margin-top: 2px;
+}
+
+.infoText {
+  font-size: 0.875rem;
+  color: #1E40AF;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.followUpItem {
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.followUpItem.completed {
+  border-color: #BBF7D0;
+  background: #F0FDF4;
+}
+
+.followUpHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.followUpLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.followUpBadge {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.badgePending {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.badgeBooked {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.formRow {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.formGroup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6B7280;
+}
+
+.input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-family: inherit;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #2674BB;
+  box-shadow: 0 0 0 3px rgba(38, 116, 187, 0.1);
+}
+
+.select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  background: white;
+}
+
+.slotGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.25rem;
+}
+
+.slotButton {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  background: white;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.slotButton:hover {
+  border-color: #2674BB;
+}
+
+.slotButton.selected {
+  background: #2674BB;
+  color: white;
+  border-color: #2674BB;
+}
+
+.slotsLoading {
+  font-size: 0.8125rem;
+  color: #9CA3AF;
+  padding: 0.5rem 0;
+}
+
+.noSlots {
+  font-size: 0.8125rem;
+  color: #9CA3AF;
+  padding: 0.5rem 0;
+}
+
+.bookButton {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #2674BB;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+}
+
+.bookButton:hover {
+  background: #1a5a9a;
+}
+
+.bookButton:disabled {
+  background: #9CA3AF;
+  cursor: not-allowed;
+}
+
+.completedText {
+  font-size: 0.8125rem;
+  color: #059669;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.error {
+  padding: 0.75rem;
+  background: #FEF2F2;
+  color: #DC2626;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.skipButton {
+  padding: 0.625rem 1.25rem;
+  background: none;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #6B7280;
+  cursor: pointer;
+}
+
+.skipButton:hover {
+  background: #F9FAFB;
+}
+
+.doneButton {
+  padding: 0.625rem 1.25rem;
+  background: #059669;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.doneButton:hover {
+  background: #047857;
+}

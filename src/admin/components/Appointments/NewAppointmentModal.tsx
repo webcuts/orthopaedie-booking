@@ -6,6 +6,7 @@ import {
   useAdminCreateMfaBooking,
   useAdminMfaAvailableSlots,
 } from '../../hooks';
+import { FollowUpDialog } from './FollowUpDialog';
 import { sanitizeInput, validateName, validateEmail, validatePhone, validateNotes, FIELD_LIMITS } from '../../../utils/validation';
 import styles from './NewAppointmentModal.module.css';
 
@@ -28,6 +29,7 @@ interface MfaTreatmentType {
   name: string;
   duration_minutes: number;
   is_active: boolean;
+  follow_up_count: number;
 }
 
 interface InsuranceType {
@@ -70,6 +72,13 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState(false);
+  const [followUpInfo, setFollowUpInfo] = useState<{
+    parentAppointmentId: string;
+    treatmentName: string;
+    followUpCount: number;
+    patientId: string;
+    mfaTreatmentTypeId: string;
+  } | null>(null);
 
   // Doctor hooks
   const { createBooking: createDoctorBooking, loading: doctorLoading, error: doctorError, clearError: clearDoctorError } = useAdminCreateBooking();
@@ -94,7 +103,7 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
       const [practRes, treatRes, mfaTreatRes, insRes] = await Promise.all([
         supabase.from('practitioners').select('id, title, first_name, last_name').eq('is_active', true).order('last_name'),
         supabase.from('treatment_types').select('id, name, duration_minutes, is_active').eq('is_active', true).order('name'),
-        supabase.from('mfa_treatment_types').select('id, name, duration_minutes, is_active').eq('is_active', true).order('sort_order'),
+        supabase.from('mfa_treatment_types').select('id, name, duration_minutes, is_active, follow_up_count').eq('is_active', true).order('sort_order'),
         supabase.from('insurance_types').select('id, name').eq('is_active', true).order('name'),
       ]);
       if (practRes.data) setPractitioners(practRes.data);
@@ -158,10 +167,8 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
     if (!validate()) return;
     clearError();
 
-    let result;
-
     if (bookingType === 'mfa') {
-      result = await createMfaBooking({
+      const result = await createMfaBooking({
         mfaTimeSlotId: timeSlotId,
         mfaTreatmentTypeId,
         insuranceTypeId,
@@ -170,8 +177,26 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
         patientPhone: patientPhone.trim() || undefined,
         notes: sanitizeInput(notes.trim()) || undefined,
       });
+
+      if (result.success) {
+        // Check if MFA treatment has follow-ups (ORTHO-058)
+        const selectedMfaTreatment = mfaTreatmentTypes.find(t => t.id === mfaTreatmentTypeId);
+        if (selectedMfaTreatment && selectedMfaTreatment.follow_up_count > 0 && result.appointmentId && result.patientId) {
+          setFollowUpInfo({
+            parentAppointmentId: result.appointmentId,
+            treatmentName: selectedMfaTreatment.name,
+            followUpCount: selectedMfaTreatment.follow_up_count,
+            patientId: result.patientId,
+            mfaTreatmentTypeId,
+          });
+          onCreated();
+          return;
+        }
+        setSuccess(true);
+        onCreated();
+      }
     } else {
-      result = await createDoctorBooking({
+      const result = await createDoctorBooking({
         practitionerId,
         timeSlotId,
         treatmentTypeId,
@@ -181,11 +206,11 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
         patientPhone: patientPhone.trim() || undefined,
         notes: sanitizeInput(notes.trim()) || undefined,
       });
-    }
 
-    if (result.success) {
-      setSuccess(true);
-      onCreated();
+      if (result.success) {
+        setSuccess(true);
+        onCreated();
+      }
     }
   };
 
@@ -507,6 +532,19 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
           </button>
         </div>
       </div>
+
+      {followUpInfo && (
+        <FollowUpDialog
+          parentAppointmentId={followUpInfo.parentAppointmentId}
+          treatmentName={followUpInfo.treatmentName}
+          followUpCount={followUpInfo.followUpCount}
+          patientId={followUpInfo.patientId}
+          patientName={patientName}
+          mfaTreatmentTypeId={followUpInfo.mfaTreatmentTypeId}
+          onClose={() => { setFollowUpInfo(null); setSuccess(true); }}
+          onComplete={() => { setFollowUpInfo(null); setSuccess(true); onCreated(); }}
+        />
+      )}
     </div>
   );
 }

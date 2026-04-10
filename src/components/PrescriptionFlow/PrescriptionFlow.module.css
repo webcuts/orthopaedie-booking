@@ -90,6 +90,69 @@
   margin-top: 0.125rem;
 }
 
+.typeHint {
+  font-size: 0.75rem;
+  color: #2674BB;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* Quarterly Check */
+.quarterlyActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.quarterlyYes {
+  padding: 0.875rem 1.25rem;
+  background: #F0FDF4;
+  border: 2px solid #BBF7D0;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #166534;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.quarterlyYes:hover {
+  border-color: #22C55E;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.12);
+}
+
+.quarterlyNo {
+  padding: 0.875rem 1.25rem;
+  background: #FEF2F2;
+  border: 2px solid #FECACA;
+  border-radius: 12px;
+  cursor: not-allowed;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #991B1B;
+  text-align: left;
+  opacity: 0.7;
+}
+
+.quarterlyWarning {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #FEF3C7;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #92400E;
+  margin-bottom: 1rem;
+}
+
+.quarterlyWarning svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
 .backLink {
   display: inline-flex;
   align-items: center;

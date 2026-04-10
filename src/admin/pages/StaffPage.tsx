@@ -6,7 +6,7 @@ import styles from './StaffPage.module.css';
 interface StaffMember {
   id: string;
   display_name: string;
-  role: 'admin' | 'mfa';
+  role: 'admin' | 'mfa' | 'arzt';
   is_active: boolean;
   created_at: string;
 }
@@ -24,6 +24,7 @@ interface PractitionerEntry {
 const ROLE_LABELS: Record<string, string> = {
   admin: 'Administrator',
   mfa: 'MFA',
+  arzt: 'Arzt',
 };
 
 export function StaffPage() {
@@ -41,7 +42,7 @@ export function StaffPage() {
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [newRole, setNewRole] = useState<'admin' | 'mfa'>('mfa');
+  const [newRole, setNewRole] = useState<'admin' | 'mfa' | 'arzt'>('mfa');
 
   // Practitioner form
   const [practTitle, setPractTitle] = useState('');
@@ -194,8 +195,9 @@ export function StaffPage() {
             </div>
             <div className={styles.formRow}>
               <label className={styles.formLabel}>Rolle *</label>
-              <select value={newRole} onChange={(e) => setNewRole(e.target.value as 'admin' | 'mfa')} className={styles.formInput}>
+              <select value={newRole} onChange={(e) => setNewRole(e.target.value as 'admin' | 'mfa' | 'arzt')} className={styles.formInput}>
                 <option value="mfa">MFA (Kalender, Termine, Vorbestellungen)</option>
+                <option value="arzt">Arzt (Eigener Kalender, eigene Abwesenheiten)</option>
                 <option value="admin">Admin (Vollzugriff inkl. Mitarbeiterverwaltung)</option>
               </select>
             </div>
@@ -236,6 +238,7 @@ export function StaffPage() {
                       className={styles.roleSelect}
                     >
                       <option value="mfa">MFA</option>
+                      <option value="arzt">Arzt</option>
                       <option value="admin">Admin</option>
                     </select>
                     <button className={styles.archiveButton} onClick={() => handleAction('archive', member.id)}>

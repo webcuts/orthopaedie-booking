@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import type { Session, User } from '@supabase/supabase-js';
 
-export type AdminRole = 'admin' | 'mfa';
+export type AdminRole = 'admin' | 'mfa' | 'arzt';
 
 interface AuthState {
   session: Session | null;
@@ -10,6 +10,7 @@ interface AuthState {
   loading: boolean;
   role: AdminRole | null;
   roleLoading: boolean;
+  practitionerId: string | null;
 }
 
 interface LoginCredentials {
@@ -22,21 +23,23 @@ interface UseAuthReturn extends AuthState {
   logout: () => Promise<void>;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isDoctor: boolean;
 }
 
 function loadRole(userId: string, setState: React.Dispatch<React.SetStateAction<AuthState>>) {
   setState(prev => ({ ...prev, roleLoading: true }));
   supabase
     .from('admin_profiles')
-    .select('role, is_active')
+    .select('role, is_active, practitioner_id')
     .eq('id', userId)
     .single()
     .then(({ data }) => {
       const role: AdminRole = data?.is_active ? (data.role as AdminRole) : 'admin';
-      setState(prev => ({ ...prev, role, roleLoading: false }));
+      const practitionerId = data?.practitioner_id || null;
+      setState(prev => ({ ...prev, role, practitionerId, roleLoading: false }));
     })
     .then(null, () => {
-      setState(prev => ({ ...prev, role: 'admin', roleLoading: false }));
+      setState(prev => ({ ...prev, role: 'admin', practitionerId: null, roleLoading: false }));
     });
 }
 
@@ -47,6 +50,7 @@ export function useAuth(): UseAuthReturn {
     loading: true,
     role: null,
     roleLoading: false,
+    practitionerId: null,
   });
 
   useEffect(() => {
@@ -57,6 +61,7 @@ export function useAuth(): UseAuthReturn {
         loading: false,
         role: null,
         roleLoading: !!session?.user,
+        practitionerId: null,
       });
 
       if (session?.user) {
@@ -72,6 +77,7 @@ export function useAuth(): UseAuthReturn {
           loading: false,
           role: null,
           roleLoading: !!session?.user,
+          practitionerId: null,
         });
 
         if (session?.user) {
@@ -106,5 +112,6 @@ export function useAuth(): UseAuthReturn {
     logout,
     isAuthenticated: !!state.session,
     isAdmin: state.role === 'admin',
+    isDoctor: state.role === 'arzt',
   };
 }

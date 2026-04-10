@@ -14,7 +14,7 @@ interface StaffRequest {
   email?: string;
   password?: string;
   displayName?: string;
-  role?: 'admin' | 'mfa';
+  role?: 'admin' | 'mfa' | 'arzt';
   userId?: string;
 }
 

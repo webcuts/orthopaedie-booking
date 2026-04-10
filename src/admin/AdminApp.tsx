@@ -24,7 +24,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <AdminLayout>{children}</AdminLayout>;
 }
 
-/** Route die nur für Admins zugänglich ist. MFAs werden zum Kalender umgeleitet. */
+/** Route die nur für Admins zugänglich ist. MFAs und Ärzte werden zum Kalender umgeleitet. */
 function AdminOnlyRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading, isAdmin, roleLoading } = useAuth();
 
@@ -42,6 +42,30 @@ function AdminOnlyRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!isAdmin) {
+    return <Navigate to="/admin/calendar" replace />;
+  }
+
+  return <AdminLayout>{children}</AdminLayout>;
+}
+
+/** Route für Admin + MFA, nicht für Ärzte (z.B. Vorbestellungen) */
+function AdminMfaRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, loading, isDoctor, roleLoading } = useAuth();
+
+  if (loading || roleLoading) {
+    return (
+      <div className="admin-loading">
+        <div className="admin-loading-spinner" />
+        <span>Lade...</span>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  if (isDoctor) {
     return <Navigate to="/admin/calendar" replace />;
   }
 
@@ -93,9 +117,9 @@ export function AdminApp() {
         <Route
           path="/admin/prescriptions"
           element={
-            <ProtectedRoute>
+            <AdminMfaRoute>
               <PrescriptionsPage />
-            </ProtectedRoute>
+            </AdminMfaRoute>
           }
         />
         <Route

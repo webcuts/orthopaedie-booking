@@ -1,20 +1,22 @@
-// ORTHO-049: Doctolib-Abkündigung Banner
+// ORTHO-049 / ORTHO-056: Doctolib-Abkündigung Banner
 // Einbindung: Framer → Code → New File → Inhalt einfügen
-// Platzierung: Ganz oben auf der Startseite, sichtbar ohne Scrollen
+// Platzierung: Mittig auf der Startseite, ÜBER dem "Termin vereinbaren"-Bereich
+// ORTHO-056: Signalfarbe (Gelb/Orange), mind. 18px, fett, zentriert
 
 import { addPropertyControls, ControlType } from "framer"
 
-export default function DoctolibBanner({ borderRadius = 0 }: { borderRadius?: number }) {
+export default function DoctolibBanner({ borderRadius = 12 }: { borderRadius?: number }) {
     return (
         <div
             style={{
-                background: "linear-gradient(135deg, #2674BB 0%, #1a5a9a 100%)",
-                color: "#ffffff",
-                padding: "1.25rem 1.5rem",
+                background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
+                color: "#78350F",
+                padding: "1.5rem 2rem",
                 textAlign: "center",
                 fontFamily:
                     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-                boxShadow: "0 2px 8px rgba(38, 116, 187, 0.3)",
+                boxShadow: "0 4px 12px rgba(245, 158, 11, 0.35)",
+                border: "2px solid #D97706",
                 width: "100%",
                 borderRadius,
             }}
@@ -26,21 +28,21 @@ export default function DoctolibBanner({ borderRadius = 0 }: { borderRadius?: nu
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: "0.75rem",
+                    gap: "1rem",
                 }}
             >
                 <div
                     style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "0.5rem",
-                        fontWeight: 700,
-                        fontSize: "1.05rem",
+                        gap: "0.625rem",
+                        fontWeight: 800,
+                        fontSize: "1.25rem",
                     }}
                 >
                     <svg
-                        width="20"
-                        height="20"
+                        width="24"
+                        height="24"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -48,16 +50,17 @@ export default function DoctolibBanner({ borderRadius = 0 }: { borderRadius?: nu
                         strokeLinecap="round"
                         strokeLinejoin="round"
                     >
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 16v-4M12 8h.01" />
+                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
                     </svg>
                     Wichtige Information
                 </div>
 
-                <p style={{ fontSize: "0.95rem", lineHeight: 1.5, opacity: 0.95, margin: 0 }}>
-                    Ab sofort buchen Sie Ihren Termin direkt über unsere Website.
+                <p style={{ fontSize: "1.125rem", fontWeight: 700, lineHeight: 1.5, margin: 0 }}>
+                    Buchungen über Doctolib sind ab sofort nicht mehr möglich.
                     <br />
-                    Buchungen über Doctolib sind nicht mehr möglich.
+                    Bitte vereinbaren Sie Ihre Termine über unsere Website.
                 </p>
 
                 <a
@@ -66,19 +69,19 @@ export default function DoctolibBanner({ borderRadius = 0 }: { borderRadius?: nu
                         display: "inline-flex",
                         alignItems: "center",
                         gap: "0.5rem",
-                        background: "#ffffff",
-                        color: "#2674BB",
-                        fontWeight: 600,
-                        fontSize: "0.95rem",
-                        padding: "0.625rem 1.5rem",
+                        background: "#78350F",
+                        color: "#FEF3C7",
+                        fontWeight: 700,
+                        fontSize: "1rem",
+                        padding: "0.75rem 1.75rem",
                         borderRadius: 8,
                         textDecoration: "none",
-                        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.15)",
+                        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.2)",
                     }}
                 >
                     <svg
-                        width="16"
-                        height="16"
+                        width="18"
+                        height="18"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -102,7 +105,7 @@ addPropertyControls(DoctolibBanner, {
     borderRadius: {
         type: ControlType.Number,
         title: "Border Radius",
-        defaultValue: 0,
+        defaultValue: 12,
         min: 0,
         max: 32,
         step: 1,
