@@ -7,6 +7,7 @@ import {
   useAdminMfaAvailableSlots,
 } from '../../hooks';
 import { FollowUpDialog } from './FollowUpDialog';
+import { PatientSearch, isDoctolibPlaceholder, type PatientMatch } from './PatientSearch';
 import { sanitizeInput, validateName, validateEmail, validatePhone, validateNotes, FIELD_LIMITS } from '../../../utils/validation';
 import styles from './NewAppointmentModal.module.css';
 
@@ -72,6 +73,7 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState(false);
+  const [existingPatientId, setExistingPatientId] = useState<string | null>(null);
   const [followUpInfo, setFollowUpInfo] = useState<{
     parentAppointmentId: string;
     treatmentName: string;
@@ -129,6 +131,23 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
     setErrors({});
   }, [bookingType]);
 
+  const handlePatientSelect = useCallback((p: PatientMatch | null) => {
+    if (p) {
+      setExistingPatientId(p.id);
+      setPatientName(p.name);
+      setPatientEmail(p.email || '');
+      // Doctolib-Platzhalter-Nummern nicht übernehmen — MFA soll echte Nummer nachtragen
+      setPatientPhone(isDoctolibPlaceholder(p.phone) ? '' : p.phone);
+      setInsuranceTypeId(p.insurance_type_id);
+      setErrors((prev) => ({ ...prev, patientName: '', insuranceTypeId: '' }));
+    } else {
+      setExistingPatientId(null);
+      setPatientName('');
+      setPatientEmail('');
+      setPatientPhone('');
+    }
+  }, []);
+
   const validate = useCallback(() => {
     const newErrors: Record<string, string> = {};
 
@@ -176,6 +195,7 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
         patientEmail: patientEmail.trim() || undefined,
         patientPhone: patientPhone.trim() || undefined,
         notes: sanitizeInput(notes.trim()) || undefined,
+        existingPatientId: existingPatientId || undefined,
       });
 
       if (result.success) {
@@ -205,6 +225,7 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
         patientEmail: patientEmail.trim() || undefined,
         patientPhone: patientPhone.trim() || undefined,
         notes: sanitizeInput(notes.trim()) || undefined,
+        existingPatientId: existingPatientId || undefined,
       });
 
       if (result.success) {
@@ -449,6 +470,15 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
           {/* Patient */}
           <section className={styles.section}>
             <h3 className={styles.sectionTitle}>Patient</h3>
+
+            <div style={{ marginBottom: '0.75rem' }}>
+              <PatientSearch
+                onSelect={handlePatientSelect}
+                selectedPatientId={existingPatientId}
+                selectedPatientLabel={existingPatientId ? patientName : null}
+              />
+            </div>
+
             <div className={styles.formGrid}>
               <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                 <label className={styles.label}>
@@ -460,6 +490,7 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
                   placeholder="Vor- und Nachname"
                   value={patientName}
                   maxLength={FIELD_LIMITS.NAME_MAX}
+                  disabled={!!existingPatientId}
                   onChange={(e) => {
                     setPatientName(sanitizeInput(e.target.value));
                     setErrors((prev) => ({ ...prev, patientName: '' }));
@@ -485,7 +516,14 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.label}>Telefon</label>
+                <label className={styles.label}>
+                  Telefon
+                  {existingPatientId && !patientPhone && (
+                    <span style={{ marginLeft: 6, fontSize: '0.7rem', color: '#92400E', fontWeight: 500 }}>
+                      (Doctolib — bitte echte Nummer eintragen)
+                    </span>
+                  )}
+                </label>
                 <input
                   type="tel"
                   className={`${styles.input} ${errors.patientPhone ? styles.inputError : ''}`}
