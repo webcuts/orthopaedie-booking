@@ -1,0 +1,875 @@
+Datum;Wochentag;Uhrzeit;Terminkalender;Ressource;Status;Ankunft_um;Patient;Terminart;Versicherung;Externe_Nummer;Notiz;Quelldatei
+24.04.2026;Freitag;08:45;Dr. Jonda Michael;;Anstehend;;Frau NORDWIG Monika;1. Termin;Gesetzlich versichert;65280;;24.04
+24.04.2026;Freitag;08:45;V. Flores;;Anstehend;;AL ASKARI HINA;1. Termin;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;09:00;Dr. Jonda Michael;;Anstehend;;Herr SCHATTE GLASER Thomas;1. Termin;Gesetzlich versichert;91984;;24.04
+24.04.2026;Freitag;09:00;V. Flores;;Anstehend;;Herr BAUM Robert;1. Termin;Gesetzlich versichert;82235;;24.04
+24.04.2026;Freitag;09:10;Dr. Jonda Michael;;Anstehend;;Herr CHUPIN Matwej;Sprechstunde;Gesetzlich versichert;95582;;24.04
+24.04.2026;Freitag;09:10;V. Flores;;Anstehend;;Frau AKTAS Tugba;Sprechstunde;Gesetzlich versichert;49514;;24.04
+24.04.2026;Freitag;09:20;Dr. Jonda Michael;;Anstehend;;Herr KOHRS Thomas;Sprechstunde;Gesetzlich versichert;88845;;24.04
+24.04.2026;Freitag;09:20;V. Flores;;Anstehend;;Frau GRABOWSKA Joanna Bozena;Erstuntersuchung;Gesetzlich versichert;89342;;24.04
+24.04.2026;Freitag;09:30;Dr. Jonda Michael;;Anstehend;;BINGOELBALI Arzu;Sprechstunde;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;09:30;V. Flores;;Anstehend;;Frau UDE Verena;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;09:40;Dr. Jonda Michael;;Anstehend;;Frau KENA Felicia;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;09:40;V. Flores;;Anstehend;;Frau ZHURBA Olena;Sprechstunde;Gesetzlich versichert;88701;;24.04
+24.04.2026;Freitag;09:50;Dr. Jonda Michael;;Anstehend;;Herr SCHMIDT Reinhard;Sprechstunde;Gesetzlich versichert;64169;;24.04
+24.04.2026;Freitag;09:50;V. Flores;;Anstehend;;Frau PLATONOVA Marianna;Sprechstunde;Gesetzlich versichert;95492;;24.04
+24.04.2026;Freitag;10:00;Dr. Jonda Michael;;Anstehend;;Herr DUMITRU Marian Cristian;1. Termin;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;10:00;Dr. Jonda Michael;;Anstehend;;Frau SCHOEN Daniela;Sprechstunde;Gesetzlich versichert;2256;;24.04
+24.04.2026;Freitag;10:00;V. Flores;;Anstehend;;Herr SMIRNOV Alexandr;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;10:10;Dr. Jonda Michael;;Anstehend;;Frau LEINEWEBER Tanja;Sprechstunde;Gesetzlich versichert;94813;;24.04
+24.04.2026;Freitag;10:10;V. Flores;;Anstehend;;STRIEBKOVA Madlien;1. Termin;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;10:20;Dr. Jonda Michael;;Anstehend;;Frau GAWLITZA Yvonne;1. Termin;Gesetzlich versichert;78068;;24.04
+24.04.2026;Freitag;10:20;V. Flores;;Anstehend;;AKHEDZAK Viacheslav;Sprechstunde;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;10:30;Dr. Ercan Yilmaz;;Anstehend;;Herr DOEHRING Heiko;1. Termin;Gesetzlich versichert;95782;;24.04
+24.04.2026;Freitag;10:30;Dr. Jonda Michael;;Anstehend;;Frau KHALO Ziro Barakat;1. Termin;Gesetzlich versichert;74155;;24.04
+24.04.2026;Freitag;10:30;V. Flores;;Anstehend;;Frau JOSIPOVIC Natasa;1. Termin;Gesetzlich versichert;14888;;24.04
+24.04.2026;Freitag;10:40;Dr. Jonda Michael;;Anstehend;;Herr ZIESENISS Friedrich;1. Termin;Gesetzlich versichert;2368;;24.04
+24.04.2026;Freitag;10:40;V. Flores;;Anstehend;;Frau MEIER Ruth;Sprechstunde;Gesetzlich versichert;81632;;24.04
+24.04.2026;Freitag;10:50;Dr. Jonda Michael;;Anstehend;;Frau YUECE Halime;1. Termin;Gesetzlich versichert;91647;;24.04
+24.04.2026;Freitag;10:50;V. Flores;;Anstehend;;Herr MEIER Uwe;Sprechstunde;Gesetzlich versichert;74798;;24.04
+24.04.2026;Freitag;11:00;Dr. Jonda Michael;;Anstehend;;Herr RIDWAN Abdul Kadiri;1. Termin;Gesetzlich versichert;79550;;24.04
+24.04.2026;Freitag;11:00;Dr. Jonda Michael;;Anstehend;;Frau TINTER Dimitra;1. Termin;Gesetzlich versichert;95785;;24.04
+24.04.2026;Freitag;11:00;V. Flores;;Anstehend;;Frau BURTUL Mihriban;Sprechstunde;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;11:10;Dr. Jonda Michael;;Anstehend;;Herr ROHRBERG Wolfgang;Sprechstunde;Gesetzlich versichert;95831;;24.04
+24.04.2026;Freitag;11:10;V. Flores;;Anstehend;;Herr JUCHMANN Hanns-Joachim;1. Termin;Gesetzlich versichert;66289;;24.04
+24.04.2026;Freitag;11:20;Dr. Jonda Michael;;Anstehend;;Herr WIEBKE Dennis;Sprechstunde;Gesetzlich versichert;95940;;24.04
+24.04.2026;Freitag;11:20;V. Flores;;Anstehend;;GEBERT Emma;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;11:30;Dr. Jonda Michael;;Anstehend;;Frau NGUYEN BA Katharina-Louise;1. Termin;Gesetzlich versichert;91312;;24.04
+24.04.2026;Freitag;11:30;Dr. Jonda Michael;;Anstehend;;Herr HINRICHS Mark;Sprechstunde;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;11:30;V. Flores;;Anstehend;;Frau KHAMDAR Nataliya;1. Termin;Gesetzlich versichert;95961;;24.04
+24.04.2026;Freitag;11:40;Dr. Jonda Michael;;Anstehend;;Frau BULDUK Hatice;Sprechstunde;Gesetzlich versichert;95863;;24.04
+24.04.2026;Freitag;11:40;V. Flores;;Anstehend;;Herr KHEREDDIN Abbas;1. Termin;Gesetzlich versichert;95962;;24.04
+24.04.2026;Freitag;11:50;Dr. Jonda Michael;;Anstehend;;Herr BRANDES Christopher;Sprechstunde;Gesetzlich versichert;91433;;24.04
+24.04.2026;Freitag;11:50;V. Flores;;Anstehend;;Frau RADDADI Nadia;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;12:00;V. Flores;;Anstehend;;Frau AN Thi-Hong-Hanh;1. Termin;Gesetzlich versichert;53468;;24.04
+24.04.2026;Freitag;12:10;V. Flores;;Anstehend;;SHOVGENIUK Vira;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;12:20;V. Flores;;Anstehend;;Frau SCHILIN Nina;3. Termin;Gesetzlich versichert;79596;;24.04
+24.04.2026;Freitag;12:30;V. Flores;;Anstehend;;VADODI Ian;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;12:40;V. Flores;;Anstehend;;Frau WISCHNEWSKI Natalia;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;12:50;V. Flores;;Anstehend;;ROGGE Olav;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;13:00;Dr. Ercan Yilmaz;;Anstehend;;ER Fewziye;1. Termin;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;13:00;Dr. Ercan Yilmaz;;Anstehend;;DINA Harbiya;1. Termin;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;13:00;V. Flores;;Anstehend;;Frau PARRILLA Eneida;Sprechstunde;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;13:10;Dr. Ercan Yilmaz;;Anstehend;;SEEMANN Albrecht;Erstuntersuchung;Privat versichert;66460;;24.04
+24.04.2026;Freitag;13:10;V. Flores;;Anstehend;;Frau DELGADO RODRIGUEZ Analucia;2. Termin;Gesetzlich versichert;95983;;24.04
+24.04.2026;Freitag;13:20;Dr. Ercan Yilmaz;;Anstehend;;Frau HORSTMANN Andrea;1. Termin;Gesetzlich versichert;32387;;24.04
+24.04.2026;Freitag;13:20;V. Flores;;Anstehend;;Frau FILYAVICH Valeriya;1. Termin;Gesetzlich versichert;91804;;24.04
+24.04.2026;Freitag;13:30;Dr. Ercan Yilmaz;;Anstehend;;Frau CIYUKLU Faydaguel;1. Termin;Gesetzlich versichert;82707;;24.04
+24.04.2026;Freitag;13:30;Dr. Ercan Yilmaz;;Anstehend;;Frau ALI Laila;1. Termin;Gesetzlich versichert;81779;;24.04
+24.04.2026;Freitag;13:30;V. Flores;;Anstehend;;Herr SEVA Gordan;1. Termin;Gesetzlich versichert;75222;;24.04
+24.04.2026;Freitag;13:40;Dr. Ercan Yilmaz;;Anstehend;;Frau CHOMAEVA Asiyat;Sprechstunde;Gesetzlich versichert;79276;;24.04
+24.04.2026;Freitag;13:40;V. Flores;;Anstehend;;HLAZYRINA Evielina;Sprechstunde;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;13:50;Dr. Ercan Yilmaz;;Anstehend;;Frau SHAM Mariam;Sprechstunde;Gesetzlich versichert;71603;;24.04
+24.04.2026;Freitag;13:50;V. Flores;;Anstehend;;Frau HLAZYRINA Svitlana;Sprechstunde;Gesetzlich versichert;90945;;24.04
+24.04.2026;Freitag;14:00;Dr. Ercan Yilmaz;;Anstehend;;ASUMAN Citin;1. Termin;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;14:00;Dr. Ercan Yilmaz;;Anstehend;;OEZAVCI Bahtiguel;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;14:00;V. Flores;;Anstehend;;Frau GUEMRUEK Asiye;1. Termin;Gesetzlich versichert;95098;;24.04
+24.04.2026;Freitag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Frau SAMIR RASHO Teyssir;1. Termin;Gesetzlich versichert;92871;;24.04
+24.04.2026;Freitag;14:10;V. Flores;;Anstehend;;SVITLANA;1. Termin;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;14:20;Dr. Ercan Yilmaz;;Anstehend;;MURAT Changa;1. Termin;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;14:20;V. Flores;;Anstehend;;Herr GRAAS Michel;Sprechstunde;Gesetzlich versichert;52393;;24.04
+24.04.2026;Freitag;14:30;Dr. Ercan Yilmaz;;Anstehend;;Frau KAYIKCI Nurcan;1. Termin;Gesetzlich versichert;91120;;24.04
+24.04.2026;Freitag;14:30;V. Flores;;Anstehend;;Frau LEON BENAVIDES Kris Danna;1. Termin;Gesetzlich versichert;74106;;24.04
+24.04.2026;Freitag;14:40;Dr. Ercan Yilmaz;;Anstehend;;Frau MOLT Melanie;1. Termin;Gesetzlich versichert;73770;;24.04
+24.04.2026;Freitag;14:40;V. Flores;;Anstehend;;Frau DENK Tatyana;Sprechstunde;Gesetzlich versichert;94487;;24.04
+24.04.2026;Freitag;14:50;Dr. Ercan Yilmaz;;Anstehend;;KHALAF Chansah;1. Termin;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;14:50;V. Flores;;Anstehend;;Herr DEREVENCHA Daniil;Sprechstunde;Gesetzlich versichert;95458;;24.04
+24.04.2026;Freitag;15:00;Dr. Ercan Yilmaz;;Anstehend;;Frau KHALEEL TAHLO Piroz;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;15:00;V. Flores;;Anstehend;;Herr SHINKEVICH Viktor;1. Termin;Gesetzlich versichert;90375;;24.04
+24.04.2026;Freitag;15:10;Dr. Ercan Yilmaz;;Anstehend;;Herr AYDIN Burak;1. Termin;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;15:10;V. Flores;;Anstehend;;Frau GOMEZ LOAIZA Diana Maria;2. Termin;Gesetzlich versichert;95808;;24.04
+24.04.2026;Freitag;15:20;Dr. Ercan Yilmaz;;Anstehend;;Frau KEMPA Sarah;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;15:20;V. Flores;;Anstehend;;Frau HAASE Anja;2. Termin;Gesetzlich versichert;71032;;24.04
+24.04.2026;Freitag;15:30;Dr. Ercan Yilmaz;;Anstehend;;Herr GELEN Necdet;1. Termin;Gesetzlich versichert;95128;;24.04
+24.04.2026;Freitag;15:30;V. Flores;;Anstehend;;Frau TOMALA-FLUTE Jessica;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;15:40;Dr. Ercan Yilmaz;;Anstehend;;Herr TANIS Ugur;Erstuntersuchung;Gesetzlich versichert;;;24.04
+24.04.2026;Freitag;15:50;Dr. Ercan Yilmaz;;Anstehend;;Herr GEDIK Mustafa;Sprechstunde;Gesetzlich versichert;91747;;24.04
+24.04.2026;Freitag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Herr BAKI Eyyuep;1. Termin;Gesetzlich versichert;82691;;24.04
+24.04.2026;Freitag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Frau AMIRI Zakia;1. Termin;Gesetzlich versichert;86168;;24.04
+24.04.2026;Freitag;16:10;Dr. Ercan Yilmaz;;Anstehend;;Frau LUECKE Petra;1. Termin;Gesetzlich versichert;47825;;24.04
+24.04.2026;Freitag;16:20;Dr. Ercan Yilmaz;;Anstehend;;Herr CALISKAN Burak;1. Termin;Gesetzlich versichert;16117;;24.04
+27.04.2026;Montag;08:45;V. Flores;;Anstehend;;Frau PHILIPP Steffi;MRT Besprechung;Gesetzlich versichert;84177;;27.04
+27.04.2026;Montag;09:00;V. Flores;;Anstehend;;Herr ATHANGANOS Orchan;1. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;09:10;V. Flores;;Anstehend;;MYRGORODSKA Iryna;1. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;09:20;V. Flores;;Anstehend;;Frau VOLCHIK Tatiana;Erstuntersuchung;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;09:30;V. Flores;;Anstehend;;DAMER Michael;2. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;09:40;V. Flores;;Anstehend;;Herr COEGUER Dennis;Sprechstunde;Gesetzlich versichert;95741;;27.04
+27.04.2026;Montag;09:50;V. Flores;;Anstehend;;Frau HENNAWI Lina;1. Termin;Gesetzlich versichert;77684;;27.04
+27.04.2026;Montag;10:00;V. Flores;;Anstehend;;Frau ZIMMER Irina;1. Termin;Gesetzlich versichert;95876;;27.04
+27.04.2026;Montag;10:10;V. Flores;;Anstehend;;Herr LIAKH Viktor;1. Termin;Gesetzlich versichert;81144;;27.04
+27.04.2026;Montag;10:20;V. Flores;;Anstehend;;Frau LESKOVA Natalia;Erstuntersuchung;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;10:30;V. Flores;;Anstehend;;Frau SARANGO QUEZADA Maria Joaquina;Sprechstunde;Gesetzlich versichert;93280;;27.04
+27.04.2026;Montag;10:40;V. Flores;;Anstehend;;CORDES Gisela;Sprechstunde;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;10:50;V. Flores;;Anstehend;;Frau WEIST Elke;Erstuntersuchung;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;11:00;V. Flores;;Anstehend;;KOTENKO Ivan;Sprechstunde;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;11:10;V. Flores;;Anstehend;;Frau HORSTMANN Jutta;Sprechstunde;Gesetzlich versichert;86212;;27.04
+27.04.2026;Montag;11:20;V. Flores;;Anstehend;;Frau NESTERENKO Oksana;1. Termin;Gesetzlich versichert;88596;;27.04
+27.04.2026;Montag;11:30;V. Flores;;Anstehend;;Herr LOESCHNER Fabian;Sprechstunde;Gesetzlich versichert;90427;;27.04
+27.04.2026;Montag;11:40;V. Flores;;Anstehend;;Herr IDRIZI Erion;Sprechstunde;Gesetzlich versichert;91871;;27.04
+27.04.2026;Montag;11:50;V. Flores;;Anstehend;;UILIEMS Aivy;1. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;12:00;V. Flores;;Anstehend;;BOGATOVA Larysa;Sprechstunde;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;12:10;V. Flores;;Anstehend;;Frau SCHNEIDER Ludmilla;Sprechstunde;Gesetzlich versichert;94154;;27.04
+27.04.2026;Montag;12:20;V. Flores;;Anstehend;;Herr SABIE Roman;Sprechstunde;Gesetzlich versichert;76234;;27.04
+27.04.2026;Montag;12:30;V. Flores;;Anstehend;;Frau PHILIPP Doris;1. Termin;Gesetzlich versichert;95870;;27.04
+27.04.2026;Montag;12:40;V. Flores;;Anstehend;;Herr BURKHARDT Manuel;1. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;12:50;V. Flores;;Anstehend;;Frau SCHEPYKINA Nadiia;Sprechstunde;Gesetzlich versichert;88470;;27.04
+27.04.2026;Montag;13:00;V. Flores;;Anstehend;;DVORIANINOVA Tetiana;Erstuntersuchung;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;13:10;V. Flores;;Anstehend;;GERLOVIN Isaak;1. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;13:20;V. Flores;;Anstehend;;Frau KOLDEVITZ Kerstin;Sprechstunde;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;13:30;V. Flores;;Anstehend;;Frau TEPLYAKOVA Svetlana;1. Termin;Gesetzlich versichert;76624;;27.04
+27.04.2026;Montag;13:40;V. Flores;;Anstehend;;Herr GOLOVKO Georgii;Sprechstunde;Privat versichert;;;27.04
+27.04.2026;Montag;13:50;V. Flores;;Anstehend;;KAPLAN Hayriye;1. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau GOENGOER Niyasa;1. Termin;Gesetzlich versichert;92012;;27.04
+27.04.2026;Montag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau WIGANOWSKI Janine;1. Termin;Gesetzlich versichert;80531;;27.04
+27.04.2026;Montag;14:00;V. Flores;;Anstehend;;Frau ROMANENKO Anna;1. Termin;Gesetzlich versichert;94484;;27.04
+27.04.2026;Montag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Herr TEKIN Mehmet-Zeki;1. Termin;Gesetzlich versichert;94094;;27.04
+27.04.2026;Montag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Herr HOANG Van Long;1. Termin;Gesetzlich versichert;94970;;27.04
+27.04.2026;Montag;14:10;V. Flores;;Anstehend;;Frau NUNEZ ESTRADA Camila;Erstuntersuchung;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Herr DEGIRMENCI Ilyas;1. Termin;Gesetzlich versichert;94102;;27.04
+27.04.2026;Montag;14:20;V. Flores;;Anstehend;;Frau DASSOW Philine;Erstuntersuchung;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;14:30;Dr. Ercan Yilmaz;;Anstehend;;Frau SAHIN Birsen;1. Termin;Gesetzlich versichert;94005;;27.04
+27.04.2026;Montag;14:30;Dr. Ercan Yilmaz;;Anstehend;;BUEHRING Marianne;1. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;14:30;V. Flores;;Anstehend;;Frau SOLOVEV Vladimir;Erstuntersuchung;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;14:40;Dr. Ercan Yilmaz;;Anstehend;;Frau POSE Maria;1. Termin;Gesetzlich versichert;93108;;27.04
+27.04.2026;Montag;14:40;V. Flores;;Anstehend;;SOLOVEV Helene;Erstuntersuchung;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;14:50;Dr. Ercan Yilmaz;;Anstehend;;Herr SEVEN Muaffak;1. Termin;Gesetzlich versichert;74387;;27.04
+27.04.2026;Montag;14:50;V. Flores;;Anstehend;;Frau FAHRENHOLZ Gisela;1. Termin;Gesetzlich versichert;79763;;27.04
+27.04.2026;Montag;15:00;Dr. Ercan Yilmaz;;Anstehend;;Herr OEZEL Ahmet;1. Termin;Gesetzlich versichert;94507;;27.04
+27.04.2026;Montag;15:00;Dr. Ercan Yilmaz;;Anstehend;;Herr HRISTOV Arso;1. Termin;Gesetzlich versichert;94382;;27.04
+27.04.2026;Montag;15:00;V. Flores;;Anstehend;;Herr SANTOS BARBOSA COSTA Walney;2. Termin;Gesetzlich versichert;87464;;27.04
+27.04.2026;Montag;15:10;Dr. Ercan Yilmaz;;Anstehend;;Herr OEZEL Ahmet K2;1. Termin;Gesetzlich versichert;94507;;27.04
+27.04.2026;Montag;15:10;V. Flores;;Anstehend;;Herr STENZEL Marco;Erstuntersuchung;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;15:20;Dr. Ercan Yilmaz;;Anstehend;;Frau ZYLA Beata;1. Termin;Gesetzlich versichert;79631;;27.04
+27.04.2026;Montag;15:20;Dr. Ercan Yilmaz;;Anstehend;;Herr BILDIRICI Oguz;1. Termin;Gesetzlich versichert;82576;;27.04
+27.04.2026;Montag;15:20;V. Flores;;Anstehend;;Frau HABELIUK Svitlana;1. Termin;Gesetzlich versichert;88151;;27.04
+27.04.2026;Montag;15:30;Dr. Ercan Yilmaz;;Anstehend;;Frau NIERSTE Nicole;Sprechstunde;Gesetzlich versichert;26278;;27.04
+27.04.2026;Montag;15:30;V. Flores;;Anstehend;;STANKKOVA Okasna;1. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;15:40;Dr. Ercan Yilmaz;;Anstehend;;Frau AKYUZ Filiz;1. Termin;Gesetzlich versichert;87690;;27.04
+27.04.2026;Montag;15:40;V. Flores;;Anstehend;;Herr BORSAGOV Sevullaj;1. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;15:50;Dr. Ercan Yilmaz;;Anstehend;;Frau DEDE Aynur;1. Termin;Gesetzlich versichert;91890;;27.04
+27.04.2026;Montag;15:50;V. Flores;;Anstehend;;HURA Tetiana;Erstuntersuchung;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Herr YILMAZ Yakup;1. Termin;Gesetzlich versichert;;;27.04
+27.04.2026;Montag;16:10;Dr. Ercan Yilmaz;;Anstehend;;Frau DIAGNE Monika;Sprechstunde;Gesetzlich versichert;85583;;27.04
+27.04.2026;Montag;16:20;Dr. Ercan Yilmaz;;Anstehend;;Herr AGAC Icabi;1. Termin;Gesetzlich versichert;92619;;27.04
+28.04.2026;Dienstag;08:45;Dr. Jonda Michael;;Anstehend;;Frau TRUEBSBACH Karin;1. Termin;Gesetzlich versichert;47575;;28.04
+28.04.2026;Dienstag;09:00;Dr. Jonda Michael;;Anstehend;;Frau AUST Selma Naomi;1. Termin;Gesetzlich versichert;78457;;28.04
+28.04.2026;Dienstag;09:00;V. Flores;;Anstehend;;Herr SAHIN Welad;Sprechstunde;Gesetzlich versichert;95421;;28.04
+28.04.2026;Dienstag;09:10;Dr. Jonda Michael;;Anstehend;;Frau BIELER Claudia;1. Termin;Gesetzlich versichert;95526;;28.04
+28.04.2026;Dienstag;09:10;V. Flores;;Anstehend;;Frau MUELLER Natalia;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;09:20;Dr. Jonda Michael;;Anstehend;;Herr ASSAD Mohamed;1. Termin;Gesetzlich versichert;86204;;28.04
+28.04.2026;Dienstag;09:20;V. Flores;;Anstehend;;Frau HULIIEVA Hiunel;1. Termin;Gesetzlich versichert;92510;;28.04
+28.04.2026;Dienstag;09:30;Dr. Jonda Michael;;Anstehend;;Herr KLEINE BORGMANN Ulrich;Sprechstunde;Gesetzlich versichert;91068;;28.04
+28.04.2026;Dienstag;09:30;V. Flores;;Anstehend;;Frau LIDER Natalia;Erstuntersuchung;Gesetzlich versichert;95357;;28.04
+28.04.2026;Dienstag;09:40;Dr. Jonda Michael;;Anstehend;;Frau VOGEL Daniela;Sprechstunde;Gesetzlich versichert;56968;;28.04
+28.04.2026;Dienstag;09:40;V. Flores;;Anstehend;;TULUPOVA Tetiana;1. Termin;Gesetzlich versichert;85274;;28.04
+28.04.2026;Dienstag;09:50;Dr. Jonda Michael;;Anstehend;;Frau NJIE Ilona;1. Termin;Gesetzlich versichert;66323;;28.04
+28.04.2026;Dienstag;09:50;V. Flores;;Anstehend;;GELINA Tatjana;Erstuntersuchung;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;10:00;Dr. Jonda Michael;;Anstehend;;Herr GUEMUES Mustafa;1. Termin;Gesetzlich versichert;93031;;28.04
+28.04.2026;Dienstag;10:00;V. Flores;;Anstehend;;JIMENEZ CABEZUDO Jaime;1. Termin;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;10:10;Dr. Jonda Michael;;Anstehend;;Frau TOPCU Naside;1. Termin;Gesetzlich versichert;89336;;28.04
+28.04.2026;Dienstag;10:10;V. Flores;;Anstehend;;Herr SHVACHKA Mykola;1. Termin;Gesetzlich versichert;91174;;28.04
+28.04.2026;Dienstag;10:20;Dr. Jonda Michael;;Anstehend;;Frau WEIDEMANN Martina;Sprechstunde;Gesetzlich versichert;95736;;28.04
+28.04.2026;Dienstag;10:20;V. Flores;;Anstehend;;Frau SHVACHKA Zhanna;1. Termin;Gesetzlich versichert;85872;;28.04
+28.04.2026;Dienstag;10:30;Dr. Jonda Michael;;Anstehend;;Frau SHEVCHENKO Olexandra;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;10:30;V. Flores;;Anstehend;;Herr MUTHANA MUSTAFA AL-ABAYCHI Athir;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;10:40;Dr. Jonda Michael;;Anstehend;;Frau GEBHARDT Silke;Sprechstunde;Gesetzlich versichert;95528;;28.04
+28.04.2026;Dienstag;10:40;V. Flores;;Anstehend;;Herr GLAUBITZ Sascha;Sprechstunde;Gesetzlich versichert;94918;;28.04
+28.04.2026;Dienstag;10:50;Dr. Jonda Michael;;Anstehend;;Frau DMYTRISHENA Maryna;1. Termin;Gesetzlich versichert;47499;;28.04
+28.04.2026;Dienstag;10:50;V. Flores;;Anstehend;;Frau ROBAYO RODRIGUEZ Diana Ximena;Sprechstunde;Gesetzlich versichert;95824;;28.04
+28.04.2026;Dienstag;11:00;Dr. Jonda Michael;;Anstehend;;Herr VECKOLLARI Ilami;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;11:00;V. Flores;;Anstehend;;Frau DARII Irina;1. Termin;Gesetzlich versichert;90053;;28.04
+28.04.2026;Dienstag;11:10;Dr. Jonda Michael;;Anstehend;;Frau HELWICH Galina;1. Termin;Gesetzlich versichert;92963;;28.04
+28.04.2026;Dienstag;11:10;V. Flores;;Anstehend;;AHMAD Nasrin;1. Termin;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;11:20;Dr. Jonda Michael;;Anstehend;;Frau BOLAT Oezay;1. Termin;Gesetzlich versichert;93410;;28.04
+28.04.2026;Dienstag;11:20;V. Flores;;Anstehend;;Frau LEIKOVSKA Nataliia;Erstuntersuchung;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;11:30;Dr. Jonda Michael;;Anstehend;;Frau CEMEN Semra;1. Termin;Gesetzlich versichert;81686;;28.04
+28.04.2026;Dienstag;11:30;V. Flores;;Anstehend;;Frau HOPPE Gisela;2. Termin;Gesetzlich versichert;73014;;28.04
+28.04.2026;Dienstag;11:40;Dr. Jonda Michael;;Anstehend;;Frau GANS-XU Jutta;MRT Besprechung;Gesetzlich versichert;95215;;28.04
+28.04.2026;Dienstag;11:40;V. Flores;;Anstehend;;Frau IBRYAMOV Estera;2. Termin;Gesetzlich versichert;74777;;28.04
+28.04.2026;Dienstag;11:50;Dr. Jonda Michael;;Anstehend;;Herr PAPE Sascha;Sprechstunde;Gesetzlich versichert;94316;;28.04
+28.04.2026;Dienstag;11:50;V. Flores;;Anstehend;;Herr BORN Paul;Sprechstunde;Gesetzlich versichert;95979;;28.04
+28.04.2026;Dienstag;12:00;Dr. Jonda Michael;;Anstehend;;ABDAL KADIER Lauahis;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;12:00;V. Flores;;Anstehend;;Frau AIELLO Maria Alejandra;1. Termin;Gesetzlich versichert;43024;;28.04
+28.04.2026;Dienstag;12:10;Dr. Jonda Michael;;Anstehend;;Herr DAULE Thomas;Sprechstunde;Gesetzlich versichert;13785;;28.04
+28.04.2026;Dienstag;12:10;V. Flores;;Anstehend;;Herr KIS Levent;Sprechstunde;Gesetzlich versichert;44808;;28.04
+28.04.2026;Dienstag;12:20;Dr. Jonda Michael;;Anstehend;;Frau KERKHOFF Dorothea;1. Termin;Gesetzlich versichert;88495;;28.04
+28.04.2026;Dienstag;12:20;V. Flores;;Anstehend;;Frau BATIIENKO Nataliia;1. Termin;Gesetzlich versichert;91149;;28.04
+28.04.2026;Dienstag;12:30;V. Flores;;Anstehend;;Herr FROLENKOV Nikolai;Sprechstunde;Gesetzlich versichert;95938;;28.04
+28.04.2026;Dienstag;12:40;V. Flores;;Anstehend;;Frau KOPANIEVA Natalia;Erstuntersuchung;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;12:50;V. Flores;;Anstehend;;PIORO Nina;Erstuntersuchung;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;13:00;Dr. Jonda Michael;;Anstehend;;Frau KRUSCHEWSKI Ina;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;13:00;V. Flores;;Anstehend;;YULAVNIK Irina;1. Termin;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;13:10;Dr. Jonda Michael;;Anstehend;;Frau SOLTENDIECK Heike;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;13:10;V. Flores;;Anstehend;;AGAMIROY Mamet;1. Termin;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;13:20;Dr. Jonda Michael;;Anstehend;;Frau TOORHAGHIGHI Arezoo;Sprechstunde;Gesetzlich versichert;95974;;28.04
+28.04.2026;Dienstag;13:30;Dr. Jonda Michael;;Anstehend;;Herr PIEPER Frank;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;13:40;Dr. Jonda Michael;;Anstehend;;Frau KOEHLER Sabine;Sprechstunde;Gesetzlich versichert;5272;;28.04
+28.04.2026;Dienstag;13:50;Dr. Jonda Michael;;Anstehend;;Frau KLIMAS Elke;Sprechstunde;Gesetzlich versichert;4494;;28.04
+28.04.2026;Dienstag;13:50;V. Flores;;Anstehend;;Herr ZAHORULKO Oleksander;1. Termin;Gesetzlich versichert;88217;;28.04
+28.04.2026;Dienstag;14:00;Dr. Jonda Michael;;Anstehend;;Frau SELTANY Nagia;1. Termin;Gesetzlich versichert;58044;;28.04
+28.04.2026;Dienstag;14:00;V. Flores;;Anstehend;;ALEIKSENKO Tetiana;1. Termin;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;14:10;Dr. Jonda Michael;;Anstehend;;Frau TUCHINA Natalia;1. Termin;Gesetzlich versichert;82149;;28.04
+28.04.2026;Dienstag;14:10;V. Flores;;Anstehend;;NOSULENKO Oleksii;Erstuntersuchung;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;14:20;Dr. Jonda Michael;;Anstehend;;Frau RODEHAU Beatrice;Erstuntersuchung;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;14:20;V. Flores;;Anstehend;;SHEVCHENKO Viktor;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;14:30;Dr. Jonda Michael;;Anstehend;;Frau SCHMIDT Rosemarie;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;14:30;V. Flores;;Anstehend;;Frau UWERA Esperance;2. Termin;Gesetzlich versichert;77243;;28.04
+28.04.2026;Dienstag;14:40;Dr. Jonda Michael;;Anstehend;;Herr CAMOIRAS ALONSO Jose Luis;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;14:40;V. Flores;;Anstehend;;Frau COLIC Hadisa;1. Termin;Gesetzlich versichert;75602;;28.04
+28.04.2026;Dienstag;14:50;Dr. Jonda Michael;;Anstehend;;Frau BIENIA Agata Bogumila;1. Termin;Gesetzlich versichert;14641;;28.04
+28.04.2026;Dienstag;14:50;V. Flores;;Anstehend;;Herr BUELBUEL Oezay;Erstuntersuchung;Gesetzlich versichert;95866;;28.04
+28.04.2026;Dienstag;15:00;Dr. Jonda Michael;;Anstehend;;Frau LACINSKA Magdalena;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;15:00;V. Flores;;Anstehend;;Herr KOERBIS David;1. Termin;Gesetzlich versichert;87768;;28.04
+28.04.2026;Dienstag;15:10;Dr. Jonda Michael;;Anstehend;;Frau PAUL Kati;Sprechstunde;Gesetzlich versichert;95413;;28.04
+28.04.2026;Dienstag;15:10;V. Flores;;Anstehend;;Frau TEMERENKO Anna;Sprechstunde;Gesetzlich versichert;76540;;28.04
+28.04.2026;Dienstag;15:20;Dr. Jonda Michael;;Anstehend;;Herr BUCHHOLZ Michael;Sprechstunde;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;15:20;V. Flores;;Anstehend;;KALAYCI Sepharia;1. Termin;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;15:30;Dr. Jonda Michael;;Anstehend;;DASTAN Hanife;1. Termin;Gesetzlich versichert;83610;;28.04
+28.04.2026;Dienstag;15:30;V. Flores;;Anstehend;;Herr KALAYCI Huesseyin;1. Termin;Gesetzlich versichert;;;28.04
+28.04.2026;Dienstag;15:40;Dr. Jonda Michael;;Anstehend;;Herr DASTAN Baki;1. Termin;Gesetzlich versichert;65080;;28.04
+28.04.2026;Dienstag;15:40;V. Flores;;Anstehend;;Frau ESTEVES ALAVA Alexandra;1. Termin;Gesetzlich versichert;71906;;28.04
+28.04.2026;Dienstag;15:50;Dr. Jonda Michael;;Anstehend;;Frau REBOCK Diana;1. Termin;Gesetzlich versichert;90589;;28.04
+28.04.2026;Dienstag;15:50;V. Flores;;Anstehend;;Frau ESTEVES ALAVA Betsy;1. Termin;Gesetzlich versichert;70888;;28.04
+28.04.2026;Dienstag;16:00;Dr. Jonda Michael;;Anstehend;;Frau TOSUN Emine;1. Termin;Gesetzlich versichert;4106;;28.04
+28.04.2026;Dienstag;16:00;Dr. Jonda Michael;;Anstehend;;Frau ROSEBROCK Elke;1. Termin;Gesetzlich versichert;94738;;28.04
+28.04.2026;Dienstag;16:10;Dr. Jonda Michael;;Anstehend;;Herr TOSUN Derya;1. Termin;Gesetzlich versichert;95796;;28.04
+28.04.2026;Dienstag;16:10;Dr. Jonda Michael;;Anstehend;;Herr DARGEL Uwe;1. Termin;Gesetzlich versichert;12017;;28.04
+28.04.2026;Dienstag;16:20;Dr. Jonda Michael;;Anstehend;;Frau DARGEL Manuela;1. Termin;Gesetzlich versichert;12714;;28.04
+28.04.2026;Dienstag;16:20;Dr. Jonda Michael;;Anstehend;;Herr SZCEPANKOWSKI Adrian;1. Termin;Gesetzlich versichert;88877;;28.04
+29.04.2026;Mittwoch;08:45;Dr. Jonda Michael;;Anstehend;;Frau POHL Erna;1. Termin;Gesetzlich versichert;88054;;29.04
+29.04.2026;Mittwoch;09:00;Dr. Jonda Michael;;Anstehend;;Frau WILDE Martina;1. Termin;Gesetzlich versichert;86616;;29.04
+29.04.2026;Mittwoch;09:00;V. Flores;;Anstehend;;Frau KULWIKOWSKI Barbara;1. Termin;Gesetzlich versichert;78913;;29.04
+29.04.2026;Mittwoch;09:10;Dr. Jonda Michael;;Anstehend;;Herr HANCI Bayram-Ali;1. Termin;Gesetzlich versichert;95661;;29.04
+29.04.2026;Mittwoch;09:10;V. Flores;;Anstehend;;Herr KULWIKOWSKI Zbigniew-Edward;1. Termin;Gesetzlich versichert;80316;;29.04
+29.04.2026;Mittwoch;09:20;Dr. Jonda Michael;;Anstehend;;Frau SRIBNA Larysa;1. Termin;Gesetzlich versichert;78626;;29.04
+29.04.2026;Mittwoch;09:20;V. Flores;;Anstehend;;Frau WILCKE Kerstin;Sprechstunde;Gesetzlich versichert;41726;;29.04
+29.04.2026;Mittwoch;09:30;Dr. Jonda Michael;;Anstehend;;Frau LINZ Juliane;Erstuntersuchung;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;09:30;V. Flores;;Anstehend;;Frau ASENCIO TURBI Deyris Mabel;1. Termin;Gesetzlich versichert;81253;;29.04
+29.04.2026;Mittwoch;09:40;Dr. Jonda Michael;;Anstehend;;Frau LOPEZ MONTERO Sonia;Sprechstunde;Gesetzlich versichert;95928;;29.04
+29.04.2026;Mittwoch;09:40;V. Flores;;Anstehend;;Herr BRVAR Matjaz;Erstuntersuchung;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;09:50;Dr. Jonda Michael;;Anstehend;;Frau TOPCU Sevin;1. Termin;Gesetzlich versichert;16218;;29.04
+29.04.2026;Mittwoch;09:50;V. Flores;;Anstehend;;Herr BALKE Robert;MRT Besprechung;Gesetzlich versichert;36759;;29.04
+29.04.2026;Mittwoch;10:00;Dr. Jonda Michael;;Anstehend;;Herr KUBON Joachim;Sprechstunde;Gesetzlich versichert;95737;;29.04
+29.04.2026;Mittwoch;10:00;V. Flores;;Anstehend;;Frau HENNING Sabine;1. Termin;Gesetzlich versichert;62398;;29.04
+29.04.2026;Mittwoch;10:10;Dr. Jonda Michael;;Anstehend;;Frau DURGUT Hafize;1. Termin;Gesetzlich versichert;92546;;29.04
+29.04.2026;Mittwoch;10:10;V. Flores;;Anstehend;;Herr ASLANTOK Hanife;1. Termin;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;10:20;Dr. Jonda Michael;;Anstehend;;Frau FUELSCHE Margot Manuela;1. Termin;Gesetzlich versichert;88578;;29.04
+29.04.2026;Mittwoch;10:20;V. Flores;;Anstehend;;Frau ASLANTOK Deria;1. Termin;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;10:30;Dr. Jonda Michael;;Anstehend;;Herr LOPEZ TORRES Jorge;Sprechstunde;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;10:30;V. Flores;;Anstehend;;Frau BRANDT Alina;Erstuntersuchung;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;10:40;Dr. Jonda Michael;;Anstehend;;EZER Ismail;1. Termin;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;10:40;V. Flores;;Anstehend;;Frau TIRBAKH Tatyana;1. Termin;Gesetzlich versichert;93729;;29.04
+29.04.2026;Mittwoch;10:50;Dr. Jonda Michael;;Anstehend;;Frau ZARBALA Elli;Sprechstunde;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;10:50;V. Flores;;Anstehend;;Frau RAMIREZ SANCHEZ Ines Laity;Sprechstunde;Gesetzlich versichert;68423;;29.04
+29.04.2026;Mittwoch;11:00;Dr. Jonda Michael;;Anstehend;;Herr BUCHHEIM Nico;Erstuntersuchung;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;11:00;V. Flores;;Anstehend;;BODARIEVA Veroniika;1. Termin;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;11:10;Dr. Jonda Michael;;Anstehend;;Frau DORDEVIC MILENKOVIC Olga;Sprechstunde;Gesetzlich versichert;96022;;29.04
+29.04.2026;Mittwoch;11:10;V. Flores;;Anstehend;;Frau PRINCEATII Kristina;Sprechstunde;Gesetzlich versichert;93080;;29.04
+29.04.2026;Mittwoch;11:20;Dr. Jonda Michael;;Anstehend;;Herr MORITZ Dieter;Sprechstunde;Gesetzlich versichert;94001;;29.04
+29.04.2026;Mittwoch;11:30;Dr. Jonda Michael;;Anstehend;;Herr SYSKA Konrad Jan;Erstuntersuchung;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;11:40;Dr. Jonda Michael;;Anstehend;;Herr OEZCAN Enver Oemer;Sprechstunde;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;11:50;Dr. Jonda Michael;;Anstehend;;Frau ZICK Lena;Sprechstunde;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;12:00;Dr. Jonda Michael;;Anstehend;;Herr SCHMIDT Reiner;1. Termin;Gesetzlich versichert;11745;;29.04
+29.04.2026;Mittwoch;12:00;Dr. Jonda Michael;;Anstehend;;Herr UENVER Ilhami;Sprechstunde;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;12:10;Dr. Jonda Michael;;Anstehend;;Herr SCHMIDT Malte;Sprechstunde;Gesetzlich versichert;95569;;29.04
+29.04.2026;Mittwoch;12:20;Dr. Jonda Michael;;Anstehend;;Herr KERIMOGLOU Giakoup;Sprechstunde;Gesetzlich versichert;8575;;29.04
+29.04.2026;Mittwoch;13:00;V. Flores;;Anstehend;;MAGNETFELDSCHULUNG;3. Termin;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;14:00;V. Flores;;Anstehend;;LAUREANO Alexandera;1. Termin;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;14:00;V. Flores;;Anstehend;;Frau ABASH Alina;1. Termin;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;14:10;V. Flores;;Anstehend;;Frau ABASH Vernonika;1. Termin;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;14:30;V. Flores;;Anstehend;;LAUREANO Alexandera2;1. Termin;Gesetzlich versichert;;;29.04
+29.04.2026;Mittwoch;15:00;V. Flores;;Anstehend;;Frau DUDCHENKO Mariia;1. Termin;Gesetzlich versichert;96073;;29.04
+29.04.2026;Mittwoch;15:10;V. Flores;;Anstehend;;DEMIDA Alexander;1. Termin;Gesetzlich versichert;88914;;29.04
+29.04.2026;Mittwoch;15:20;V. Flores;;Anstehend;;Frau DEMIDA Rita;2. Termin;Gesetzlich versichert;;;29.04
+30.04.2026;Donnerstag;09:00;Dr. Jonda Michael;;Anstehend;;Herr KONCOK Marcin;1. Termin;Gesetzlich versichert;83162;;30.04
+30.04.2026;Donnerstag;09:00;V. Flores;;Anstehend;;Herr NOGALES LORENZO Francisco;1. Termin;Gesetzlich versichert;95477;;30.04
+30.04.2026;Donnerstag;09:10;Dr. Jonda Michael;;Anstehend;;Frau MADER Natascha;Erstuntersuchung;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;09:10;V. Flores;;Anstehend;;Frau YILDIZ Reyhan;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;09:20;Dr. Jonda Michael;;Anstehend;;Frau UESTUEN Guelbahar;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;09:20;V. Flores;;Anstehend;;LORBERG Karl Heinrich;1. Termin;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;09:30;Dr. Jonda Michael;;Anstehend;;Frau FRISCHMUTH Petra;1. Termin;Gesetzlich versichert;58670;;30.04
+30.04.2026;Donnerstag;09:30;V. Flores;;Anstehend;;Frau EISTETTER Valentina;1. Termin;Gesetzlich versichert;57441;;30.04
+30.04.2026;Donnerstag;09:40;Dr. Jonda Michael;;Anstehend;;Frau BOZYILAN Anke;1. Termin;Gesetzlich versichert;8946;;30.04
+30.04.2026;Donnerstag;09:40;V. Flores;;Anstehend;;Herr ERDOGAN Oemer;Erstuntersuchung;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;09:50;Dr. Jonda Michael;;Anstehend;;Herr ATES Fatih;1. Termin;Gesetzlich versichert;93604;;30.04
+30.04.2026;Donnerstag;10:00;Dr. Jonda Michael;;Anstehend;;Herr GAMIE Abdelghani;Sprechstunde;Gesetzlich versichert;89459;;30.04
+30.04.2026;Donnerstag;10:10;Dr. Jonda Michael;;Anstehend;;Frau GOEBEL Rita;1. Termin;Gesetzlich versichert;93574;;30.04
+30.04.2026;Donnerstag;10:20;Dr. Jonda Michael;;Anstehend;;SPRENGER Harry;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;10:30;Dr. Jonda Michael;;Anstehend;;Herr ZACHER Johannes;1. Termin;Gesetzlich versichert;73660;;30.04
+30.04.2026;Donnerstag;10:40;Dr. Jonda Michael;;Anstehend;;Frau SPRENGER Brigitte;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;10:50;Dr. Jonda Michael;;Anstehend;;Frau BURZIN Nicole;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;11:00;Dr. Jonda Michael;;Anstehend;;Frau ZILSDORF Tatyana;Erstuntersuchung;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;11:10;Dr. Jonda Michael;;Anstehend;;Frau WALLNER Sonja;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;11:20;Dr. Jonda Michael;;Anstehend;;Frau DALMANN Andrea;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;11:30;Dr. Jonda Michael;;Anstehend;;Frau TAVLI Fadimana;1. Termin;Gesetzlich versichert;94739;;30.04
+30.04.2026;Donnerstag;11:30;V. Flores;;Anstehend;;Frau KRASNOVA Olga;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;11:40;Dr. Jonda Michael;;Anstehend;;Herr MUCHARSKI Bogumil;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;11:50;Dr. Jonda Michael;;Anstehend;;Herr STREICH Pascal;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;12:50;V. Flores;;Anstehend;;Frau DAO Ha Trang;Sprechstunde;Gesetzlich versichert;95402;;30.04
+30.04.2026;Donnerstag;13:00;V. Flores;;Anstehend;;Herr SCHAPER Andreas;2. Termin;Gesetzlich versichert;95992;;30.04
+30.04.2026;Donnerstag;14:00;V. Flores;;Anstehend;;Frau FREITAG Sabrina;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;14:30;Dr. Jonda Michael;;Anstehend;;Frau SHESTOPAL Olga;1. Termin;Gesetzlich versichert;95720;;30.04
+30.04.2026;Donnerstag;14:40;Dr. Jonda Michael;;Anstehend;;Frau MCDONALD Jacqueline;1. Termin;Gesetzlich versichert;94925;;30.04
+30.04.2026;Donnerstag;14:50;Dr. Jonda Michael;;Anstehend;;Herr DEMIR Mehmet;1. Termin;Gesetzlich versichert;91098;;30.04
+30.04.2026;Donnerstag;15:00;Dr. Jonda Michael;;Anstehend;;KELES Ali;1. Termin;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;15:10;Dr. Jonda Michael;;Anstehend;;Herr ALTUN Eren;Sprechstunde;Gesetzlich versichert;90876;;30.04
+30.04.2026;Donnerstag;15:20;Dr. Jonda Michael;;Anstehend;;Frau HASAN Nazi Murad;1. Termin;Gesetzlich versichert;95326;;30.04
+30.04.2026;Donnerstag;15:20;V. Flores;;Anstehend;;Frau SEEWALD Nadezhda;Sprechstunde;Gesetzlich versichert;95947;;30.04
+30.04.2026;Donnerstag;15:30;Dr. Jonda Michael;;Anstehend;;Herr ABDELGALIL Junis;Erstuntersuchung;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;15:30;V. Flores;;Anstehend;;Herr BEERMANN Udo;Sprechstunde;Gesetzlich versichert;50255;;30.04
+30.04.2026;Donnerstag;15:40;Dr. Jonda Michael;;Anstehend;;Frau ABDELGALIL Kathleen;Sprechstunde;Gesetzlich versichert;11475;;30.04
+30.04.2026;Donnerstag;15:40;V. Flores;;Anstehend;;Herr BOTEZ Elena;Sprechstunde;Gesetzlich versichert;82089;;30.04
+30.04.2026;Donnerstag;15:50;Dr. Jonda Michael;;Anstehend;;RAKUS Leszek;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;15:50;V. Flores;;Anstehend;;Herr STRITT Volker;2. Termin;Gesetzlich versichert;15425;;30.04
+30.04.2026;Donnerstag;16:00;Dr. Jonda Michael;;Anstehend;;Frau ISAAK Julia;Sprechstunde;Gesetzlich versichert;95366;;30.04
+30.04.2026;Donnerstag;16:10;Dr. Jonda Michael;;Anstehend;;Herr ERASLAN Mikdat;Sprechstunde;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;16:20;Dr. Jonda Michael;;Anstehend;;Frau MONTAU Joelle;Sprechstunde;Gesetzlich versichert;90857;;30.04
+30.04.2026;Donnerstag;16:30;Dr. Jonda Michael;;Anstehend;;ACHMED Habil;1. Termin;Gesetzlich versichert;;;30.04
+30.04.2026;Donnerstag;16:40;Dr. Jonda Michael;;Anstehend;;Frau GUEDON Elisabeth;1. Termin;Gesetzlich versichert;9665;;30.04
+30.04.2026;Donnerstag;16:50;Dr. Jonda Michael;;Anstehend;;Frau SCHUBERT Mandy;Sprechstunde;Gesetzlich versichert;10954;;30.04
+30.04.2026;Donnerstag;17:00;Dr. Jonda Michael;;Anstehend;;Frau RUDOLPH Dagmar;1. Termin;Gesetzlich versichert;95002;;30.04
+04.05.2026;Montag;09:00;Dr. Jonda Michael;;Anstehend;;Herr PANDEL Siegfried;1. Termin;Gesetzlich versichert;19988;;04.05
+04.05.2026;Montag;09:00;V. Flores;;Anstehend;;Frau HLADKA Olha;1. Termin;Gesetzlich versichert;80767;;04.05
+04.05.2026;Montag;09:10;Dr. Jonda Michael;;Anstehend;;Herr BAGAVAC Danijel;1. Termin;Gesetzlich versichert;79578;;04.05
+04.05.2026;Montag;09:10;V. Flores;;Anstehend;;Frau SHAMSHEEVA Tamara;1. Termin;Gesetzlich versichert;46092;;04.05
+04.05.2026;Montag;09:20;Dr. Jonda Michael;;Anstehend;;Frau DURAKI Ramajana;MRT Besprechung;Gesetzlich versichert;15853;;04.05
+04.05.2026;Montag;09:20;V. Flores;;Anstehend;;KISELOVA Natalia;Erstuntersuchung;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;09:30;Dr. Jonda Michael;;Anstehend;;Frau BOZYILAN Anke;Sprechstunde;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;09:30;V. Flores;;Anstehend;;Frau GUSELNIKOV Mina;1. Termin;Gesetzlich versichert;70281;;04.05
+04.05.2026;Montag;09:40;Dr. Jonda Michael;;Anstehend;;Frau MATIJEVIC BEHR Iris;Sprechstunde;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;09:40;V. Flores;;Anstehend;;Frau STARK Valentina;1. Termin;Gesetzlich versichert;77384;;04.05
+04.05.2026;Montag;09:50;Dr. Jonda Michael;;Anstehend;;Herr PHILIPP Alexander;Erstuntersuchung;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;10:00;Dr. Jonda Michael;;Anstehend;;ARNHOLD Jama;Sprechstunde;Privat versichert;;;04.05
+04.05.2026;Montag;10:00;V. Flores;;Anstehend;;TAMARA Scherbachenko;Erstuntersuchung;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;10:10;Dr. Jonda Michael;;Anstehend;;Frau WOODHOUSE Sabine;Sprechstunde;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;10:20;V. Flores;;Anstehend;;Frau PIKALOVA Nina;Sprechstunde;Gesetzlich versichert;96024;;04.05
+04.05.2026;Montag;10:30;V. Flores;;Anstehend;;Frau IZOTOVA Viktoriia;1. Termin;Gesetzlich versichert;95788;;04.05
+04.05.2026;Montag;10:40;V. Flores;;Anstehend;;Frau ROJAS ROSARIO Elizabeth;Sprechstunde;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;11:00;Dr. Jonda Michael;;Anstehend;;COZA Danica;Sprechstunde;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;11:10;Dr. Jonda Michael;;Anstehend;;Herr SCHMIDT Klaus-Dieter;Sprechstunde;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;11:30;Dr. Jonda Michael;;Anstehend;;Frau SCHUBERT Hannelore;1. Termin;Gesetzlich versichert;96075;;04.05
+04.05.2026;Montag;11:40;Dr. Jonda Michael;;Anstehend;;STATLAND Leonid;Sprechstunde;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;11:50;Dr. Jonda Michael;;Anstehend;;Herr QUIRCE Jose-Luis;Sprechstunde;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;12:20;Dr. Jonda Michael;;Anstehend;;Herr KOC Cem;Sprechstunde;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;13:00;Dr. Jonda Michael;;Anstehend;;Herr FUCHS Markus;Sprechstunde;Gesetzlich versichert;95859;;04.05
+04.05.2026;Montag;13:00;V. Flores;;Anstehend;;Frau FAJGER Weronika;Sprechstunde;Gesetzlich versichert;82911;;04.05
+04.05.2026;Montag;13:10;Dr. Jonda Michael;;Anstehend;;HELFRICH Philipp;Erstuntersuchung;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;13:45;Dr. Ercan Yilmaz;;Anstehend;;Frau TOPALOVA Nefise;1. Termin;Gesetzlich versichert;91107;;04.05
+04.05.2026;Montag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau DOGAN Nurcan;1. Termin;Gesetzlich versichert;95307;;04.05
+04.05.2026;Montag;14:00;Dr. Ercan Yilmaz;;Anstehend;;FERHAN;1. Termin;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;14:00;Dr. Jonda Michael;;Anstehend;;Herr STEUER Peter;Sprechstunde;Gesetzlich versichert;91646;;04.05
+04.05.2026;Montag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Frau OBOLKINA Tetiana;1. Termin;Gesetzlich versichert;88439;;04.05
+04.05.2026;Montag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Herr YAGCI Mahmut;1. Termin;Gesetzlich versichert;76440;;04.05
+04.05.2026;Montag;14:30;Dr. Ercan Yilmaz;;Anstehend;;Frau DOGU Sevgi;1. Termin;Gesetzlich versichert;84064;;04.05
+04.05.2026;Montag;14:30;Dr. Ercan Yilmaz;;Anstehend;;Frau GERCEK Nursel;1. Termin;Gesetzlich versichert;93576;;04.05
+04.05.2026;Montag;14:40;Dr. Ercan Yilmaz;;Anstehend;;Frau ILGEZDI Dilek;1. Termin;Gesetzlich versichert;77737;;04.05
+04.05.2026;Montag;14:40;Dr. Jonda Michael;;Anstehend;;Herr TOPCU Kadir;Sprechstunde;Gesetzlich versichert;19109;;04.05
+04.05.2026;Montag;14:50;Dr. Ercan Yilmaz;;Anstehend;;Frau TALAS Ayse;1. Termin;Gesetzlich versichert;90840;;04.05
+04.05.2026;Montag;14:50;Dr. Jonda Michael;;Anstehend;;Frau AVAR Yeter;Sprechstunde;Gesetzlich versichert;3289;;04.05
+04.05.2026;Montag;15:00;Dr. Ercan Yilmaz;;Anstehend;;Herr SIEBERT Dieter;1. Termin;Gesetzlich versichert;663;;04.05
+04.05.2026;Montag;15:00;Dr. Jonda Michael;;Anstehend;;Herr TOMOVIC Marko;1. Termin;Gesetzlich versichert;95393;;04.05
+04.05.2026;Montag;15:10;Dr. Ercan Yilmaz;;Anstehend;;KURU Fatma;Erstuntersuchung;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;15:10;Dr. Jonda Michael;;Anstehend;;OLIVER Griebenow;Sprechstunde;Gesetzlich versichert;92891;;04.05
+04.05.2026;Montag;15:20;Dr. Ercan Yilmaz;;Anstehend;;Frau HILLEBRECHT Silke;1. Termin;Gesetzlich versichert;1436;;04.05
+04.05.2026;Montag;15:20;Dr. Jonda Michael;;Anstehend;;Frau MIEHE Jennifer;Sprechstunde;Gesetzlich versichert;76181;;04.05
+04.05.2026;Montag;15:30;Dr. Ercan Yilmaz;;Anstehend;;Frau TUERKEL Guelsen;1. Termin;Gesetzlich versichert;93969;;04.05
+04.05.2026;Montag;15:30;Dr. Jonda Michael;;Anstehend;;Frau BORMANN Seraphina;Sprechstunde;Gesetzlich versichert;95125;;04.05
+04.05.2026;Montag;15:40;Dr. Ercan Yilmaz;;Anstehend;;Frau UTLU Serife;1. Termin;Gesetzlich versichert;88663;;04.05
+04.05.2026;Montag;15:40;Dr. Ercan Yilmaz;;Anstehend;;GUEVEN Oemer Faruk;1. Termin;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;15:50;Dr. Ercan Yilmaz;;Anstehend;;Frau GRIMPE Bettina;1. Termin;Gesetzlich versichert;35955;;04.05
+04.05.2026;Montag;15:50;Dr. Jonda Michael;;Anstehend;;Frau RETZLAFF Katja;1. Termin;Gesetzlich versichert;88397;;04.05
+04.05.2026;Montag;15:50;V. Flores;;Anstehend;;Frau BUCHHEIM Renate;Erstuntersuchung;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Frau MREICHE Bernadette;1. Termin;Gesetzlich versichert;92108;;04.05
+04.05.2026;Montag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Frau DERMENZHI Bohdana;1. Termin;Gesetzlich versichert;94595;;04.05
+04.05.2026;Montag;16:00;Dr. Jonda Michael;;Anstehend;;Frau PSARREAS Maike;Sprechstunde;Gesetzlich versichert;;;04.05
+04.05.2026;Montag;16:10;Dr. Ercan Yilmaz;;Anstehend;;Frau LEPSKA Viktoriia;1. Termin;Gesetzlich versichert;93348;;04.05
+04.05.2026;Montag;16:10;Dr. Jonda Michael;;Anstehend;;Frau HEISE Samira;Sprechstunde;Gesetzlich versichert;79790;;04.05
+04.05.2026;Montag;16:20;Dr. Ercan Yilmaz;;Anstehend;;Frau YUEKSEKOVA Nazan;1. Termin;Gesetzlich versichert;30586;;04.05
+04.05.2026;Montag;16:20;Dr. Jonda Michael;;Anstehend;;Herr TSIATSKA Vitalii;Sprechstunde;Gesetzlich versichert;;;04.05
+05.05.2026;Dienstag;09:00;Dr. Jonda Michael;;Anstehend;;ASAN Jem;Sprechstunde;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;09:00;V. Flores;;Anstehend;;Frau SANDER Beate;Sprechstunde;Gesetzlich versichert;59618;;05.05
+05.05.2026;Dienstag;09:10;Dr. Jonda Michael;;Anstehend;;Herr ZYMERI Rrahim;1. Termin;Gesetzlich versichert;92264;;05.05
+05.05.2026;Dienstag;09:20;Dr. Jonda Michael;;Anstehend;;Frau EROGLU Fatma;Sprechstunde;Gesetzlich versichert;96049;;05.05
+05.05.2026;Dienstag;09:30;Dr. Jonda Michael;;Anstehend;;Herr DAVRAN Ayhan;1. Termin;Gesetzlich versichert;3465;;05.05
+05.05.2026;Dienstag;09:30;V. Flores;;Anstehend;;Frau KUDENKO Irina;1. Termin;Gesetzlich versichert;95066;;05.05
+05.05.2026;Dienstag;09:40;Dr. Jonda Michael;;Anstehend;;Frau OZOH Gudrun;Sprechstunde;Gesetzlich versichert;91344;;05.05
+05.05.2026;Dienstag;09:50;Dr. Jonda Michael;;Anstehend;;Herr BEHRENS Spejtin;Sprechstunde;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;10:00;Dr. Ercan Yilmaz;;Anstehend;;Herr NEWGER Marc;1. Termin;Gesetzlich versichert;93020;;05.05
+05.05.2026;Dienstag;10:00;Dr. Jonda Michael;;Anstehend;;Herr WITZEL Holger;Sprechstunde;Gesetzlich versichert;1086;;05.05
+05.05.2026;Dienstag;10:15;Dr. Ercan Yilmaz;;Anstehend;;Herr KARACA Ilyas;1. Termin;Gesetzlich versichert;95966;;05.05
+05.05.2026;Dienstag;10:30;V. Flores;;Anstehend;;Frau FOYNITSKAYA Galina;2. Termin;Gesetzlich versichert;36684;;05.05
+05.05.2026;Dienstag;11:00;Dr. Jonda Michael;;Anstehend;;Frau KLIMKE Viktoria;Sprechstunde;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;11:10;Dr. Jonda Michael;;Anstehend;;Herr ROVITO Alessandro;Sprechstunde;Gesetzlich versichert;95455;;05.05
+05.05.2026;Dienstag;12:00;Dr. Jonda Michael;;Anstehend;;Frau TOMALAK Ilona;Sprechstunde;Gesetzlich versichert;94794;;05.05
+05.05.2026;Dienstag;12:00;V. Flores;;Anstehend;;Herr MUNIZ MOREIRA Daniel;Sprechstunde;Gesetzlich versichert;94694;;05.05
+05.05.2026;Dienstag;13:30;Dr. Jonda Michael;;Anstehend;;Frau SENS-GUEVEN Claudia;1. Termin;Gesetzlich versichert;93427;;05.05
+05.05.2026;Dienstag;13:50;Dr. Jonda Michael;;Anstehend;;Herr LEWANDOWSKI Ben;Erstuntersuchung;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;14:00;Dr. Jonda Michael;;Anstehend;;Frau ALIBRAHIM Mareen Faiath Plng;1. Termin;Gesetzlich versichert;93991;;05.05
+05.05.2026;Dienstag;14:30;Dr. Jonda Michael;;Anstehend;;KUBIAK Jaroslaw Artur;Sprechstunde;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;14:30;V. Flores;;Anstehend;;Frau ROMANENKO Larysa;Sprechstunde;Gesetzlich versichert;95759;;05.05
+05.05.2026;Dienstag;14:40;Dr. Jonda Michael;;Anstehend;;Herr OEZTUERK Seyfullah;Sprechstunde;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;15:30;Dr. Jonda Michael;;Anstehend;;SEJDOVIC Bilal;Erstuntersuchung;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;15:40;Dr. Jonda Michael;;Anstehend;;SEJDOVIC Nermina;Sprechstunde;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;15:50;Dr. Jonda Michael;;Anstehend;;Herr SEJDOVIC Nermin;Sprechstunde;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;15:50;V. Flores;;Anstehend;;OEZCAN Musa;Erstuntersuchung;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;16:00;Dr. Jonda Michael;;Anstehend;;Frau KAHL Nicola;Sprechstunde;Gesetzlich versichert;;;05.05
+05.05.2026;Dienstag;16:10;Dr. Jonda Michael;;Anstehend;;Frau BAXMANN Inka;1. Termin;Gesetzlich versichert;89461;;05.05
+05.05.2026;Dienstag;16:20;Dr. Jonda Michael;;Anstehend;;Herr POHL Berthold;1. Termin;Gesetzlich versichert;12319;;05.05
+06.05.2026;Mittwoch;09:00;Dr. Jonda Michael;;Anstehend;;Frau GROSSIMLINGHAUS Petra;1. Termin;Gesetzlich versichert;95768;;06.05
+06.05.2026;Mittwoch;09:20;Dr. Jonda Michael;;Anstehend;;Frau WROBEL-DINU Roberta Claudia;Sprechstunde;Gesetzlich versichert;;;06.05
+06.05.2026;Mittwoch;09:50;V. Flores;;Anstehend;;Frau LIDER Natalia;Erstuntersuchung;Gesetzlich versichert;95357;;06.05
+06.05.2026;Mittwoch;10:00;Dr. Jonda Michael;;Anstehend;;Frau BURBO Irena;1. Termin;Gesetzlich versichert;12767;;06.05
+06.05.2026;Mittwoch;10:30;Dr. Jonda Michael;;Anstehend;;Frau KRUSE Gabriele;Sprechstunde;Gesetzlich versichert;;;06.05
+06.05.2026;Mittwoch;11:00;Dr. Jonda Michael;;Anstehend;;MIGGE Mathias;1. Termin;Gesetzlich versichert;;;06.05
+06.05.2026;Mittwoch;11:00;V. Flores;;Anstehend;;KATAEVA Zulpa;Sprechstunde;Gesetzlich versichert;;;06.05
+06.05.2026;Mittwoch;12:00;Dr. Jonda Michael;;Anstehend;;Frau NAMAZI Farahnaz;Sprechstunde;Gesetzlich versichert;95465;;06.05
+06.05.2026;Mittwoch;12:00;V. Flores;;Anstehend;;Frau SZELA Jolanta;1. Termin;Gesetzlich versichert;90214;;06.05
+06.05.2026;Mittwoch;12:10;V. Flores;;Anstehend;;Herr SEVERIN Tudor;Sprechstunde;Gesetzlich versichert;95989;;06.05
+06.05.2026;Mittwoch;12:20;Dr. Jonda Michael;;Anstehend;;Herr TUERKTEKIN Ibrahim;Sprechstunde;Gesetzlich versichert;;;06.05
+07.05.2026;Donnerstag;09:00;Dr. Jonda Michael;;Anstehend;;Herr AYBAZ Fatih;1. Termin;Gesetzlich versichert;93489;;07.05
+07.05.2026;Donnerstag;09:00;V. Flores;;Anstehend;;Herr LESNICHEVSKY Artem;2. Termin;Gesetzlich versichert;96050;;07.05
+07.05.2026;Donnerstag;09:10;Dr. Jonda Michael;;Anstehend;;Frau SEKI Margarita;Sprechstunde;Gesetzlich versichert;94275;;07.05
+07.05.2026;Donnerstag;09:20;Dr. Jonda Michael;;Anstehend;;Frau BOREK Szymon;Sprechstunde;Gesetzlich versichert;;;07.05
+07.05.2026;Donnerstag;10:00;Dr. Ercan Yilmaz;;Anstehend;;Herr TAN Emir;1. Termin;Gesetzlich versichert;95601;;07.05
+07.05.2026;Donnerstag;10:00;Dr. Jonda Michael;;Anstehend;;Frau UESTENCI Hacer;Sprechstunde;Gesetzlich versichert;;;07.05
+07.05.2026;Donnerstag;10:00;V. Flores;;Anstehend;;Frau BLINOVA Galyna;1. Termin;Gesetzlich versichert;64494;;07.05
+07.05.2026;Donnerstag;10:10;V. Flores;;Anstehend;;Herr TSYPIN Volodymyr;1. Termin;Gesetzlich versichert;6045;;07.05
+07.05.2026;Donnerstag;10:20;Dr. Jonda Michael;;Anstehend;;Frau RUMPF Renate;Sprechstunde;Gesetzlich versichert;48084;;07.05
+07.05.2026;Donnerstag;11:30;Dr. Jonda Michael;;Anstehend;;Frau TAHIRI Sumeja;Sprechstunde;Gesetzlich versichert;78564;;07.05
+07.05.2026;Donnerstag;11:50;Dr. Jonda Michael;;Anstehend;;Herr HESSE Thorsten;Sprechstunde;Gesetzlich versichert;3977;;07.05
+07.05.2026;Donnerstag;14:30;Dr. Jonda Michael;;Anstehend;;Frau ALIBRAHIM Mareen Faiath Plng;1. Termin;Gesetzlich versichert;93991;;07.05
+07.05.2026;Donnerstag;15:00;Dr. Jonda Michael;;Anstehend;;RICHMOND Simone;Sprechstunde;Gesetzlich versichert;91277;;07.05
+07.05.2026;Donnerstag;15:00;V. Flores;;Anstehend;;Frau SKORUPSKA Lyudmyla;1. Termin;Gesetzlich versichert;87373;;07.05
+07.05.2026;Donnerstag;15:40;V. Flores;;Anstehend;;Frau MIHOVA Kateryna;1. Termin;Gesetzlich versichert;;;07.05
+07.05.2026;Donnerstag;15:50;V. Flores;;Anstehend;;Frau MIHOVA Kateryna2;1. Termin;Gesetzlich versichert;;;07.05
+07.05.2026;Donnerstag;16:00;Dr. Jonda Michael;;Anstehend;;Herr ICINAK Cemal;1. Termin;Gesetzlich versichert;36264;;07.05
+07.05.2026;Donnerstag;16:10;Dr. Jonda Michael;;Anstehend;;Frau ASHER Berkha;Sprechstunde;Gesetzlich versichert;73556;;07.05
+07.05.2026;Donnerstag;16:20;Dr. Jonda Michael;;Anstehend;;Frau REINKE Susanne;Sprechstunde;Gesetzlich versichert;;;07.05
+07.05.2026;Donnerstag;16:30;Dr. Jonda Michael;;Anstehend;;MORADI Nosrat;Sprechstunde;Gesetzlich versichert;;;07.05
+07.05.2026;Donnerstag;16:40;Dr. Jonda Michael;;Anstehend;;Frau ISMAIL Tuche;Sprechstunde;Gesetzlich versichert;95091;;07.05
+07.05.2026;Donnerstag;16:50;Dr. Jonda Michael;;Anstehend;;Herr KOCH Konstantin;1. Termin;Gesetzlich versichert;95515;;07.05
+08.05.2026;Freitag;09:00;Dr. Jonda Michael;;Anstehend;;Herr GRUENIG Wieland;1. Termin;Gesetzlich versichert;1271;;08.05
+08.05.2026;Freitag;09:10;Dr. Jonda Michael;;Anstehend;;MARTINEZ Martinez;1. Termin;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;09:30;Dr. Jonda Michael;;Anstehend;;BALCI Berat;1. Termin;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;10:00;Dr. Jonda Michael;;Anstehend;;Herr WOITYCZKA Julius;1. Termin;Gesetzlich versichert;95715;;08.05
+08.05.2026;Freitag;10:00;V. Flores;;Anstehend;;Frau MIHAJLOVIC Dragana;1. Termin;Gesetzlich versichert;89951;;08.05
+08.05.2026;Freitag;10:10;Dr. Jonda Michael;;Anstehend;;Frau LEINEWEBER Tanja;Sprechstunde;Gesetzlich versichert;94813;;08.05
+08.05.2026;Freitag;10:20;Dr. Jonda Michael;;Anstehend;;Frau SCHROEDER Christine;Sprechstunde;Gesetzlich versichert;87574;;08.05
+08.05.2026;Freitag;10:30;Dr. Jonda Michael;;Anstehend;;Herr BOZER Yekta;1. Termin;Gesetzlich versichert;15122;;08.05
+08.05.2026;Freitag;10:30;V. Flores;;Anstehend;;Frau SCHULZ Rosa;Erstuntersuchung;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;11:00;Dr. Jonda Michael;;Anstehend;;Herr WOLTER Andreas;1. Termin;Gesetzlich versichert;89059;;08.05
+08.05.2026;Freitag;11:10;Dr. Jonda Michael;;Anstehend;;Frau KREIS Petra;1. Termin;Gesetzlich versichert;2562;;08.05
+08.05.2026;Freitag;11:30;Dr. Jonda Michael;;Anstehend;;Herr YILDIRIM Veli;1. Termin;Gesetzlich versichert;94222;;08.05
+08.05.2026;Freitag;11:30;V. Flores;;Anstehend;;KOVAL Elvira;Sprechstunde;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;13:00;Dr. Ercan Yilmaz;;Anstehend;;Herr DIKENCI Metin;1. Termin;Gesetzlich versichert;94750;;08.05
+08.05.2026;Freitag;13:00;Dr. Ercan Yilmaz;;Anstehend;;Frau ASLAN Menice;1. Termin;Gesetzlich versichert;82407;;08.05
+08.05.2026;Freitag;13:10;Dr. Ercan Yilmaz;;Anstehend;;Frau MOSER Euikyung;1. Termin;Gesetzlich versichert;89504;;08.05
+08.05.2026;Freitag;13:20;Dr. Ercan Yilmaz;;Anstehend;;Frau TATLI Senguel;1. Termin;Gesetzlich versichert;91572;;08.05
+08.05.2026;Freitag;13:30;Dr. Ercan Yilmaz;;Anstehend;;Frau BURAK Sevcan;1. Termin;Gesetzlich versichert;87476;;08.05
+08.05.2026;Freitag;13:30;Dr. Ercan Yilmaz;;Anstehend;;Frau MUELLER Zahide;1. Termin;Gesetzlich versichert;90111;;08.05
+08.05.2026;Freitag;13:40;Dr. Ercan Yilmaz;;Anstehend;;Frau KALLWEIT Inge;1. Termin;Gesetzlich versichert;83565;;08.05
+08.05.2026;Freitag;13:50;Dr. Ercan Yilmaz;;Anstehend;;Frau ORUC Nevin;1. Termin;Gesetzlich versichert;36402;;08.05
+08.05.2026;Freitag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Herr KUDYK Mykhailo;Sprechstunde;Privat versichert;;;08.05
+08.05.2026;Freitag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Frau SARIKAYA Inci;Sprechstunde;Gesetzlich versichert;83193;;08.05
+08.05.2026;Freitag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Herr ARNOLD Niklas;Sprechstunde;Gesetzlich versichert;94385;;08.05
+08.05.2026;Freitag;14:30;Dr. Ercan Yilmaz;;Anstehend;;Herr ACAR Yusuf;1. Termin;Gesetzlich versichert;9118;;08.05
+08.05.2026;Freitag;14:30;V. Flores;;Anstehend;;Herr OEZGEC Ugur;Sprechstunde;Gesetzlich versichert;95914;;08.05
+08.05.2026;Freitag;14:40;Dr. Ercan Yilmaz;;Anstehend;;Frau YILDIZ Naciye;Erstuntersuchung;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;14:40;V. Flores;;Anstehend;;Frau JAHN Petra;Erstuntersuchung;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;14:50;Dr. Ercan Yilmaz;;Anstehend;;Frau GANI Nevena;Sprechstunde;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;15:00;Dr. Ercan Yilmaz;;Anstehend;;Frau AKYOL Besime;1. Termin;Gesetzlich versichert;86741;;08.05
+08.05.2026;Freitag;15:00;V. Flores;;Anstehend;;Frau SCHIRNOW Alissa;Sprechstunde;Gesetzlich versichert;95628;;08.05
+08.05.2026;Freitag;15:10;Dr. Ercan Yilmaz;;Anstehend;;Frau KAPLAN Hanim;Sprechstunde;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;15:20;Dr. Ercan Yilmaz;;Anstehend;;Frau BACAKCI Damla;1. Termin;Gesetzlich versichert;94674;;08.05
+08.05.2026;Freitag;15:30;Dr. Ercan Yilmaz;;Anstehend;;Herr KIRCO Coskun;Erstuntersuchung;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;15:30;V. Flores;;Anstehend;;Frau MARZAHL Elena;Sprechstunde;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;15:40;Dr. Ercan Yilmaz;;Anstehend;;Herr BUCHARDT Patrick;Sprechstunde;Gesetzlich versichert;90027;;08.05
+08.05.2026;Freitag;15:50;Dr. Ercan Yilmaz;;Anstehend;;Frau OEZER Sultan;1. Termin;Gesetzlich versichert;86255;;08.05
+08.05.2026;Freitag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Frau HAJI Jihan;2. Termin;Gesetzlich versichert;93210;;08.05
+08.05.2026;Freitag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Herr ARAS Ekrem;1. Termin;Privat versichert;92105;;08.05
+08.05.2026;Freitag;16:10;Dr. Ercan Yilmaz;;Anstehend;;Frau GRUS Irena;1. Termin;Gesetzlich versichert;81345;;08.05
+08.05.2026;Freitag;16:20;Dr. Ercan Yilmaz;;Anstehend;;Herr OLUZ Ferhat;1. Termin;Gesetzlich versichert;;;08.05
+08.05.2026;Freitag;16:30;Dr. Ercan Yilmaz;;Anstehend;;Herr VU Tuan-Anh;1. Termin;Gesetzlich versichert;94894;;08.05
+11.05.2026;Montag;08:00;Namakonova Yulia;;Anstehend;;Frau ILINSKA Nataliia;1. Termin;Gesetzlich versichert;80622;;11.05
+11.05.2026;Montag;08:10;Namakonova Yulia;;Anstehend;;Frau MORDKOWITSCH Tatjana;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;08:20;Namakonova Yulia;;Anstehend;;Herr TOSTMANN Dirk;1. Termin;Gesetzlich versichert;90787;;11.05
+11.05.2026;Montag;08:30;Namakonova Yulia;;Anstehend;;Herr PIKUZA Vyacheslav;1. Termin;Gesetzlich versichert;95857;;11.05
+11.05.2026;Montag;08:40;Namakonova Yulia;;Anstehend;;Herr WITTE Jens;1. Termin;Gesetzlich versichert;95374;;11.05
+11.05.2026;Montag;08:50;Namakonova Yulia;;Anstehend;;Frau BARKHATOVA Hanna;1. Termin;Gesetzlich versichert;80422;;11.05
+11.05.2026;Montag;09:00;Namakonova Yulia;;Anstehend;;Herr YUKELZON Volodymyr;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;09:00;V. Flores;;Anstehend;;Herr KLOSE Moritz;Sprechstunde;Gesetzlich versichert;93565;;11.05
+11.05.2026;Montag;09:10;Namakonova Yulia;;Anstehend;;POLISHCHUK Liudmila;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;09:10;V. Flores;;Anstehend;;Frau DENYSOVA Tetiana;2. Termin;Gesetzlich versichert;85897;;11.05
+11.05.2026;Montag;09:20;Namakonova Yulia;;Anstehend;;Frau KURDI AYOUBI Rahaf;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;09:30;Namakonova Yulia;;Anstehend;;Herr SKVORTSOV Igor;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;09:40;Namakonova Yulia;;Anstehend;;FURSA Hiulizar;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;09:50;Namakonova Yulia;;Anstehend;;MERCAN Gkioulai;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;09:50;V. Flores;;Anstehend;;Frau POLISHCHUK Maryna;1. Termin;Gesetzlich versichert;81092;;11.05
+11.05.2026;Montag;10:00;Namakonova Yulia;;Anstehend;;Frau PUTINCEV Marina;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;10:00;V. Flores;;Anstehend;;Frau CICHOS Edith;1. Termin;Gesetzlich versichert;80642;;11.05
+11.05.2026;Montag;10:10;Namakonova Yulia;;Anstehend;;Frau SHAL Stella;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;10:20;Namakonova Yulia;;Anstehend;;KIRILLOVA Emma;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;10:30;Namakonova Yulia;;Anstehend;;Frau ADASKINA Nina;1. Termin;Gesetzlich versichert;73488;;11.05
+11.05.2026;Montag;10:40;Namakonova Yulia;;Anstehend;;Frau ADASKINA Sania;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;10:50;Namakonova Yulia;;Anstehend;;ROZNATOVSKA Alla;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;11:00;Namakonova Yulia;;Anstehend;;ZARETSKA Anastasiia;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;11:00;V. Flores;;Anstehend;;Frau PIKALO Liudmyla;2. Termin;Gesetzlich versichert;88411;;11.05
+11.05.2026;Montag;11:10;Namakonova Yulia;;Anstehend;;Frau DECKERT Sabine;1. Termin;Gesetzlich versichert;13678;;11.05
+11.05.2026;Montag;11:20;Namakonova Yulia;;Anstehend;;Frau TRAGE Heidrun;1. Termin;Gesetzlich versichert;22190;;11.05
+11.05.2026;Montag;11:30;Namakonova Yulia;;Anstehend;;Frau NAUMCHUK Olha;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;11:50;Namakonova Yulia;;Anstehend;;HARGESHEIMER Heiko;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;12:10;Namakonova Yulia;;Anstehend;;Frau JAKOB Angelina;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;12:20;Namakonova Yulia;;Anstehend;;MIECZKOWSKI Malgorzata;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;12:30;Namakonova Yulia;;Anstehend;;Herr MIECZKOWSKI Daniel;1. Termin;Gesetzlich versichert;89785;;11.05
+11.05.2026;Montag;12:40;Namakonova Yulia;;Anstehend;;Frau MELNYK Tetiana;1. Termin;Gesetzlich versichert;93252;;11.05
+11.05.2026;Montag;12:50;Namakonova Yulia;;Anstehend;;Frau BRAUCKS Doerte;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;13:00;Dr. Jonda Michael;;Anstehend;;Herr DIKA Gezim;1. Termin;Gesetzlich versichert;15371;;11.05
+11.05.2026;Montag;13:45;Dr. Ercan Yilmaz;;Anstehend;;Herr KHALAF Mohamad Amin;1. Termin;Gesetzlich versichert;91528;;11.05
+11.05.2026;Montag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau ALBAYRAK Nese;1. Termin;Gesetzlich versichert;95535;;11.05
+11.05.2026;Montag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau UENAL Serife;1. Termin;Gesetzlich versichert;94065;;11.05
+11.05.2026;Montag;14:00;V. Flores;;Anstehend;;Frau HANKINA Yevheniya;1. Termin;Gesetzlich versichert;40647;;11.05
+11.05.2026;Montag;14:10;Dr. Ercan Yilmaz;;Anstehend;;ALPDOGAN Sami;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Herr AYDIN Ibrahim;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Frau GUENES Fatma;1. Termin;Gesetzlich versichert;93647;;11.05
+11.05.2026;Montag;14:30;Dr. Ercan Yilmaz;;Anstehend;;OTLU Goerkem;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;14:40;Dr. Ercan Yilmaz;;Anstehend;;Frau MIRAN Canan;1. Termin;Gesetzlich versichert;94683;;11.05
+11.05.2026;Montag;14:50;Dr. Ercan Yilmaz;;Anstehend;;Frau GUELERYUEZ Neslihan;1. Termin;Gesetzlich versichert;94844;;11.05
+11.05.2026;Montag;15:00;Dr. Ercan Yilmaz;;Anstehend;;KILIC Levent;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;15:00;Dr. Jonda Michael;;Anstehend;;Herr RISCHMUELLER Martin;1. Termin;Gesetzlich versichert;73337;;11.05
+11.05.2026;Montag;15:10;Dr. Ercan Yilmaz;;Anstehend;;Herr YILMAZ Cemal;1. Termin;Gesetzlich versichert;83922;;11.05
+11.05.2026;Montag;15:20;Dr. Ercan Yilmaz;;Anstehend;;Frau YILMAZ Guelizar;1. Termin;Gesetzlich versichert;87087;;11.05
+11.05.2026;Montag;15:30;Dr. Ercan Yilmaz;;Anstehend;;Frau OEZTAPAN Asli;1. Termin;Gesetzlich versichert;88851;;11.05
+11.05.2026;Montag;15:40;Dr. Ercan Yilmaz;;Anstehend;;Frau WERNER Julia Helene;1. Termin;Gesetzlich versichert;93932;;11.05
+11.05.2026;Montag;15:40;V. Flores;;Anstehend;;Frau KOVALENKO Olha;1. Termin;Gesetzlich versichert;88287;;11.05
+11.05.2026;Montag;15:50;Dr. Ercan Yilmaz;;Anstehend;;Frau CALISKAN Feristah;1. Termin;Gesetzlich versichert;77200;;11.05
+11.05.2026;Montag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Herr UECBE Volkan;1. Termin;Gesetzlich versichert;94588;;11.05
+11.05.2026;Montag;16:10;Dr. Ercan Yilmaz;;Anstehend;;OCBE;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;16:20;Dr. Ercan Yilmaz;;Anstehend;;Herr SAPANCE Dibra;1. Termin;Gesetzlich versichert;;;11.05
+11.05.2026;Montag;16:20;Dr. Jonda Michael;;Anstehend;;Frau LEIFHEIT Samira;Sprechstunde;Gesetzlich versichert;;;11.05
+12.05.2026;Dienstag;09:00;Dr. Jonda Michael;;Anstehend;;Herr PIESIUR Robert;1. Termin;Gesetzlich versichert;75128;;12.05
+12.05.2026;Dienstag;09:00;V. Flores;;Anstehend;;Frau MOSHKIVSKA Liudmyla;Sprechstunde;Gesetzlich versichert;79542;;12.05
+12.05.2026;Dienstag;09:10;Dr. Jonda Michael;;Anstehend;;Herr KROSCH Joerg;Sprechstunde;Gesetzlich versichert;;;12.05
+12.05.2026;Dienstag;09:30;Dr. Jonda Michael;;Anstehend;;Frau SCHUTT Birgit;1. Termin;Gesetzlich versichert;52406;;12.05
+12.05.2026;Dienstag;09:30;V. Flores;;Anstehend;;Frau BILOUS Olha;1. Termin;Gesetzlich versichert;83582;;12.05
+12.05.2026;Dienstag;09:40;V. Flores;;Anstehend;;Frau PILIUSHENKO Iryna;1. Termin;Gesetzlich versichert;83581;;12.05
+12.05.2026;Dienstag;10:00;Dr. Jonda Michael;;Anstehend;;Herr YILMAZ Cemal;1. Termin;Gesetzlich versichert;87086;;12.05
+12.05.2026;Dienstag;10:00;V. Flores;;Anstehend;;Frau FOYNITSKAYA Galina;2. Termin;Gesetzlich versichert;36684;;12.05
+12.05.2026;Dienstag;10:10;Dr. Jonda Michael;;Anstehend;;Frau MEUSER Kirsten;Sprechstunde;Gesetzlich versichert;33888;;12.05
+12.05.2026;Dienstag;11:00;Dr. Jonda Michael;;Anstehend;;Herr KERBER Andreas;1. Termin;Gesetzlich versichert;87850;;12.05
+12.05.2026;Dienstag;14:00;Dr. Jonda Michael;;Anstehend;;Frau VOGEL Daniela;Sprechstunde;Gesetzlich versichert;56968;;12.05
+12.05.2026;Dienstag;14:30;Dr. Jonda Michael;;Anstehend;;Herr JANZIN Mike;Sprechstunde;Gesetzlich versichert;76394;;12.05
+12.05.2026;Dienstag;14:30;V. Flores;;Anstehend;;Frau DORFMANN Anna;1. Termin;Gesetzlich versichert;88048;;12.05
+12.05.2026;Dienstag;14:40;Dr. Jonda Michael;;Anstehend;;Frau SCHLICHTING Dagmar;1. Termin;Gesetzlich versichert;85080;;12.05
+12.05.2026;Dienstag;14:50;Dr. Jonda Michael;;Anstehend;;Frau MUELLER Angela;Sprechstunde;Gesetzlich versichert;94455;;12.05
+12.05.2026;Dienstag;15:00;Dr. Jonda Michael;;Anstehend;;Herr HAGHSHENAS Bahram;1. Termin;Gesetzlich versichert;95031;;12.05
+12.05.2026;Dienstag;15:00;V. Flores;;Anstehend;;Frau KHALETSKA Olena;2. Termin;Gesetzlich versichert;89167;;12.05
+12.05.2026;Dienstag;15:10;Dr. Jonda Michael;;Anstehend;;SZEDLAK Gerhard;Sprechstunde;Gesetzlich versichert;;;12.05
+13.05.2026;Mittwoch;09:00;V. Flores;;Anstehend;;Frau YUREVYCH Iryna;1. Termin;Gesetzlich versichert;95620;;13.05
+13.05.2026;Mittwoch;09:50;Dr. Jonda Michael;;Anstehend;;Frau MANOIM Maria;Sprechstunde;Gesetzlich versichert;53132;;13.05
+13.05.2026;Mittwoch;10:00;Dr. Jonda Michael;;Anstehend;;Frau SENS-GUEVEN Claudia;Sprechstunde;Gesetzlich versichert;93427;;13.05
+13.05.2026;Mittwoch;11:30;Dr. Jonda Michael;;Anstehend;;Frau TRAGE Heidrun;1. Termin;Gesetzlich versichert;22190;;13.05
+13.05.2026;Mittwoch;15:20;V. Flores;;Anstehend;;Frau NESTERENKO Svitlana;2. Termin;Gesetzlich versichert;87096;;13.05
+15.05.2026;Freitag;09:00;Dr. Jonda Michael;;Anstehend;;Herr GRBIC Muris;1. Termin;Gesetzlich versichert;94642;;15.05
+15.05.2026;Freitag;09:00;V. Flores;;Anstehend;;Frau SINIECKA Karolina;1. Termin;Gesetzlich versichert;;;15.05
+15.05.2026;Freitag;09:10;Dr. Jonda Michael;;Anstehend;;KIROU Petros;1. Termin;Gesetzlich versichert;;;15.05
+15.05.2026;Freitag;09:30;Dr. Jonda Michael;;Anstehend;;Frau ACAR Guelseren;1. Termin;Gesetzlich versichert;87477;;15.05
+15.05.2026;Freitag;11:40;V. Flores;;Anstehend;;Frau ZHULINA Olga;Sprechstunde;Gesetzlich versichert;;;15.05
+15.05.2026;Freitag;11:50;Dr. Jonda Michael;;Anstehend;;Frau SEYFI Nasim;Sprechstunde;Gesetzlich versichert;95815;;15.05
+15.05.2026;Freitag;12:45;Dr. Ercan Yilmaz;;Anstehend;;Herr DAMBIETZ Manfred;1. Termin;Gesetzlich versichert;4653;;15.05
+15.05.2026;Freitag;13:00;Dr. Ercan Yilmaz;;Anstehend;;Herr GOEKCE Serdar;Sprechstunde;Gesetzlich versichert;95020;;15.05
+15.05.2026;Freitag;13:10;Dr. Ercan Yilmaz;;Anstehend;;Frau BAUMANN Elke;1. Termin;Gesetzlich versichert;71828;;15.05
+15.05.2026;Freitag;13:20;Dr. Ercan Yilmaz;;Anstehend;;Frau ARSLAN Hatice;1. Termin;Gesetzlich versichert;94437;;15.05
+15.05.2026;Freitag;13:30;Dr. Ercan Yilmaz;;Anstehend;;Frau ARSLAN Kezibe;1. Termin;Gesetzlich versichert;10148;;15.05
+15.05.2026;Freitag;13:30;Dr. Ercan Yilmaz;;Anstehend;;Herr YILMAZ Yasar Yigit;1. Termin;Gesetzlich versichert;88823;;15.05
+15.05.2026;Freitag;13:40;Dr. Ercan Yilmaz;;Anstehend;;Herr KELEMEN Ioan;1. Termin;Gesetzlich versichert;81627;;15.05
+15.05.2026;Freitag;13:50;Dr. Ercan Yilmaz;;Anstehend;;OEZCAN Muazzez;Sprechstunde;Gesetzlich versichert;;;15.05
+15.05.2026;Freitag;14:00;Dr. Ercan Yilmaz;;Anstehend;;BERK Asiye;Erstuntersuchung;Gesetzlich versichert;;;15.05
+15.05.2026;Freitag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Herr CALU Elisan;Sprechstunde;Gesetzlich versichert;90436;;15.05
+15.05.2026;Freitag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Frau SERBES Didar;Sprechstunde;Gesetzlich versichert;;;15.05
+15.05.2026;Freitag;14:30;Dr. Ercan Yilmaz;;Anstehend;;Herr YILDIRIM Baris;1. Termin;Gesetzlich versichert;93718;;15.05
+15.05.2026;Freitag;14:40;Dr. Ercan Yilmaz;;Anstehend;;Frau RATHERT Meike;Sprechstunde;Gesetzlich versichert;90509;;15.05
+15.05.2026;Freitag;14:50;Dr. Ercan Yilmaz;;Anstehend;;Herr DOGANDEMIR Metin;Sprechstunde;Gesetzlich versichert;90465;;15.05
+15.05.2026;Freitag;15:00;Dr. Ercan Yilmaz;;Anstehend;;Frau KILIC Senguel;Erstuntersuchung;Gesetzlich versichert;;;15.05
+15.05.2026;Freitag;15:10;Dr. Ercan Yilmaz;;Anstehend;;Herr OTTO Yannik;Erstuntersuchung;Gesetzlich versichert;;;15.05
+15.05.2026;Freitag;15:20;Dr. Ercan Yilmaz;;Anstehend;;Frau ECKART Katharina;1. Termin;Gesetzlich versichert;65745;;15.05
+15.05.2026;Freitag;15:30;Dr. Ercan Yilmaz;;Anstehend;;Frau YILDIRIM Isil;Sprechstunde;Gesetzlich versichert;94745;;15.05
+15.05.2026;Freitag;15:40;Dr. Ercan Yilmaz;;Anstehend;;ECKART Alfred;1. Termin;Gesetzlich versichert;69099;;15.05
+15.05.2026;Freitag;15:50;Dr. Ercan Yilmaz;;Anstehend;;Herr EREN Ahmet;1. Termin;Gesetzlich versichert;93705;;15.05
+15.05.2026;Freitag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Herr DEGIRMENCI Hakan;Erstuntersuchung;Gesetzlich versichert;;;15.05
+15.05.2026;Freitag;16:10;Dr. Ercan Yilmaz;;Anstehend;;Frau BLASIUS Tatjana;Erstuntersuchung;Gesetzlich versichert;;;15.05
+15.05.2026;Freitag;16:20;Dr. Ercan Yilmaz;;Anstehend;;Herr YOLDAS Timur;Sprechstunde;Gesetzlich versichert;15309;;15.05
+16.05.2026;Samstag;08:00;Dr. Ercan Yilmaz;;Anstehend;;Herr KACZMAREK Armin;1. Termin;Gesetzlich versichert;69170;;16.05
+16.05.2026;Samstag;08:00;Dr. Ercan Yilmaz;;Anstehend;;NIKOLOV;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;08:00;Namakonova Yulia;;Anstehend;;Frau WINKLER Angela;1. Termin;Gesetzlich versichert;93513;;16.05
+16.05.2026;Samstag;08:10;Dr. Ercan Yilmaz;;Anstehend;;Frau YILDIZ Reyhan;Sprechstunde;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;08:10;Namakonova Yulia;;Anstehend;;Herr JASNY Jonas;1. Termin;Gesetzlich versichert;94210;;16.05
+16.05.2026;Samstag;08:20;Dr. Ercan Yilmaz;;Anstehend;;Herr YILMAZ Zeki;1. Termin;Gesetzlich versichert;94638;;16.05
+16.05.2026;Samstag;08:20;Namakonova Yulia;;Anstehend;;Frau POLOSUKHINA Lyudmyla;1. Termin;Gesetzlich versichert;79503;;16.05
+16.05.2026;Samstag;08:30;Dr. Ercan Yilmaz;;Anstehend;;YAZ Tuelay;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;08:30;Namakonova Yulia;;Anstehend;;Frau HAACK Irena;1. Termin;Gesetzlich versichert;88610;;16.05
+16.05.2026;Samstag;08:40;Dr. Ercan Yilmaz;;Anstehend;;CELIKBAG Aysun;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;08:40;Namakonova Yulia;;Anstehend;;Herr WITTE Jens;1. Termin;Gesetzlich versichert;95374;;16.05
+16.05.2026;Samstag;08:50;Dr. Ercan Yilmaz;;Anstehend;;OGNYANOVA Sevda Yodanova;1. Termin;Gesetzlich versichert;78002;;16.05
+16.05.2026;Samstag;08:50;Dr. Ercan Yilmaz;;Anstehend;;Herr YASHAR Metin;1. Termin;Gesetzlich versichert;95304;;16.05
+16.05.2026;Samstag;08:50;Namakonova Yulia;;Anstehend;;Frau SCHWECHHEIMER Karin;1. Termin;Gesetzlich versichert;78720;;16.05
+16.05.2026;Samstag;09:00;Dr. Ercan Yilmaz;;Anstehend;;Frau BOZKURT Sevim;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;09:00;Namakonova Yulia;;Anstehend;;Frau BUTCO Dina;1. Termin;Gesetzlich versichert;95360;;16.05
+16.05.2026;Samstag;09:00;V. Flores;;Anstehend;;HOLOB;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;09:10;Dr. Ercan Yilmaz;;Anstehend;;Frau CRINGEANU Mihaela;Sprechstunde;Gesetzlich versichert;92695;;16.05
+16.05.2026;Samstag;09:10;Namakonova Yulia;;Anstehend;;Herr KATRANAS Kosmas;1. Termin;Gesetzlich versichert;93503;;16.05
+16.05.2026;Samstag;09:20;Dr. Ercan Yilmaz;;Anstehend;;Herr ULGAC Kilic;1. Termin;Gesetzlich versichert;86381;;16.05
+16.05.2026;Samstag;09:20;Namakonova Yulia;;Anstehend;;Herr BODE Karsten;1. Termin;Gesetzlich versichert;95559;;16.05
+16.05.2026;Samstag;09:30;Dr. Ercan Yilmaz;;Anstehend;;Frau YETIS Sevinc;Sprechstunde;Privat versichert;;;16.05
+16.05.2026;Samstag;09:30;Namakonova Yulia;;Anstehend;;Frau LURJE Svetlana;1. Termin;Gesetzlich versichert;82728;;16.05
+16.05.2026;Samstag;09:40;Dr. Ercan Yilmaz;;Anstehend;;Frau KOTKOWSKA Anna;Erstuntersuchung;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;09:40;Namakonova Yulia;;Anstehend;;Frau KALAPIS-GUREAN Elfriede;1. Termin;Gesetzlich versichert;78096;;16.05
+16.05.2026;Samstag;09:50;Dr. Ercan Yilmaz;;Anstehend;;Frau SAMAST Ayguel;Sprechstunde;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;09:50;Namakonova Yulia;;Anstehend;;Frau KHARLAMOVA Mila;1. Termin;Gesetzlich versichert;45044;;16.05
+16.05.2026;Samstag;10:00;Dr. Ercan Yilmaz;;Anstehend;;Frau YILDIZ Yadikar;1. Termin;Gesetzlich versichert;16586;;16.05
+16.05.2026;Samstag;10:00;Dr. Ercan Yilmaz;;Anstehend;;Frau YILDIRIM Nursen;1. Termin;Gesetzlich versichert;86037;;16.05
+16.05.2026;Samstag;10:00;Namakonova Yulia;;Anstehend;;Frau KALASHNYK Tetiana;1. Termin;Gesetzlich versichert;95079;;16.05
+16.05.2026;Samstag;10:00;Namakonova Yulia;;Anstehend;;Frau CHEBAKOVA Anastasiia;1. Termin;Gesetzlich versichert;92601;;16.05
+16.05.2026;Samstag;10:00;V. Flores;;Anstehend;;Frau DACAL ROMERO Lorien;2. Termin;Gesetzlich versichert;95740;;16.05
+16.05.2026;Samstag;10:10;Dr. Ercan Yilmaz;;Anstehend;;MELEK Ekrem;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;10:10;Namakonova Yulia;;Anstehend;;Frau CARGHER Janna;1. Termin;Gesetzlich versichert;59010;;16.05
+16.05.2026;Samstag;10:20;Dr. Ercan Yilmaz;;Anstehend;;Frau CALUS Fatma;Sprechstunde;Gesetzlich versichert;94857;;16.05
+16.05.2026;Samstag;10:20;Namakonova Yulia;;Anstehend;;Frau KOVALOVA Tetiana;1. Termin;Gesetzlich versichert;93295;;16.05
+16.05.2026;Samstag;10:30;Dr. Ercan Yilmaz;;Anstehend;;Frau HAMZAOGLU Yildiz;Erstuntersuchung;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;10:30;Namakonova Yulia;;Anstehend;;STERENA Ludmila;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;10:40;Dr. Ercan Yilmaz;;Anstehend;;Frau KIIOK Liudmyla;Sprechstunde;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;10:40;Namakonova Yulia;;Anstehend;;KIM NATALIIA;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;10:50;Dr. Ercan Yilmaz;;Anstehend;;Frau HAKLI Guelcan;Sprechstunde;Gesetzlich versichert;93214;;16.05
+16.05.2026;Samstag;10:50;Namakonova Yulia;;Anstehend;;Frau IERMOLENKO Nataliia;1. Termin;Gesetzlich versichert;89063;;16.05
+16.05.2026;Samstag;11:00;Dr. Ercan Yilmaz;;Anstehend;;Frau YESILYURT Necla;1. Termin;Gesetzlich versichert;88830;;16.05
+16.05.2026;Samstag;11:00;Namakonova Yulia;;Anstehend;;Frau NELSON Yulia;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;11:00;V. Flores;;Anstehend;;Herr ROMAN Verlanov;Sprechstunde;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;11:10;Dr. Ercan Yilmaz;;Anstehend;;Frau YILDIRIM Sehriban;1. Termin;Gesetzlich versichert;93430;;16.05
+16.05.2026;Samstag;11:10;Namakonova Yulia;;Anstehend;;Frau DANIEL Inna;1. Termin;Gesetzlich versichert;69420;;16.05
+16.05.2026;Samstag;11:20;Dr. Ercan Yilmaz;;Anstehend;;Frau NEAGU Ana-Crinuta;1. Termin;Gesetzlich versichert;94510;;16.05
+16.05.2026;Samstag;11:20;Namakonova Yulia;;Anstehend;;OPO;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;11:30;Dr. Ercan Yilmaz;;Anstehend;;Herr MEMET Moumin;Erstuntersuchung;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;11:30;Namakonova Yulia;;Anstehend;;Herr CHUBKO Anatoly;1. Termin;Gesetzlich versichert;52616;;16.05
+16.05.2026;Samstag;11:40;Dr. Ercan Yilmaz;;Anstehend;;MOURTEZA Tugce;Erstuntersuchung;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;11:40;Namakonova Yulia;;Anstehend;;Frau OLONETSKA Valentyna;1. Termin;Gesetzlich versichert;90956;;16.05
+16.05.2026;Samstag;11:50;Dr. Ercan Yilmaz;;Anstehend;;Frau BARTENS Alina;Sprechstunde;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;11:50;Namakonova Yulia;;Anstehend;;ARANOVSKA;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;12:00;Dr. Ercan Yilmaz;;Anstehend;;Frau TALSIK Ayse;1. Termin;Gesetzlich versichert;40698;;16.05
+16.05.2026;Samstag;12:00;Namakonova Yulia;;Anstehend;;POLICHRONIDIS Timo;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;12:10;Dr. Ercan Yilmaz;;Anstehend;;Herr SIMSEK Ramazan;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;12:10;Namakonova Yulia;;Anstehend;;NEROZNIKOVA Oleksandra;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;12:20;Dr. Ercan Yilmaz;;Anstehend;;T Aysha;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;12:20;Namakonova Yulia;;Anstehend;;MAXIMIT Valentin;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;12:30;Dr. Ercan Yilmaz;;Anstehend;;Herr TOKAN Sabri;1. Termin;Gesetzlich versichert;89613;;16.05
+16.05.2026;Samstag;12:30;Namakonova Yulia;;Anstehend;;Herr BITTKOW Dirk;1. Termin;Gesetzlich versichert;85708;;16.05
+16.05.2026;Samstag;12:40;Dr. Ercan Yilmaz;;Anstehend;;Herr HUSSEIN MUSTAFA Khalid;1. Termin;Gesetzlich versichert;69689;;16.05
+16.05.2026;Samstag;12:40;Namakonova Yulia;;Anstehend;;Frau SCHWAB Marina;1. Termin;Gesetzlich versichert;93401;;16.05
+16.05.2026;Samstag;12:50;Dr. Ercan Yilmaz;;Anstehend;;VELIOGLOU Memer;Sprechstunde;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;12:50;Namakonova Yulia;;Anstehend;;Frau LARYSA Roife;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;13:00;Dr. Ercan Yilmaz;;Anstehend;;Herr SEVINGEN Muhittin;1. Termin;Gesetzlich versichert;95281;;16.05
+16.05.2026;Samstag;13:10;Dr. Ercan Yilmaz;;Anstehend;;MUKADES Sevingen;1. Termin;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;13:20;Dr. Ercan Yilmaz;;Anstehend;;Frau CIFCI Muelkinaz;1. Termin;Gesetzlich versichert;93618;;16.05
+16.05.2026;Samstag;13:30;Dr. Ercan Yilmaz;;Anstehend;;Frau YILMAZ Melisa;Sprechstunde;Gesetzlich versichert;;;16.05
+16.05.2026;Samstag;13:40;Dr. Ercan Yilmaz;;Anstehend;;Herr HOSSEINI-PAGOOH Ali-Akbar;1. Termin;Gesetzlich versichert;45948;;16.05
+16.05.2026;Samstag;13:50;Dr. Ercan Yilmaz;;Anstehend;;Frau HOLSTE-KLOS Annegret;1. Termin;Gesetzlich versichert;95228;;16.05
+16.05.2026;Samstag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Herr SAHIN Saban;1. Termin;Gesetzlich versichert;89919;;16.05
+16.05.2026;Samstag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Frau FRATACCI Cigdem;Sprechstunde;Gesetzlich versichert;94274;;16.05
+16.05.2026;Samstag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Frau AKTAS Fatma;Sprechstunde;Gesetzlich versichert;;;16.05
+18.05.2026;Montag;10:00;V. Flores;;Anstehend;;Frau PIATEK Sieglinde;1. Termin;Gesetzlich versichert;62562;;18.05
+18.05.2026;Montag;10:30;V. Flores;;Anstehend;;Herr SEIFERT Igor;Erstuntersuchung;Gesetzlich versichert;95611;;18.05
+18.05.2026;Montag;13:00;V. Flores;;Anstehend;;Frau BINZ Evelyn;1. Termin;Gesetzlich versichert;65311;;18.05
+18.05.2026;Montag;13:30;V. Flores;;Anstehend;;Herr BURZIN Gregor;Sprechstunde;Gesetzlich versichert;95411;;18.05
+18.05.2026;Montag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Herr YORULMAZ Mehmet;1. Termin;Gesetzlich versichert;71508;;18.05
+18.05.2026;Montag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau SAHIN Remziye;1. Termin;Gesetzlich versichert;85317;;18.05
+18.05.2026;Montag;14:00;Dr. Jonda Michael;;Anstehend;;Herr VOELGER Michael;1. Termin;Gesetzlich versichert;2080;;18.05
+18.05.2026;Montag;14:00;V. Flores;;Anstehend;;Herr SCHMIDT Jan;1. Termin;Gesetzlich versichert;56864;;18.05
+18.05.2026;Montag;14:10;Dr. Ercan Yilmaz;;Anstehend;;THPCU Selin;1. Termin;Gesetzlich versichert;;;18.05
+18.05.2026;Montag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Frau ENGELKE Marianne;1. Termin;Gesetzlich versichert;58070;;18.05
+18.05.2026;Montag;14:30;Dr. Ercan Yilmaz;;Anstehend;;Frau DERECI Mukadder;1. Termin;Gesetzlich versichert;83482;;18.05
+18.05.2026;Montag;14:40;Dr. Ercan Yilmaz;;Anstehend;;Herr SINDERN Marek;1. Termin;Gesetzlich versichert;94897;;18.05
+18.05.2026;Montag;14:50;Dr. Ercan Yilmaz;;Anstehend;;Frau BERLOVYCH Inna;1. Termin;Gesetzlich versichert;48118;;18.05
+18.05.2026;Montag;15:00;Dr. Ercan Yilmaz;;Anstehend;;Herr AYHAN Sevkan;1. Termin;Gesetzlich versichert;95431;;18.05
+18.05.2026;Montag;15:00;Dr. Ercan Yilmaz;;Anstehend;;Herr KLEIPSTIES Mario;1. Termin;Gesetzlich versichert;93846;;18.05
+18.05.2026;Montag;15:10;Dr. Ercan Yilmaz;;Anstehend;;Herr SCHERWINSKI Christoph;1. Termin;Gesetzlich versichert;48323;;18.05
+18.05.2026;Montag;15:20;Dr. Ercan Yilmaz;;Anstehend;;Frau SCHERWINSKI Renata;1. Termin;Gesetzlich versichert;48475;;18.05
+18.05.2026;Montag;15:30;Dr. Ercan Yilmaz;;Anstehend;;Frau KARAHAN Guelhanim;1. Termin;Gesetzlich versichert;89854;;18.05
+18.05.2026;Montag;15:40;Dr. Ercan Yilmaz;;Anstehend;;Frau ULUBAS Sevgi;1. Termin;Gesetzlich versichert;90544;;18.05
+18.05.2026;Montag;15:50;Dr. Ercan Yilmaz;;Anstehend;;Frau IVTUSCHIK Janina;Erstuntersuchung;Gesetzlich versichert;;;18.05
+18.05.2026;Montag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Herr KARABAG Ercan;1. Termin;Gesetzlich versichert;92581;;18.05
+18.05.2026;Montag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Frau KLEMENS Wladyslawa;1. Termin;Gesetzlich versichert;89197;;18.05
+18.05.2026;Montag;16:10;Dr. Ercan Yilmaz;;Anstehend;;Frau EMADI Tayebeh;1. Termin;Gesetzlich versichert;86900;;18.05
+18.05.2026;Montag;16:20;Dr. Ercan Yilmaz;;Anstehend;;Herr CANDAN Ahmet;Sprechstunde;Gesetzlich versichert;;;18.05
+19.05.2026;Dienstag;09:00;Dr. Jonda Michael;;Anstehend;;Frau LITAU Marina;Erstuntersuchung;Gesetzlich versichert;9951;;19.05
+19.05.2026;Dienstag;09:00;V. Flores;;Anstehend;;Herr POSTUPNYI Serhii;2. Termin;Gesetzlich versichert;95652;;19.05
+19.05.2026;Dienstag;09:10;V. Flores;;Anstehend;;Frau KLIUSHEVA Hanna;Sprechstunde;Gesetzlich versichert;94878;;19.05
+19.05.2026;Dienstag;10:00;Dr. Jonda Michael;;Anstehend;;Herr NADERI Daniel;1. Termin;Gesetzlich versichert;87149;;19.05
+19.05.2026;Dienstag;10:10;Dr. Jonda Michael;;Anstehend;;NADERI Rahmatollah;1. Termin;Gesetzlich versichert;;;19.05
+19.05.2026;Dienstag;12:00;V. Flores;;Anstehend;;Frau AZAROVA Marina;2. Termin;Gesetzlich versichert;95753;;19.05
+19.05.2026;Dienstag;14:40;Dr. Jonda Michael;;Anstehend;;Frau SCHLICHTING Dagmar;1. Termin;Gesetzlich versichert;85080;;19.05
+19.05.2026;Dienstag;14:40;V. Flores;;Anstehend;;Frau SCHLICHTING Dagmar2;1. Termin;Gesetzlich versichert;85080;;19.05
+20.05.2026;Mittwoch;09:00;Dr. Jonda Michael;;Anstehend;;EROL Aysel;1. Termin;Gesetzlich versichert;83573;;20.05
+20.05.2026;Mittwoch;09:00;V. Flores;;Anstehend;;Frau CANTOV Anastasia;2. Termin;Gesetzlich versichert;95766;;20.05
+20.05.2026;Mittwoch;09:10;Dr. Jonda Michael;;Anstehend;;Frau WIGANOWSKI Janine;1. Termin;Gesetzlich versichert;80531;;20.05
+21.05.2026;Donnerstag;15:50;V. Flores;;Anstehend;;Frau YAIKO Myroslava;1. Termin;Gesetzlich versichert;96079;;21.05
+21.05.2026;Donnerstag;16:30;Dr. Jonda Michael;;Anstehend;;Herr KARIMI Bahram;Erstuntersuchung;Gesetzlich versichert;;;21.05
+26.05.2026;Dienstag;09:00;Dr. Jonda Michael;;Anstehend;;Frau MARDAR Alla;1. Termin;Gesetzlich versichert;38299;;26.05
+26.05.2026;Dienstag;09:00;V. Flores;;Anstehend;;Frau NAKONECHNA Nataliia;1. Termin;Gesetzlich versichert;92683;;26.05
+26.05.2026;Dienstag;11:30;V. Flores;;Anstehend;;Frau ROSELIEB Ingrid;1. Termin;Gesetzlich versichert;70270;;26.05
+26.05.2026;Dienstag;13:00;V. Flores;;Anstehend;;Frau SKLAREVIC Alena;2. Termin;Gesetzlich versichert;55556;;26.05
+26.05.2026;Dienstag;15:50;V. Flores;;Anstehend;;YAIKO Myroslava;2. Termin;Gesetzlich versichert;;;26.05
+26.05.2026;Dienstag;16:10;Dr. Jonda Michael;;Anstehend;;Frau MOENKEL Ursula;Sprechstunde;Gesetzlich versichert;92689;;26.05
+28.05.2026;Donnerstag;10:00;Dr. Ercan Yilmaz;;Anstehend;;Herr REQICA Durim;1. Termin;Gesetzlich versichert;95506;;28.05
+28.05.2026;Donnerstag;10:15;Dr. Ercan Yilmaz;;Anstehend;;Frau SILAY Senay;1. Termin;Gesetzlich versichert;92323;;28.05
+28.05.2026;Donnerstag;10:30;Dr. Ercan Yilmaz;;Anstehend;;KARAKIS Nurettin;1. Termin;Gesetzlich versichert;89043;;28.05
+28.05.2026;Donnerstag;10:45;Dr. Ercan Yilmaz;;Anstehend;;CETIN Asuman;1. Termin;Gesetzlich versichert;;;28.05
+28.05.2026;Donnerstag;11:00;Dr. Ercan Yilmaz;;Anstehend;;Frau ERKUL Guelnur;1. Termin;Gesetzlich versichert;93470;;28.05
+29.05.2026;Freitag;11:40;V. Flores;;Anstehend;;Frau BANSEN Ursula;Sprechstunde;Gesetzlich versichert;94641;;29.05
+29.05.2026;Freitag;13:00;Dr. Ercan Yilmaz;;Anstehend;;Herr YIRCI Adem;1. Termin;Gesetzlich versichert;90827;;29.05
+29.05.2026;Freitag;13:00;Dr. Ercan Yilmaz;;Anstehend;;Frau YILMAZ Zatinur;1. Termin;Gesetzlich versichert;93212;;29.05
+29.05.2026;Freitag;13:10;Dr. Ercan Yilmaz;;Anstehend;;Frau MUCHA Beata;2. Termin;Gesetzlich versichert;94800;;29.05
+29.05.2026;Freitag;13:10;Dr. Ercan Yilmaz;;Anstehend;;Herr RIESCH Alfred;1. Termin;Gesetzlich versichert;81184;;29.05
+29.05.2026;Freitag;13:20;Dr. Ercan Yilmaz;;Anstehend;;Frau OENGEL Ayla;1. Termin;Gesetzlich versichert;58429;;29.05
+29.05.2026;Freitag;13:30;Dr. Ercan Yilmaz;;Anstehend;;Herr ALJASHAAM Anas;1. Termin;Gesetzlich versichert;91853;;29.05
+29.05.2026;Freitag;13:40;Dr. Ercan Yilmaz;;Anstehend;;STRATMANN Gerald;Sprechstunde;Gesetzlich versichert;;;29.05
+29.05.2026;Freitag;13:50;Dr. Ercan Yilmaz;;Anstehend;;Frau CRINGEANU Mihaela;1. Termin;Gesetzlich versichert;92695;;29.05
+29.05.2026;Freitag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau SEZICI Makbule;1. Termin;Gesetzlich versichert;44692;;29.05
+29.05.2026;Freitag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Herr TENAN Antonio;1. Termin;Gesetzlich versichert;47374;;29.05
+29.05.2026;Freitag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Herr SIEKMANN Joerg;Sprechstunde;Gesetzlich versichert;86217;;29.05
+29.05.2026;Freitag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Herr OGUZ Ilhami;1. Termin;Gesetzlich versichert;54191;;29.05
+29.05.2026;Freitag;14:30;Dr. Ercan Yilmaz;;Anstehend;;Herr OEZTEPE Emre Semih;1. Termin;Gesetzlich versichert;92569;;29.05
+29.05.2026;Freitag;14:40;Dr. Ercan Yilmaz;;Anstehend;;AKPINAR Selhmetzttin;1. Termin;Gesetzlich versichert;;;29.05
+29.05.2026;Freitag;14:50;Dr. Ercan Yilmaz;;Anstehend;;NERMIN Seydovic;1. Termin;Gesetzlich versichert;;;29.05
+29.05.2026;Freitag;15:00;Dr. Ercan Yilmaz;;Anstehend;;Herr BEERMANN Udo;1. Termin;Gesetzlich versichert;50255;;29.05
+29.05.2026;Freitag;15:10;Dr. Ercan Yilmaz;;Anstehend;;HAINAN Jansset;1. Termin;Gesetzlich versichert;92203;;29.05
+29.05.2026;Freitag;15:20;Dr. Ercan Yilmaz;;Anstehend;;YOUSSEF Ahmad;1. Termin;Gesetzlich versichert;80567;;29.05
+29.05.2026;Freitag;15:30;Dr. Ercan Yilmaz;;Anstehend;;Herr ULUS Mehmet-Sait;1. Termin;Gesetzlich versichert;22174;;29.05
+29.05.2026;Freitag;15:40;Dr. Ercan Yilmaz;;Anstehend;;Frau YESILYURT Yeliz;1. Termin;Gesetzlich versichert;;;29.05
+29.05.2026;Freitag;15:50;Dr. Ercan Yilmaz;;Anstehend;;Frau BERGEN Elena;1. Termin;Gesetzlich versichert;91541;;29.05
+29.05.2026;Freitag;16:00;Dr. Ercan Yilmaz;;Anstehend;;HITO Brahim;1. Termin;Gesetzlich versichert;;;29.05
+29.05.2026;Freitag;16:10;Dr. Ercan Yilmaz;;Anstehend;;Herr CETIN Koeksal;1. Termin;Gesetzlich versichert;94478;;29.05
+29.05.2026;Freitag;16:20;Dr. Ercan Yilmaz;;Anstehend;;Frau BAEUML Mareile-Celine;1. Termin;Gesetzlich versichert;95539;;29.05
+30.05.2026;Samstag;08:00;Dr. Ercan Yilmaz;;Anstehend;;Frau HEUSCHEN Gudrun;Sprechstunde;Gesetzlich versichert;64530;;30.05
+30.05.2026;Samstag;08:00;Dr. Jonda Michael;;Anstehend;;Frau STOLPE Sabine;Sprechstunde;Gesetzlich versichert;28764;;30.05
+30.05.2026;Samstag;08:10;Dr. Ercan Yilmaz;;Anstehend;;Herr AKSU Engin;Erstuntersuchung;Privat versichert;;;30.05
+30.05.2026;Samstag;08:20;Dr. Ercan Yilmaz;;Anstehend;;Frau GKIKOURI Maria;Sprechstunde;Gesetzlich versichert;94979;;30.05
+30.05.2026;Samstag;08:30;Dr. Ercan Yilmaz;;Anstehend;;Frau ALAKAN Canan;1. Termin;Gesetzlich versichert;91765;;30.05
+30.05.2026;Samstag;08:30;Dr. Ercan Yilmaz;;Anstehend;;Frau KREIBAUM Martina;1. Termin;Gesetzlich versichert;11461;;30.05
+30.05.2026;Samstag;08:40;Dr. Ercan Yilmaz;;Anstehend;;Herr YILDIRIM Emre;Sprechstunde;Gesetzlich versichert;91123;;30.05
+30.05.2026;Samstag;08:50;Dr. Ercan Yilmaz;;Anstehend;;NIKOLOV Kirtcho;1. Termin;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;09:00;Dr. Ercan Yilmaz;;Anstehend;;GUENEL Tekin;Sprechstunde;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;09:10;Dr. Ercan Yilmaz;;Anstehend;;Frau EMINOGLOU Emel;1. Termin;Gesetzlich versichert;91479;;30.05
+30.05.2026;Samstag;09:20;Dr. Ercan Yilmaz;;Anstehend;;ORCHAN ATHINGANOS;1. Termin;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;09:30;Dr. Ercan Yilmaz;;Anstehend;;Frau HEUER Jana;1. Termin;Gesetzlich versichert;80703;;30.05
+30.05.2026;Samstag;09:30;Dr. Ercan Yilmaz;;Anstehend;;Frau FRANZ Edith;1. Termin;Gesetzlich versichert;89593;;30.05
+30.05.2026;Samstag;09:40;Dr. Ercan Yilmaz;;Anstehend;;Herr HITZMANN Holger;1. Termin;Gesetzlich versichert;95597;;30.05
+30.05.2026;Samstag;09:50;Dr. Ercan Yilmaz;;Anstehend;;Frau RAHIMI GELKOUB Shokoufeh;1. Termin;Gesetzlich versichert;83517;;30.05
+30.05.2026;Samstag;10:00;Dr. Ercan Yilmaz;;Anstehend;;Frau LEMKE Kathrin;1. Termin;Gesetzlich versichert;60567;;30.05
+30.05.2026;Samstag;10:10;Dr. Ercan Yilmaz;;Anstehend;;KILINC Guelluel;Erstuntersuchung;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;10:20;Dr. Ercan Yilmaz;;Anstehend;;Frau OEZCAN Sultan;1. Termin;Gesetzlich versichert;91620;;30.05
+30.05.2026;Samstag;10:30;Dr. Ercan Yilmaz;;Anstehend;;Frau VOLLRATH Kimberly;1. Termin;Gesetzlich versichert;94575;;30.05
+30.05.2026;Samstag;10:40;Dr. Ercan Yilmaz;;Anstehend;;Frau AKCORA Yurdaguel;Sprechstunde;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;10:50;Dr. Ercan Yilmaz;;Anstehend;;Frau OEZDEMIR Nuray;1. Termin;Gesetzlich versichert;90015;;30.05
+30.05.2026;Samstag;11:00;Dr. Ercan Yilmaz;;Anstehend;;Frau AKPOLAT Elif;Sprechstunde;Gesetzlich versichert;95508;;30.05
+30.05.2026;Samstag;11:10;Dr. Ercan Yilmaz;;Anstehend;;AKPOLAT Hasan;Sprechstunde;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;11:20;Dr. Ercan Yilmaz;;Anstehend;;Frau BROISCH Stephanie;1. Termin;Gesetzlich versichert;86460;;30.05
+30.05.2026;Samstag;11:30;Dr. Ercan Yilmaz;;Anstehend;;CIPOLLA Nino;1. Termin;Gesetzlich versichert;87620;;30.05
+30.05.2026;Samstag;11:40;Dr. Ercan Yilmaz;;Anstehend;;Frau BERLOVYCH Inna;1. Termin;Gesetzlich versichert;48118;;30.05
+30.05.2026;Samstag;11:50;Dr. Ercan Yilmaz;;Anstehend;;Herr SENCAN Riza;1. Termin;Gesetzlich versichert;58551;;30.05
+30.05.2026;Samstag;12:00;Dr. Ercan Yilmaz;;Anstehend;;Herr FISCHER Hendrik;1. Termin;Gesetzlich versichert;89845;;30.05
+30.05.2026;Samstag;12:10;Dr. Ercan Yilmaz;;Anstehend;;Frau BOZOVIC Milena;1. Termin;Gesetzlich versichert;70974;;30.05
+30.05.2026;Samstag;12:20;Dr. Ercan Yilmaz;;Anstehend;;Herr DERE Alim;Sprechstunde;Gesetzlich versichert;95082;;30.05
+30.05.2026;Samstag;12:30;Dr. Ercan Yilmaz;;Anstehend;;Frau UELKER Sidika;1. Termin;Gesetzlich versichert;83791;;30.05
+30.05.2026;Samstag;12:40;Dr. Ercan Yilmaz;;Anstehend;;Frau SEKERCI Senguel;1. Termin;Gesetzlich versichert;88410;;30.05
+30.05.2026;Samstag;12:50;Dr. Ercan Yilmaz;;Anstehend;;Herr RUDYUK Georg;Sprechstunde;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;13:00;Dr. Ercan Yilmaz;;Anstehend;;Frau OEZTUERK Funda;Sprechstunde;Gesetzlich versichert;10549;;30.05
+30.05.2026;Samstag;13:10;Dr. Ercan Yilmaz;;Anstehend;;PASICHNYK Nadiia;Sprechstunde;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;13:20;Dr. Ercan Yilmaz;;Anstehend;;Frau KUECUEKGUEL Rahsan;Sprechstunde;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;13:30;Dr. Ercan Yilmaz;;Anstehend;;Frau KARABACAK Uemran;1. Termin;Gesetzlich versichert;95606;;30.05
+30.05.2026;Samstag;13:40;Dr. Ercan Yilmaz;;Anstehend;;KDOUH Ali;Erstuntersuchung;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;13:50;Dr. Ercan Yilmaz;;Anstehend;;ARDIC Kifayet;1. Termin;Gesetzlich versichert;81119;;30.05
+30.05.2026;Samstag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Herr JOVANOVIC Tomislav;1. Termin;Gesetzlich versichert;70739;;30.05
+30.05.2026;Samstag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau TORUN Mensure;Sprechstunde;Gesetzlich versichert;49993;;30.05
+30.05.2026;Samstag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Herr YELTEKIN Muhittin;Erstuntersuchung;Gesetzlich versichert;;;30.05
+30.05.2026;Samstag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Frau AKYOL Hacire;Erstuntersuchung;Gesetzlich versichert;;;30.05
+02.06.2026;Dienstag;09:00;V. Flores;;Anstehend;;Herr PHAM Ngoc-Bao;1. Termin;Gesetzlich versichert;96046;;02.06
+02.06.2026;Dienstag;10:00;Dr. Ercan Yilmaz;;Anstehend;;Herr AMET Jakup;1. Termin;Gesetzlich versichert;96040;;02.06
+08.06.2026;Montag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau GASIOREK Asuman;1. Termin;Gesetzlich versichert;94705;;08.06
+08.06.2026;Montag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Frau STOETER Melanie;Erstuntersuchung;Gesetzlich versichert;;;08.06
+08.06.2026;Montag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Frau OEZAVCI Fati;1. Termin;Gesetzlich versichert;35542;;08.06
+08.06.2026;Montag;14:30;Dr. Ercan Yilmaz;;Anstehend;;Frau MANTI Serap;Sprechstunde;Gesetzlich versichert;83455;;08.06
+08.06.2026;Montag;14:40;Dr. Ercan Yilmaz;;Anstehend;;TURGUT Nevriye;1. Termin;Gesetzlich versichert;;;08.06
+08.06.2026;Montag;14:50;Dr. Ercan Yilmaz;;Anstehend;;Herr BARUTCU Ahmed;Sprechstunde;Gesetzlich versichert;89149;;08.06
+08.06.2026;Montag;15:00;Dr. Ercan Yilmaz;;Anstehend;;CAGRI Ahmet;Erstuntersuchung;Gesetzlich versichert;;;08.06
+08.06.2026;Montag;15:10;Dr. Ercan Yilmaz;;Anstehend;;KRUMPHOLZ Irmgard;Sprechstunde;Gesetzlich versichert;;;08.06
+08.06.2026;Montag;15:20;Dr. Ercan Yilmaz;;Anstehend;;Frau COLAKGIL Tuelin;Erstuntersuchung;Gesetzlich versichert;;;08.06
+08.06.2026;Montag;15:30;Dr. Ercan Yilmaz;;Anstehend;;Herr OEZER Umut Tolga;Sprechstunde;Gesetzlich versichert;;;08.06
+08.06.2026;Montag;15:40;Dr. Ercan Yilmaz;;Anstehend;;Herr ROST Michael;Erstuntersuchung;Gesetzlich versichert;;;08.06
+08.06.2026;Montag;15:50;Dr. Ercan Yilmaz;;Anstehend;;Frau KAVAK Fatma;Erstuntersuchung;Gesetzlich versichert;;;08.06
+08.06.2026;Montag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Frau KOESE-GUEMUESSUYU Cigdem;Erstuntersuchung;Gesetzlich versichert;;;08.06
+08.06.2026;Montag;16:00;Dr. Jonda Michael;;Anstehend;;Frau LIGOWSKI Heike;1. Termin;Gesetzlich versichert;89510;;08.06
+08.06.2026;Montag;16:10;Dr. Ercan Yilmaz;;Anstehend;;Frau EKINCI Emine;Erstuntersuchung;Gesetzlich versichert;;;08.06
+08.06.2026;Montag;16:20;Dr. Ercan Yilmaz;;Anstehend;;Frau CUKER Nadiriye;Sprechstunde;Gesetzlich versichert;90716;;08.06
+13.06.2026;Samstag;08:00;Dr. Ercan Yilmaz;;Anstehend;;Frau SOBAY Oezlem;1. Termin;Gesetzlich versichert;50303;;13.06
+13.06.2026;Samstag;08:10;Dr. Ercan Yilmaz;;Anstehend;;Herr CUERUET Babuerhan;1. Termin;Gesetzlich versichert;89256;;13.06
+13.06.2026;Samstag;08:20;Dr. Ercan Yilmaz;;Anstehend;;Frau PETRAKOVA Elena;1. Termin;Gesetzlich versichert;53477;;13.06
+13.06.2026;Samstag;08:30;Dr. Ercan Yilmaz;;Anstehend;;Herr ATAY Adem;1. Termin;Gesetzlich versichert;38203;;13.06
+13.06.2026;Samstag;08:30;Dr. Ercan Yilmaz;;Anstehend;;CALGIN Yahya;1. Termin;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;08:40;Dr. Ercan Yilmaz;;Anstehend;;Frau CALGIN Suna;1. Termin;Gesetzlich versichert;88825;;13.06
+13.06.2026;Samstag;08:50;Dr. Ercan Yilmaz;;Anstehend;;Frau GUELOGLU Zueleyha;Sprechstunde;Gesetzlich versichert;95566;;13.06
+13.06.2026;Samstag;09:00;Dr. Ercan Yilmaz;;Anstehend;;LISSON Noel;Erstuntersuchung;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;09:10;Dr. Ercan Yilmaz;;Anstehend;;Frau ATAY Nurhan;1. Termin;Gesetzlich versichert;64362;;13.06
+13.06.2026;Samstag;09:20;Dr. Ercan Yilmaz;;Anstehend;;Frau BUEYUEKERTAS Ceylan;1. Termin;Gesetzlich versichert;95558;;13.06
+13.06.2026;Samstag;09:30;Dr. Ercan Yilmaz;;Anstehend;;DADDO Ayanda;Sprechstunde;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;09:40;Dr. Ercan Yilmaz;;Anstehend;;SMILOVA Aneliya;Erstuntersuchung;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;09:50;Dr. Ercan Yilmaz;;Anstehend;;Frau ALBAYRAK Nese;Sprechstunde;Gesetzlich versichert;95535;;13.06
+13.06.2026;Samstag;10:00;Dr. Ercan Yilmaz;;Anstehend;;GUELTEKIN Kiymet;Sprechstunde;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;10:10;Dr. Ercan Yilmaz;;Anstehend;;Frau FREVERT Elke;Sprechstunde;Gesetzlich versichert;56530;;13.06
+13.06.2026;Samstag;10:20;Dr. Ercan Yilmaz;;Anstehend;;Herr BASDERE Ismet;Sprechstunde;Gesetzlich versichert;93215;;13.06
+13.06.2026;Samstag;10:30;Dr. Ercan Yilmaz;;Anstehend;;Frau ERDEM Yildiz;Sprechstunde;Gesetzlich versichert;93367;;13.06
+13.06.2026;Samstag;10:40;Dr. Ercan Yilmaz;;Anstehend;;Frau WOJCIK-GIEDYK Ewelina;Sprechstunde;Gesetzlich versichert;94538;;13.06
+13.06.2026;Samstag;10:50;Dr. Ercan Yilmaz;;Anstehend;;Frau DEMIR Songuel;1. Termin;Gesetzlich versichert;86341;;13.06
+13.06.2026;Samstag;11:00;Dr. Ercan Yilmaz;;Anstehend;;MUSLEM Gaslae;1. Termin;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;11:10;Dr. Ercan Yilmaz;;Anstehend;;Herr ATES Ismail;Sprechstunde;Gesetzlich versichert;81653;;13.06
+13.06.2026;Samstag;11:20;Dr. Ercan Yilmaz;;Anstehend;;Frau AKTUERK Fatma;1. Termin;Gesetzlich versichert;54708;;13.06
+13.06.2026;Samstag;11:30;Dr. Ercan Yilmaz;;Anstehend;;Herr DR WIETING Rolf;Erstuntersuchung;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;11:40;Dr. Ercan Yilmaz;;Anstehend;;Frau GEREDELI Leyla;Sprechstunde;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;11:50;Dr. Ercan Yilmaz;;Anstehend;;Frau CZUJ Ilona;Sprechstunde;Gesetzlich versichert;82291;;13.06
+13.06.2026;Samstag;12:00;Dr. Ercan Yilmaz;;Anstehend;;Frau YILMAZER Sadet;1. Termin;Gesetzlich versichert;95106;;13.06
+13.06.2026;Samstag;12:10;Dr. Ercan Yilmaz;;Anstehend;;Herr BILDIRICI Oguz;Sprechstunde;Gesetzlich versichert;82576;;13.06
+13.06.2026;Samstag;12:20;Dr. Ercan Yilmaz;;Anstehend;;YIKILMAZ Eylem;1. Termin;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;12:30;Dr. Ercan Yilmaz;;Anstehend;;Herr SOTIROSKI Marjan;Sprechstunde;Gesetzlich versichert;90497;;13.06
+13.06.2026;Samstag;12:40;Dr. Ercan Yilmaz;;Anstehend;;Frau YILDIZ Nurhan;1. Termin;Gesetzlich versichert;87750;;13.06
+13.06.2026;Samstag;12:50;Dr. Ercan Yilmaz;;Anstehend;;SOLAK Sevginar;Erstuntersuchung;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;13:00;Dr. Ercan Yilmaz;;Anstehend;;Frau CESIN Selin;Erstuntersuchung;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;13:10;Dr. Ercan Yilmaz;;Anstehend;;Frau ALBAYRAK Nese;Sprechstunde;Gesetzlich versichert;95535;;13.06
+13.06.2026;Samstag;13:20;Dr. Ercan Yilmaz;;Anstehend;;KADIOGLU Hatice;Erstuntersuchung;Gesetzlich versichert;;;13.06
+13.06.2026;Samstag;13:30;Dr. Ercan Yilmaz;;Anstehend;;Frau KOENEMUND Emel;1. Termin;Gesetzlich versichert;74239;;13.06
+13.06.2026;Samstag;13:40;Dr. Ercan Yilmaz;;Anstehend;;Frau YILMAZ Yeliz;1. Termin;Gesetzlich versichert;88341;;13.06
+13.06.2026;Samstag;13:50;Dr. Ercan Yilmaz;;Anstehend;;Frau ORHAN Sermin;Sprechstunde;Gesetzlich versichert;94704;;13.06
+13.06.2026;Samstag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau AKYOL Hacire;1. Termin;Gesetzlich versichert;95554;;13.06
+13.06.2026;Samstag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Frau BARSTEIN Olga;1. Termin;Gesetzlich versichert;87843;;13.06
+13.06.2026;Samstag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Frau YUSIF Cala;1. Termin;Gesetzlich versichert;87343;;13.06
+15.06.2026;Montag;09:00;V. Flores;;Anstehend;;Frau KUVALDINA Svitlana;1. Termin;Gesetzlich versichert;86583;;15.06
+15.06.2026;Montag;14:00;Dr. Ercan Yilmaz;;Anstehend;;Frau WENZEL Elke;1. Termin;Gesetzlich versichert;92217;;15.06
+15.06.2026;Montag;14:10;Dr. Ercan Yilmaz;;Anstehend;;Frau OSSO Schaha;1. Termin;Gesetzlich versichert;85881;;15.06
+15.06.2026;Montag;14:20;Dr. Ercan Yilmaz;;Anstehend;;Herr NGOM Ousseynou;1. Termin;Gesetzlich versichert;78470;;15.06
+15.06.2026;Montag;14:30;Dr. Ercan Yilmaz;;Anstehend;;Herr AL ALI Serwan;1. Termin;Gesetzlich versichert;83528;;15.06
+15.06.2026;Montag;14:40;Dr. Ercan Yilmaz;;Anstehend;;Frau NAVKHOSH Kane Ali Khalaf;1. Termin;Gesetzlich versichert;95750;;15.06
+15.06.2026;Montag;14:50;Dr. Ercan Yilmaz;;Anstehend;;KARAOSMAN Mustafa;Sprechstunde;Gesetzlich versichert;;;15.06
+15.06.2026;Montag;15:00;Dr. Ercan Yilmaz;;Anstehend;;Frau DEVSIR Fatma;1. Termin;Gesetzlich versichert;89675;;15.06
+15.06.2026;Montag;15:10;Dr. Ercan Yilmaz;;Anstehend;;Herr ISMAEL Haji;1. Termin;Gesetzlich versichert;94658;;15.06
+15.06.2026;Montag;15:20;Dr. Ercan Yilmaz;;Anstehend;;Frau MEHMED Emine Ahmed;1. Termin;Gesetzlich versichert;94760;;15.06
+15.06.2026;Montag;15:30;Dr. Ercan Yilmaz;;Anstehend;;Frau KAYA Balahanim;Erstuntersuchung;Gesetzlich versichert;;;15.06
+15.06.2026;Montag;15:40;Dr. Ercan Yilmaz;;Anstehend;;Frau MAMEDOVA Suemrud;1. Termin;Gesetzlich versichert;89310;;15.06
+15.06.2026;Montag;15:50;Dr. Ercan Yilmaz;;Anstehend;;Frau KRAUSE Sina;Erstuntersuchung;Gesetzlich versichert;96083;;15.06
+15.06.2026;Montag;16:00;Dr. Ercan Yilmaz;;Anstehend;;Frau MERMERTAS Hayriye;Erstuntersuchung;Gesetzlich versichert;;;15.06
+15.06.2026;Montag;16:10;Dr. Ercan Yilmaz;;Anstehend;;Frau GUEL Ayfer;1. Termin;Gesetzlich versichert;70600;;15.06
+15.06.2026;Montag;16:20;Dr. Ercan Yilmaz;;Anstehend;;Herr GUEL Sueleyman;1. Termin;Gesetzlich versichert;95795;;15.06
+27.06.2026;Samstag;08:00;Dr. Ercan Yilmaz;;Anstehend;;Herr OEZTUERK Ahmet;Sprechstunde;Gesetzlich versichert;94699;;27.06
+27.06.2026;Samstag;09:00;Dr. Ercan Yilmaz;;Anstehend;;Frau HAASE Alicja;Sprechstunde;Gesetzlich versichert;93928;;27.06
+27.06.2026;Samstag;10:10;Dr. Ercan Yilmaz;;Anstehend;;Herr KHOLMADOB Dilshod;Erstuntersuchung;Gesetzlich versichert;;;27.06
+27.06.2026;Samstag;11:00;Dr. Ercan Yilmaz;;Anstehend;;Frau SIMSEK Karanfil;1. Termin;Gesetzlich versichert;95711;;27.06
+27.06.2026;Samstag;11:50;Dr. Ercan Yilmaz;;Anstehend;;EVCIL Perihan;Sprechstunde;Gesetzlich versichert;;;27.06
+03.07.2026;Freitag;10:00;V. Flores;;Anstehend;;Frau ERNST Olga;1. Termin;Gesetzlich versichert;71985;;03.07
+03.07.2026;Freitag;13:00;Dr. Ercan Yilmaz;;Anstehend;;Frau FLEMMING Sarah;Erstuntersuchung;Gesetzlich versichert;;;03.07
+03.07.2026;Freitag;13:10;Dr. Ercan Yilmaz;;Anstehend;;Frau ROYLA Beate;Sprechstunde;Gesetzlich versichert;73705;;03.07
+03.07.2026;Freitag;13:40;V. Flores;;Anstehend;;Frau LI Jin;Sprechstunde;Gesetzlich versichert;95495;;03.07

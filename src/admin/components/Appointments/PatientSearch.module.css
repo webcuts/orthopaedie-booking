@@ -1,0 +1,143 @@
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.inputRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  background: white;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #2674BB;
+  box-shadow: 0 0 0 3px rgba(38, 116, 187, 0.1);
+}
+
+.clearButton {
+  padding: 0 0.75rem;
+  background: #F3F4F6;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  color: #6B7280;
+  white-space: nowrap;
+}
+
+.clearButton:hover {
+  background: #E5E7EB;
+  color: #374151;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.result {
+  padding: 0.625rem 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid #F3F4F6;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.result:last-child {
+  border-bottom: none;
+}
+
+.result:hover {
+  background: #EFF6FF;
+}
+
+.resultName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1F2937;
+}
+
+.resultMeta {
+  font-size: 0.75rem;
+  color: #6B7280;
+}
+
+.doctolibBadge {
+  display: inline-block;
+  padding: 1px 6px;
+  background: #FEF3C7;
+  color: #92400E;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  margin-left: 0.375rem;
+}
+
+.loading {
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: #9CA3AF;
+}
+
+.noResults {
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: #9CA3AF;
+}
+
+.selectedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  background: #D1FAE5;
+  color: #065F46;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.selectedBadge svg {
+  flex-shrink: 0;
+}
+
+.doctolibHint {
+  margin-top: 0.375rem;
+  padding: 0.5rem 0.625rem;
+  background: #FEF3C7;
+  color: #92400E;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.375rem;
+}
+
+.doctolibHint svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}

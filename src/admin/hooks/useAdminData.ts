@@ -436,24 +436,41 @@ export function useAdminCreateBooking() {
     patientEmail?: string;
     patientPhone?: string;
     notes?: string;
+    existingPatientId?: string;
   }) => {
     setLoading(true);
     setError(null);
 
     try {
-      // 1. Create patient
-      const { data: patient, error: patientError } = await supabase
-        .from('patients')
-        .insert({
-          name: data.patientName,
-          email: data.patientEmail || null,
-          phone: data.patientPhone || null,
-          insurance_type_id: data.insuranceTypeId,
-        })
-        .select()
-        .single();
+      // 1. Use existing patient or create new
+      let patient: { id: string };
+      if (data.existingPatientId) {
+        patient = { id: data.existingPatientId };
+        // Optional: Update contact info if provided (e.g., MFA corrected Doctolib placeholder phone)
+        if (data.patientPhone || data.patientEmail) {
+          await supabase
+            .from('patients')
+            .update({
+              ...(data.patientPhone ? { phone: data.patientPhone } : {}),
+              ...(data.patientEmail ? { email: data.patientEmail } : {}),
+            })
+            .eq('id', data.existingPatientId);
+        }
+      } else {
+        const { data: newPatient, error: patientError } = await supabase
+          .from('patients')
+          .insert({
+            name: data.patientName,
+            email: data.patientEmail || null,
+            phone: data.patientPhone || null,
+            insurance_type_id: data.insuranceTypeId,
+          })
+          .select()
+          .single();
 
-      if (patientError) throw patientError;
+        if (patientError) throw patientError;
+        patient = newPatient;
+      }
 
       // 2. Create appointment (UNIQUE constraint prevents double-booking)
       const { data: appointment, error: appointmentError } = await supabase
@@ -1070,6 +1087,7 @@ export function useAdminCreateMfaBooking() {
     patientEmail?: string;
     patientPhone?: string;
     notes?: string;
+    existingPatientId?: string;
   }) => {
     setLoading(true);
     setError(null);
@@ -1083,19 +1101,34 @@ export function useAdminCreateMfaBooking() {
         throw new Error('Dieser MFA-Zeitslot ist bereits voll belegt.');
       }
 
-      // 2. Create patient
-      const { data: patient, error: patientError } = await supabase
-        .from('patients')
-        .insert({
-          name: data.patientName,
-          email: data.patientEmail || null,
-          phone: data.patientPhone || null,
-          insurance_type_id: data.insuranceTypeId,
-        })
-        .select()
-        .single();
+      // 2. Use existing patient or create new
+      let patient: { id: string };
+      if (data.existingPatientId) {
+        patient = { id: data.existingPatientId };
+        if (data.patientPhone || data.patientEmail) {
+          await supabase
+            .from('patients')
+            .update({
+              ...(data.patientPhone ? { phone: data.patientPhone } : {}),
+              ...(data.patientEmail ? { email: data.patientEmail } : {}),
+            })
+            .eq('id', data.existingPatientId);
+        }
+      } else {
+        const { data: newPatient, error: patientError } = await supabase
+          .from('patients')
+          .insert({
+            name: data.patientName,
+            email: data.patientEmail || null,
+            phone: data.patientPhone || null,
+            insurance_type_id: data.insuranceTypeId,
+          })
+          .select()
+          .single();
 
-      if (patientError) throw patientError;
+        if (patientError) throw patientError;
+        patient = newPatient;
+      }
 
       // 3. Create MFA appointment
       const { data: appointment, error: appointmentError } = await supabase
