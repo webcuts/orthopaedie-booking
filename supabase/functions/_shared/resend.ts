@@ -13,8 +13,7 @@ export interface SendResult {
   error?: string;
 }
 
-const FROM_EMAIL = 'Orthopädie Königstraße <onboarding@resend.dev>';
-// Für Produktion: 'Orthopädie Königstraße <termine@orthopaedie-koenigstrasse.de>'
+const FROM_EMAIL = 'Orthopädie Königstraße <termine@orthopaedie-koenigstrasse.de>';
 
 export async function sendEmail(options: EmailOptions): Promise<SendResult> {
   const apiKey = Deno.env.get('RESEND_API_KEY');
