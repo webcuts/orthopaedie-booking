@@ -242,3 +242,55 @@ export function getDayName(dayOfWeek: number): string {
   const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
   return days[dayOfWeek] || '';
 }
+
+// =====================================================
+// Dienstplan (Staff Scheduling)
+// =====================================================
+
+export type ShiftType = 'work' | 'vacation' | 'sick' | 'off';
+export type ScheduleStatus = 'draft' | 'published';
+
+export interface ShiftTemplate {
+  id: string;
+  name: string;
+  start_time: string;
+  end_time: string | null;
+  ends_with_closing: boolean;
+  color: string;
+  sort_order: number;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface WeeklySchedule {
+  id: string;
+  week_start_date: string;
+  status: ScheduleStatus;
+  team_note: string | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Shift {
+  id: string;
+  weekly_schedule_id: string;
+  staff_member_id: string;
+  shift_date: string;
+  start_time: string | null;
+  end_time: string | null;
+  ends_with_closing: boolean;
+  shift_type: ShiftType;
+  note: string | null;
+  template_id: string | null;
+  color: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StaffMember {
+  id: string;
+  display_name: string;
+  role: 'admin' | 'mfa' | 'arzt';
+  is_active: boolean;
+}
