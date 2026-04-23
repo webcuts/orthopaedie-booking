@@ -32,6 +32,48 @@ function formatLocalDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+/**
+ * Findet bestehenden Patienten via Name+Telefon oder legt neuen an.
+ * Bei Fund: aktualisiert E-Mail falls der Patient eine neue angibt.
+ * So entstehen keine Duplikate, wenn derselbe Patient mehrfach über die Website bucht.
+ */
+async function findOrCreatePatient(patientData: PatientInput): Promise<Patient> {
+  const name = patientData.name.trim();
+  const phone = patientData.phone?.trim() || null;
+  const email = patientData.email?.trim() || null;
+
+  if (phone) {
+    const { data: existing } = await supabase
+      .from('patients')
+      .select('*')
+      .eq('name', name)
+      .eq('phone', phone)
+      .maybeSingle();
+
+    if (existing) {
+      // E-Mail nachtragen, falls neu angegeben und vorher leer oder anders
+      if (email && email !== existing.email) {
+        const { data: updated } = await supabase
+          .from('patients')
+          .update({ email })
+          .eq('id', existing.id)
+          .select()
+          .single();
+        return updated || existing;
+      }
+      return existing;
+    }
+  }
+
+  const { data: newPatient, error } = await supabase
+    .from('patients')
+    .insert(patientData)
+    .select()
+    .single();
+  if (error || !newPatient) throw error || new Error('Patient konnte nicht angelegt werden');
+  return newPatient;
+}
+
 // =====================================================
 // Basis-Hooks
 // =====================================================
@@ -741,14 +783,8 @@ export function useCreateMfaBooking() {
         throw new Error('Dieser Zeitslot ist leider nicht mehr verfügbar. Bitte wählen Sie einen anderen.');
       }
 
-      // 2. Patient anlegen
-      const { data: patient, error: patientError } = await supabase
-        .from('patients')
-        .insert(bookingData.patientData)
-        .select()
-        .single();
-
-      if (patientError) throw patientError;
+      // 2. Patient finden oder anlegen (Dedup via Name+Telefon)
+      const patient = await findOrCreatePatient(bookingData.patientData);
 
       // 3. MFA-Appointment anlegen
       const { data: appointment, error: appointmentError } = await supabase
@@ -842,14 +878,8 @@ export function useCreateBooking() {
         throw new Error('Sie haben bereits mehrere Termine gebucht. Bitte kontaktieren Sie die Praxis telefonisch.');
       }
 
-      // 1. Create patient
-      const { data: patient, error: patientError } = await supabase
-        .from('patients')
-        .insert(bookingData.patientData)
-        .select()
-        .single();
-
-      if (patientError) throw patientError;
+      // 1. Patient finden oder anlegen (Dedup via Name+Telefon)
+      const patient = await findOrCreatePatient(bookingData.patientData);
 
       // 2. Create appointment
       // Verfügbarkeit wird durch UNIQUE Index (time_slot_id, practitioner_id)
