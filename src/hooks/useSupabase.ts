@@ -34,8 +34,13 @@ function formatLocalDate(date: Date): string {
 
 /**
  * Findet bestehenden Patienten via Name+Telefon oder legt neuen an.
- * Bei Fund: aktualisiert E-Mail falls der Patient eine neue angibt.
- * So entstehen keine Duplikate, wenn derselbe Patient mehrfach über die Website bucht.
+ *
+ * Defensive Dedup-Regeln:
+ * - Match nur bei exakt gleichem Name + Telefon
+ * - E-Mail wird nur nachgetragen, falls sie vorher leer war
+ * - Bei E-Mail-KONFLIKT (alt gesetzt, neu abweichend) wird ein NEUER Patient
+ *   angelegt — könnten zwei verschiedene Personen sein. Die MFA kann den
+ *   Konflikt später in der Patientensuche sehen und manuell zusammenführen.
  */
 async function findOrCreatePatient(patientData: PatientInput): Promise<Patient> {
   const name = patientData.name.trim();
@@ -51,8 +56,22 @@ async function findOrCreatePatient(patientData: PatientInput): Promise<Patient> 
       .maybeSingle();
 
     if (existing) {
-      // E-Mail nachtragen, falls neu angegeben und vorher leer oder anders
-      if (email && email !== existing.email) {
+      const oldEmail = existing.email?.trim() || null;
+      const conflict = !!oldEmail && !!email && oldEmail.toLowerCase() !== email.toLowerCase();
+
+      if (conflict) {
+        // Sicherheitshalber neuen Patienten anlegen statt fremde Daten zu überschreiben
+        const { data: newPatient, error } = await supabase
+          .from('patients')
+          .insert(patientData)
+          .select()
+          .single();
+        if (error || !newPatient) throw error || new Error('Patient konnte nicht angelegt werden');
+        return newPatient;
+      }
+
+      // E-Mail nur nachtragen falls vorher leer
+      if (!oldEmail && email) {
         const { data: updated } = await supabase
           .from('patients')
           .update({ email })
