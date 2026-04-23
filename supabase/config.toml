@@ -1,0 +1,26 @@
+project_id = "orthopaedie-booking"
+
+# Edge Functions, die anonym vom Buchungswidget aufgerufen werden
+# müssen ohne JWT-Verifizierung erreichbar sein (Public Booking Flow)
+[functions.send-booking-confirmation]
+verify_jwt = false
+
+[functions.send-practice-notification]
+verify_jwt = false
+
+[functions.send-reschedule-notification]
+verify_jwt = false
+
+[functions.send-cancellation-notification]
+verify_jwt = false
+
+[functions.cancel-appointment]
+verify_jwt = false
+
+[functions.generate-ics]
+verify_jwt = false
+
+# Intern / mit Authentifizierung:
+# - manage-staff (Admin)
+# - generate-time-slots (Cron/Admin)
+# - process-email-reminders (Cron)
