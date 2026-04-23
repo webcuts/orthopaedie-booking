@@ -558,13 +558,13 @@ export function useNextFreeSlot(practitionerId?: string | null, insuranceTypeId?
         // Verfügbare Slots ab heute, sortiert nach Datum + Uhrzeit
         const { data: slots, error } = await supabase
           .from('time_slots')
-          .select('date, start_time')
+          .select('id, date, start_time')
           .eq('is_available', true)
           .gte('date', today)
           .lte('date', maxDateStr)
           .order('date', { ascending: true })
           .order('start_time', { ascending: true })
-          .limit(100);
+          .limit(200);
 
         if (error || !slots?.length) {
           setDate(null);
@@ -572,12 +572,31 @@ export function useNextFreeSlot(practitionerId?: string | null, insuranceTypeId?
           return;
         }
 
-        // Finde den ersten Slot, der nicht in der Vergangenheit liegt
-        // und der innerhalb der buchbaren Schedule-Fenster liegt
+        // Termine des Behandlers im Zeitraum laden,
+        // damit bereits gebuchte Slots dieses Behandlers ausgeschlossen werden.
+        // time_slots.is_available ist global, aber ein Slot kann für einen Behandler
+        // belegt und für andere frei sein (UNIQUE time_slot_id+practitioner_id auf appointments).
+        let bookedSlotIds = new Set<string>();
+        if (practitionerId) {
+          const slotIds = slots.map(s => s.id);
+          const { data: booked } = await supabase
+            .from('appointments')
+            .select('time_slot_id')
+            .eq('practitioner_id', practitionerId)
+            .neq('status', 'cancelled')
+            .in('time_slot_id', slotIds);
+          bookedSlotIds = new Set((booked || []).map(b => b.time_slot_id));
+        }
+
+        // Finde den ersten Slot, der nicht in der Vergangenheit liegt,
+        // innerhalb der buchbaren Schedule-Fenster liegt
+        // und nicht bereits für diesen Behandler gebucht ist
         for (const slot of slots) {
           if (slot.date === today && slot.start_time.slice(0, 5) <= cutoffTime) {
             continue;
           }
+
+          if (bookedSlotIds.has(slot.id)) continue;
 
           // Practitioner-Schedule Filter
           if (schedules.length > 0) {
