@@ -186,6 +186,123 @@ function ShiftBlock({ shift, onClick }: { shift: Shift; onClick: (e: React.Mouse
 }
 
 // =====================================================
+// Create Modal (free time input, no template)
+// =====================================================
+interface CreateShiftProps {
+  staffId: string;
+  staffName: string;
+  date: string;
+  onSave: (input: {
+    start_time: string | null;
+    end_time: string | null;
+    ends_with_closing: boolean;
+    shift_type: ShiftType;
+    note: string | null;
+  }) => Promise<void>;
+  onClose: () => void;
+}
+function CreateShiftDialog({ staffName, date, onSave, onClose }: CreateShiftProps) {
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [endsWithClosing, setEndsWithClosing] = useState(false);
+  const [shiftType, setShiftType] = useState<ShiftType>('work');
+  const [note, setNote] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const dateLabel = new Date(date + 'T00:00:00').toLocaleDateString('de-DE', {
+    weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
+  });
+
+  const handleSave = async () => {
+    if (shiftType === 'work' && !startTime) return;
+    if (shiftType === 'work' && !endsWithClosing && !endTime) return;
+    setSaving(true);
+    try {
+      await onSave({
+        start_time: shiftType === 'work' ? `${startTime}:00` : null,
+        end_time: shiftType === 'work' && !endsWithClosing ? `${endTime}:00` : null,
+        ends_with_closing: shiftType === 'work' ? endsWithClosing : false,
+        shift_type: shiftType,
+        note: note.trim() || null,
+      });
+      onClose();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
+          <h3 className={styles.modalTitle}>Neue Schicht für {staffName}</h3>
+          <button className={styles.modalClose} onClick={onClose}>×</button>
+        </div>
+        <div className={styles.modalBody}>
+          <div style={{ fontSize: '0.8125rem', color: '#6B7280', marginBottom: '0.25rem' }}>
+            {dateLabel}
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Typ</label>
+            <select
+              className={styles.select}
+              value={shiftType}
+              onChange={(e) => setShiftType(e.target.value as ShiftType)}
+            >
+              <option value="work">Arbeit</option>
+              <option value="vacation">Urlaub</option>
+              <option value="sick">Krank</option>
+              <option value="off">Frei</option>
+            </select>
+          </div>
+
+          {shiftType === 'work' && (
+            <>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Von</label>
+                  <input type="time" className={styles.input} value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Bis</label>
+                  <input
+                    type="time"
+                    className={styles.input}
+                    value={endsWithClosing ? '' : endTime}
+                    disabled={endsWithClosing}
+                    onChange={(e) => setEndTime(e.target.value)}
+                  />
+                </div>
+              </div>
+              <label className={styles.checkboxRow}>
+                <input type="checkbox" checked={endsWithClosing} onChange={(e) => setEndsWithClosing(e.target.checked)} />
+                bis Praxisende
+              </label>
+            </>
+          )}
+
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Notiz (optional)</label>
+            <input type="text" className={styles.input} value={note} onChange={(e) => setNote(e.target.value)} placeholder="z.B. Rezeption, Bestellungen" />
+          </div>
+        </div>
+        <div className={styles.modalFooter}>
+          <button className={styles.btn} onClick={onClose} disabled={saving}>Abbrechen</button>
+          <button
+            className={`${styles.btn} ${styles.btnPrimary}`}
+            onClick={handleSave}
+            disabled={saving || (shiftType === 'work' && (!startTime || (!endsWithClosing && !endTime)))}
+          >
+            {saving ? 'Speichern...' : 'Schicht anlegen'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// =====================================================
 // Edit Modal
 // =====================================================
 interface ShiftEditorProps {
@@ -299,6 +416,7 @@ function AdminDienstplan() {
   const { schedule, shifts, refetch } = useWeeklySchedule(weekStartStr);
 
   const [editShift, setEditShift] = useState<Shift | null>(null);
+  const [creatingShift, setCreatingShift] = useState<{ staffId: string; staffName: string; date: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [teamNoteValue, setTeamNoteValue] = useState('');
 
@@ -468,7 +586,11 @@ function AdminDienstplan() {
                         staffId={sm.id}
                         date={d}
                         shifts={cellShifts}
-                        onCellClick={() => { /* click handled via DnD drop */ }}
+                        onCellClick={() => setCreatingShift({
+                          staffId: sm.id,
+                          staffName: sm.display_name,
+                          date: formatDate(d),
+                        })}
                         onShiftClick={(s) => setEditShift(s)}
                       />
                     );
@@ -504,6 +626,25 @@ function AdminDienstplan() {
               await refetch();
             }}
             onClose={() => setEditShift(null)}
+          />
+        )}
+
+        {creatingShift && (
+          <CreateShiftDialog
+            staffId={creatingShift.staffId}
+            staffName={creatingShift.staffName}
+            date={creatingShift.date}
+            onSave={async (input) => {
+              const sched = schedule || await ensureScheduleForWeek(weekStartStr);
+              await createShift({
+                weekly_schedule_id: sched.id,
+                staff_member_id: creatingShift.staffId,
+                shift_date: creatingShift.date,
+                ...input,
+              });
+              await refetch();
+            }}
+            onClose={() => setCreatingShift(null)}
           />
         )}
       </div>
