@@ -456,7 +456,34 @@ export function useAvailableDates(month: Date, practitionerId: string | null = n
 
         if (error) throw error;
 
-        setData((data || []).map((row: { date: string }) => row.date));
+        let dates = (data || []).map((row: { date: string }) => row.date);
+
+        // Schedule-Filter: Wenn Behandler practitioner_schedules hat, nur Daten
+        // zeigen, an denen mindestens ein bookable Schedule für den Wochentag gilt.
+        // Behandler ohne Schedules (z.B. Mohammed) bleiben uneingeschränkt.
+        if (practitionerId) {
+          const { data: schedules } = await supabase
+            .from('practitioner_schedules')
+            .select('day_of_week, is_bookable, valid_from, valid_until')
+            .eq('practitioner_id', practitionerId)
+            .lte('valid_from', endDate)
+            .or(`valid_until.is.null,valid_until.gte.${startDate}`);
+
+          if (schedules && schedules.length > 0) {
+            dates = dates.filter((dateStr: string) => {
+              const d = new Date(dateStr + 'T00:00:00');
+              const dow = d.getDay();
+              return schedules.some(s =>
+                s.day_of_week === dow
+                && s.is_bookable === true
+                && s.valid_from <= dateStr
+                && (s.valid_until === null || s.valid_until >= dateStr)
+              );
+            });
+          }
+        }
+
+        setData(dates);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Fehler beim Laden der verfügbaren Tage');
       } finally {
@@ -496,7 +523,42 @@ export function useTimeSlots(date: string | null, practitionerId: string | null 
           });
 
         if (error) throw error;
-        setData(data || []);
+
+        let slots: TimeSlot[] = data || [];
+
+        // Schedule-Filter: Wenn Behandler practitioner_schedules für diesen Tag hat,
+        // nur Slots innerhalb is_bookable=true Fenster behalten.
+        if (practitionerId && date) {
+          const { data: schedules } = await supabase
+            .from('practitioner_schedules')
+            .select('day_of_week, start_time, end_time, is_bookable, valid_from, valid_until')
+            .eq('practitioner_id', practitionerId)
+            .lte('valid_from', date)
+            .or(`valid_until.is.null,valid_until.gte.${date}`);
+
+          if (schedules && schedules.length > 0) {
+            const d = new Date(date + 'T00:00:00');
+            const dow = d.getDay();
+            const matching = schedules.filter(s =>
+              s.day_of_week === dow
+              && s.valid_from <= date
+              && (s.valid_until === null || s.valid_until >= date)
+            );
+
+            if (matching.length > 0) {
+              const bookableWindows = matching
+                .filter(s => s.is_bookable === true)
+                .map(s => ({ start: s.start_time.slice(0, 5), end: s.end_time.slice(0, 5) }));
+
+              slots = slots.filter(slot => {
+                const t = slot.start_time.slice(0, 5);
+                return bookableWindows.some(w => t >= w.start && t < w.end);
+              });
+            }
+          }
+        }
+
+        setData(slots);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Fehler beim Laden der Zeitslots');
       } finally {
