@@ -44,4 +44,4 @@ Folgende Leistungen müssen auf der Website vorhanden sein (je eine Unterseite m
 
 ### 5. Jede Leistungsseite
 Prüfen, dass jede Unterseite einen "Termin buchen"-Button hat, der zum Booking-Widget führt:
-`https://orthopaedie-booking.vercel.app`
+`https://dr-ercan.vercel.app`

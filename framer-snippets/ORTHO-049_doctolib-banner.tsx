@@ -64,7 +64,7 @@ export default function DoctolibBanner({ borderRadius = 12 }: { borderRadius?: n
                 </p>
 
                 <a
-                    href="https://orthopaedie-booking.vercel.app"
+                    href="https://dr-ercan.vercel.app"
                     style={{
                         display: "inline-flex",
                         alignItems: "center",

@@ -2,7 +2,7 @@
  * ORTHO-036: Karriere Pop-up für Framer Website
  *
  * Einbettung in Framer: Settings → Custom Code → End of <body> tag
- * <script src="https://orthopaedie-booking.vercel.app/karriere-popup.js"></script>
+ * <script src="https://dr-ercan.vercel.app/karriere-popup.js"></script>
  */
 (function () {
   'use strict';

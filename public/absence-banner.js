@@ -2,7 +2,7 @@
  * ORTHO-034: Abwesenheits-Banner für Framer Website
  *
  * Einbettung in Framer: Settings → Custom Code → End of <body> tag
- * <script src="https://orthopaedie-booking.vercel.app/absence-banner.js"></script>
+ * <script src="https://dr-ercan.vercel.app/absence-banner.js"></script>
  *
  * Oder den gesamten Code als Inline-Script einfügen.
  */

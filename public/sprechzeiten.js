@@ -4,7 +4,7 @@
  * Einbettung in Framer:
  * 1. Container auf der Seite platzieren: <div id="sprechzeiten"></div>
  * 2. Settings → Custom Code → End of <body> tag:
- *    <script src="https://orthopaedie-booking.vercel.app/sprechzeiten.js"></script>
+ *    <script src="https://dr-ercan.vercel.app/sprechzeiten.js"></script>
  */
 (function () {
   'use strict';
