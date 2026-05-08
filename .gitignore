@@ -36,3 +36,9 @@ npm-debug.log*
 supabase/.temp/
 .vercel
 .env*.local
+
+# Doctolib-Imports enthalten Patienten-PII (Namen, Geburtsdaten, Telefon, E-Mail, Adressen)
+# NIEMALS einchecken!
+scripts/doctolib-mai-aug/
+scripts/termine.csv
+scripts/*.csv
