@@ -4,8 +4,10 @@ import { ChangePasswordModal } from './ChangePasswordModal';
 import styles from './Header.module.css';
 
 export function Header() {
-  const { user, logout } = useAuth();
+  const { user, logout, mustChangePassword, clearMustChangePassword } = useAuth();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  const modalOpen = showPasswordModal || mustChangePassword;
 
   const today = new Date().toLocaleDateString('de-DE', {
     weekday: 'long',
@@ -57,10 +59,14 @@ export function Header() {
         </button>
       </div>
 
-      {showPasswordModal && user?.email && (
+      {modalOpen && user?.email && (
         <ChangePasswordModal
           userEmail={user.email}
-          onClose={() => setShowPasswordModal(false)}
+          forced={mustChangePassword}
+          onClose={() => {
+            setShowPasswordModal(false);
+            clearMustChangePassword();
+          }}
         />
       )}
     </header>

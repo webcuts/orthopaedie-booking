@@ -5,11 +5,12 @@ import styles from './ChangePasswordModal.module.css';
 interface ChangePasswordModalProps {
   userEmail: string;
   onClose: () => void;
+  forced?: boolean;
 }
 
 const MIN_LENGTH = 8;
 
-export function ChangePasswordModal({ userEmail, onClose }: ChangePasswordModalProps) {
+export function ChangePasswordModal({ userEmail, onClose, forced = false }: ChangePasswordModalProps) {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -54,6 +55,9 @@ export function ChangePasswordModal({ userEmail, onClose }: ChangePasswordModalP
         return;
       }
 
+      // 3. Markieren, dass Passwort vom User selbst gesetzt wurde (resettet must_change + counter)
+      await supabase.rpc('mark_password_changed');
+
       setSuccess(true);
       // Nach 2 Sekunden schließen
       setTimeout(() => onClose(), 2000);
@@ -86,19 +90,26 @@ export function ChangePasswordModal({ userEmail, onClose }: ChangePasswordModalP
   }
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div className={styles.overlay} onClick={forced ? undefined : onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Passwort ändern</h2>
-          <button onClick={onClose} className={styles.closeButton} aria-label="Schließen">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
+          <h2 className={styles.title}>{forced ? 'Bitte legen Sie ein eigenes Passwort fest' : 'Passwort ändern'}</h2>
+          {!forced && (
+            <button onClick={onClose} className={styles.closeButton} aria-label="Schließen">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          )}
         </div>
 
         <div className={styles.content}>
+          {forced && (
+            <div className={styles.hint} style={{ marginBottom: 12 }}>
+              Aus Sicherheitsgründen muss das vom System gesetzte Passwort durch ein eigenes ersetzt werden, bevor Sie weiterarbeiten können.
+            </div>
+          )}
           {generalError && <div className={styles.error}>{generalError}</div>}
 
           <div className={styles.formGroup}>
@@ -152,9 +163,11 @@ export function ChangePasswordModal({ userEmail, onClose }: ChangePasswordModalP
         </div>
 
         <div className={styles.footer}>
-          <button className={styles.cancelButton} onClick={onClose} disabled={loading}>
-            Abbrechen
-          </button>
+          {!forced && (
+            <button className={styles.cancelButton} onClick={onClose} disabled={loading}>
+              Abbrechen
+            </button>
+          )}
           <button className={styles.submitButton} onClick={handleSubmit} disabled={loading}>
             {loading ? 'Wird geändert...' : 'Passwort ändern'}
           </button>

@@ -11,6 +11,7 @@ interface AuthState {
   role: AdminRole | null;
   roleLoading: boolean;
   practitionerId: string | null;
+  mustChangePassword: boolean;
 }
 
 interface LoginCredentials {
@@ -24,22 +25,24 @@ interface UseAuthReturn extends AuthState {
   isAuthenticated: boolean;
   isAdmin: boolean;
   isDoctor: boolean;
+  clearMustChangePassword: () => void;
 }
 
 function loadRole(userId: string, setState: React.Dispatch<React.SetStateAction<AuthState>>) {
   setState(prev => ({ ...prev, roleLoading: true }));
   supabase
     .from('admin_profiles')
-    .select('role, is_active, practitioner_id')
+    .select('role, is_active, practitioner_id, must_change_password, login_count')
     .eq('id', userId)
     .single()
     .then(({ data }) => {
       const role: AdminRole = data?.is_active ? (data.role as AdminRole) : 'admin';
       const practitionerId = data?.practitioner_id || null;
-      setState(prev => ({ ...prev, role, practitionerId, roleLoading: false }));
+      const mustChange = !!data?.must_change_password || (data?.login_count ?? 0) >= 3;
+      setState(prev => ({ ...prev, role, practitionerId, mustChangePassword: mustChange, roleLoading: false }));
     })
     .then(null, () => {
-      setState(prev => ({ ...prev, role: 'admin', practitionerId: null, roleLoading: false }));
+      setState(prev => ({ ...prev, role: 'admin', practitionerId: null, mustChangePassword: false, roleLoading: false }));
     });
 }
 
@@ -51,6 +54,7 @@ export function useAuth(): UseAuthReturn {
     role: null,
     roleLoading: false,
     practitionerId: null,
+    mustChangePassword: false,
   });
 
   useEffect(() => {
@@ -62,6 +66,7 @@ export function useAuth(): UseAuthReturn {
         role: null,
         roleLoading: !!session?.user,
         practitionerId: null,
+        mustChangePassword: false,
       });
 
       if (session?.user) {
@@ -78,6 +83,7 @@ export function useAuth(): UseAuthReturn {
           role: null,
           roleLoading: !!session?.user,
           practitionerId: null,
+          mustChangePassword: false,
         });
 
         if (session?.user) {
@@ -99,6 +105,13 @@ export function useAuth(): UseAuthReturn {
       return { error: 'E-Mail oder Passwort falsch' };
     }
 
+    // Counter inkrementieren + must_change-Status holen
+    const { data } = await supabase.rpc('record_login');
+    const row = Array.isArray(data) ? data[0] : data;
+    if (row?.must_change_password) {
+      setState(prev => ({ ...prev, mustChangePassword: true }));
+    }
+
     return { error: null };
   }, []);
 
@@ -106,10 +119,15 @@ export function useAuth(): UseAuthReturn {
     await supabase.auth.signOut();
   }, []);
 
+  const clearMustChangePassword = useCallback(() => {
+    setState(prev => ({ ...prev, mustChangePassword: false }));
+  }, []);
+
   return {
     ...state,
     login,
     logout,
+    clearMustChangePassword,
     isAuthenticated: !!state.session,
     isAdmin: state.role === 'admin',
     isDoctor: state.role === 'arzt',
