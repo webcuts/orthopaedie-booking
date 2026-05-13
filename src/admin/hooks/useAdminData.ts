@@ -869,12 +869,11 @@ export function useAnalytics(practitionerFilter?: string | null) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [practitionerFilter]);
 
   useEffect(() => {
     fetchAnalytics();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchAnalytics, practitionerFilter]);
+  }, [fetchAnalytics]);
 
   return { data, loading, error, refetch: fetchAnalytics };
 }

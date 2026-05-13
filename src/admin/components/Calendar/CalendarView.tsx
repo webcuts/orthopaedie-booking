@@ -27,9 +27,13 @@ export function CalendarView({ onAppointmentClick, onNewAppointment, lockedPract
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<ViewType>('day');
   const [practitioners, setPractitioners] = useState<Practitioner[]>([]);
-  const [filterPractitionerId, setFilterPractitionerId] = useState<string>(lockedPractitionerId ?? '');
-  const [filterType, setFilterType] = useState<FilterType>(lockedPractitionerId ? 'doctor' : 'all');
+  const [filterPractitionerId, setFilterPractitionerId] = useState<string>('');
+  const [filterType, setFilterType] = useState<FilterType>('all');
   const isLocked = !!lockedPractitionerId;
+
+  // Wenn Arzt eingeloggt: Filter robust auf eigene ID locken — egal wann die Prop ankommt
+  const effectivePractitionerId = lockedPractitionerId ?? filterPractitionerId;
+  const effectiveFilterType: FilterType = lockedPractitionerId ? 'doctor' : filterType;
 
   const { appointments: doctorAppointments, loading: doctorLoading, error: doctorError, refetch: refetchDoctor } = useAppointments(currentDate, view);
   const { appointments: mfaAppointments, loading: mfaLoading, error: mfaError, refetch: refetchMfa } = useMfaAppointments(currentDate, view);
@@ -59,22 +63,26 @@ export function CalendarView({ onAppointmentClick, onNewAppointment, lockedPract
   const filteredAppointments = useMemo(() => {
     let combined: AppointmentWithDetails[] = [];
 
-    if (filterType === 'all' || filterType === 'doctor') {
+    if (effectiveFilterType === 'all' || effectiveFilterType === 'doctor') {
       combined = [...doctorAppointments.map(a => ({ ...a, bookingType: 'doctor' as const }))];
     }
-    if (filterType === 'all' || filterType === 'mfa') {
+    if (effectiveFilterType === 'all' || effectiveFilterType === 'mfa') {
       combined = [...combined, ...mfaAppointments];
     }
 
-    // Practitioner filter only applies to doctor appointments
-    if (filterPractitionerId) {
+    // Bei eingeloggtem Arzt: ausschließlich eigene Termine, MFA-Termine nicht zeigen
+    if (lockedPractitionerId) {
       combined = combined.filter(apt =>
-        apt.bookingType === 'mfa' || apt.practitioner_id === filterPractitionerId
+        apt.bookingType !== 'mfa' && apt.practitioner_id === lockedPractitionerId
+      );
+    } else if (effectivePractitionerId) {
+      combined = combined.filter(apt =>
+        apt.bookingType === 'mfa' || apt.practitioner_id === effectivePractitionerId
       );
     }
 
     return combined;
-  }, [doctorAppointments, mfaAppointments, filterPractitionerId, filterType]);
+  }, [doctorAppointments, mfaAppointments, effectivePractitionerId, effectiveFilterType, lockedPractitionerId]);
 
   const navigateDate = (direction: 'prev' | 'next' | 'today') => {
     if (direction === 'today') {

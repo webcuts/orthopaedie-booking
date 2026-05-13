@@ -5,13 +5,18 @@ import { SystemStatus } from '../components/Dashboard/SystemStatus';
 import { type AppointmentWithDetails, useAuth } from '../hooks';
 
 export function DashboardPage() {
-  const { isDoctor, practitionerId, isAdmin } = useAuth();
+  const { isDoctor, practitionerId, isAdmin, roleLoading, loading } = useAuth();
   const lockedPractitionerId = isDoctor ? practitionerId : null;
 
   const [selectedAppointment, setSelectedAppointment] = useState<AppointmentWithDetails | null>(null);
   const [showNewAppointment, setShowNewAppointment] = useState(false);
   const [rescheduleAppointment, setRescheduleAppointment] = useState<AppointmentWithDetails | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  // Erst rendern wenn Auth + Rolle geladen sind, damit lockedPractitionerId korrekt durchschlägt
+  if (loading || roleLoading) {
+    return <div style={{ padding: '2rem', color: '#6B7280' }}>Lade...</div>;
+  }
 
   const handleAppointmentClick = useCallback((appointment: AppointmentWithDetails) => {
     setSelectedAppointment(appointment);
