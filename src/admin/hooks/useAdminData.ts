@@ -829,7 +829,9 @@ export function useAnalytics(practitionerFilter?: string | null) {
       // Behandler-Auslastung berechnen (schedule-basiert: theoretische Slots aus Schedules)
       const practitionerUtilization: { name: string; percentage: number }[] = [];
 
-      // Helper: berechnet theoretische Slot-Anzahl für eine Liste von Schedules in dieser Woche
+      // Helper: berechnet theoretische Slot-Anzahl für eine Liste von Schedules in dieser Woche.
+      // Wichtig: Überlappende Schedule-Einträge pro Tag werden gemerged, damit Doppelzählung
+      // vermieden wird (z.B. Fr 07:30-12:30 + Fr 07:45-16:00 → effektiv 07:30-16:00).
       const calcTheoreticalSlots = (schedules: Array<{
         day_of_week: number;
         start_time: string;
@@ -844,14 +846,35 @@ export function useAnalytics(practitionerFilter?: string | null) {
           day.setDate(monday.getDate() + i);
           const dayStr = day.toISOString().split('T')[0];
           const isoDow = ((day.getDay() + 6) % 7) + 1; // 1=Mo..7=So
+
+          // Sammle Intervalle [startMin, endMin] des Tages
+          const intervals: Array<[number, number]> = [];
           for (const s of schedules) {
             if (s.day_of_week !== isoDow) continue;
             if (s.valid_from && dayStr < s.valid_from) continue;
             if (s.valid_until && dayStr > s.valid_until) continue;
             const [sh, sm] = s.start_time.split(':').map(Number);
             const [eh, em] = s.end_time.split(':').map(Number);
-            total += Math.max(0, ((eh * 60 + em) - (sh * 60 + sm)) / 10);
+            const startMin = sh * 60 + sm;
+            const endMin = eh * 60 + em;
+            if (endMin > startMin) intervals.push([startMin, endMin]);
           }
+          if (intervals.length === 0) continue;
+
+          // Merge überlappende / aneinander-grenzende Intervalle
+          intervals.sort((a, b) => a[0] - b[0]);
+          const merged: Array<[number, number]> = [intervals[0]];
+          for (let k = 1; k < intervals.length; k++) {
+            const prev = merged[merged.length - 1];
+            const cur = intervals[k];
+            if (cur[0] <= prev[1]) {
+              prev[1] = Math.max(prev[1], cur[1]);
+            } else {
+              merged.push(cur);
+            }
+          }
+
+          for (const [s, e] of merged) total += (e - s) / 10;
         }
         return total;
       };
