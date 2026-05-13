@@ -13,11 +13,6 @@ export function DashboardPage() {
   const [rescheduleAppointment, setRescheduleAppointment] = useState<AppointmentWithDetails | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Erst rendern wenn Auth + Rolle geladen sind, damit lockedPractitionerId korrekt durchschlägt
-  if (loading || roleLoading) {
-    return <div style={{ padding: '2rem', color: '#6B7280' }}>Lade...</div>;
-  }
-
   const handleAppointmentClick = useCallback((appointment: AppointmentWithDetails) => {
     setSelectedAppointment(appointment);
   }, []);
@@ -51,6 +46,12 @@ export function DashboardPage() {
     setRescheduleAppointment(null);
     setRefreshKey((k) => k + 1);
   }, []);
+
+  // Erst rendern wenn Auth + Rolle geladen sind, damit lockedPractitionerId korrekt durchschlägt
+  // (muss NACH allen Hook-Aufrufen kommen — Rules of Hooks)
+  if (loading || roleLoading) {
+    return <div style={{ padding: '2rem', color: '#6B7280' }}>Lade...</div>;
+  }
 
   return (
     <>
