@@ -847,7 +847,8 @@ export function useAnalytics(practitionerFilter?: string | null) {
           const dayStr = day.toISOString().split('T')[0];
           const isoDow = ((day.getDay() + 6) % 7) + 1; // 1=Mo..7=So
 
-          // Sammle Intervalle [startMin, endMin] des Tages
+          // Sammle Intervalle [startMin, endMin] des Tages.
+          // Wichtig: Online-Buchung erst ab 09:00 → Schedule-Start bei 09:00 cappen.
           const intervals: Array<[number, number]> = [];
           for (const s of schedules) {
             if (s.day_of_week !== isoDow) continue;
@@ -855,7 +856,7 @@ export function useAnalytics(practitionerFilter?: string | null) {
             if (s.valid_until && dayStr > s.valid_until) continue;
             const [sh, sm] = s.start_time.split(':').map(Number);
             const [eh, em] = s.end_time.split(':').map(Number);
-            const startMin = sh * 60 + sm;
+            const startMin = Math.max(sh * 60 + sm, 9 * 60); // ab 09:00
             const endMin = eh * 60 + em;
             if (endMin > startMin) intervals.push([startMin, endMin]);
           }
