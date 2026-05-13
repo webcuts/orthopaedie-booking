@@ -141,7 +141,7 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
       <div className={styles.address}>
         <h3>{t('success.addressTitle')}</h3>
         <p>Orthopädie Königstraße</p>
-        <p>Königstraße 51</p>
+        <p>Berliner Allee 14</p>
         <p>30175 Hannover</p>
       </div>
 

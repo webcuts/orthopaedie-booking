@@ -26,7 +26,7 @@ const SITE_URL = Deno.env.get('SITE_URL') || 'https://orthopaedie-koenigstrasse.
 // Praxis-Informationen (bleiben immer Deutsch)
 const PRACTICE_INFO = {
   name: 'Orthopädie Königstraße',
-  address: 'Königstraße 51',
+  address: 'Berliner Allee 14',
   city: '30175 Hannover',
   phone: '05 11 / 34 83 30',
   email: 'praxis@orthopaedie-koenigstrasse.de',
