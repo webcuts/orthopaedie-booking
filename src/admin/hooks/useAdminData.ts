@@ -843,7 +843,40 @@ export function useAnalytics(practitionerFilter?: string | null) {
 
       // Behandler-Auslastung berechnen
       const practitionerUtilization: { name: string; percentage: number }[] = [];
-      if (practitionersRes.data && slotsThisWeekRes.data && !practitionerFilter) {
+      if (practitionerFilter && practitionersRes.data?.[0]) {
+        // Einzelner Arzt: Auslastung basierend auf seinen practitioner_schedules
+        const { data: schedules } = await supabase
+          .from('practitioner_schedules')
+          .select('day_of_week, start_time, end_time, valid_from, valid_until')
+          .eq('practitioner_id', practitionerFilter)
+          .eq('is_bookable', true);
+
+        let theoreticalSlots = 0;
+        const monday = new Date(thisMondayStr);
+        for (let i = 0; i < 7; i++) {
+          const day = new Date(monday);
+          day.setDate(monday.getDate() + i);
+          const dayStr = day.toISOString().split('T')[0];
+          const isoDow = ((day.getDay() + 6) % 7) + 1; // 1=Mo..7=So
+
+          for (const s of schedules || []) {
+            if (s.day_of_week !== isoDow) continue;
+            if (s.valid_from && dayStr < s.valid_from) continue;
+            if (s.valid_until && dayStr > s.valid_until) continue;
+            const [sh, sm] = s.start_time.split(':').map(Number);
+            const [eh, em] = s.end_time.split(':').map(Number);
+            theoreticalSlots += Math.max(0, ((eh * 60 + em) - (sh * 60 + sm)) / 10);
+          }
+        }
+
+        const bookings = thisWeekRes.count || 0;
+        const percentage = theoreticalSlots > 0
+          ? Math.min(100, Math.round((bookings / theoreticalSlots) * 100))
+          : 0;
+        const p = practitionersRes.data[0];
+        const name = `${p.title ? p.title + ' ' : ''}${p.first_name} ${p.last_name}`;
+        practitionerUtilization.push({ name, percentage });
+      } else if (practitionersRes.data && slotsThisWeekRes.data) {
         // Globale Sicht: pro Behandler die Slot-Auslastung
         const slotsData = slotsThisWeekRes.data as Array<{ practitioner_id: string | null; is_available: boolean }>;
         for (const pract of practitionersRes.data) {
