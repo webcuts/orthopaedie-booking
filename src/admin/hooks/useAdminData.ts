@@ -880,25 +880,59 @@ export function useAnalytics(practitionerFilter?: string | null) {
         return total;
       };
 
+      // Prüft ob eine Buchung (Datum + Zeit) in einem online-buchbaren Schedule-Fenster
+      // des Arztes liegt. Berücksichtigt 09:00-Cap.
+      const isInOnlineWindow = (
+        dateStr: string,
+        timeStr: string,
+        schedules: Array<{ day_of_week: number; start_time: string; end_time: string; valid_from?: string | null; valid_until?: string | null }>
+      ): boolean => {
+        const day = new Date(dateStr);
+        const isoDow = ((day.getDay() + 6) % 7) + 1;
+        for (const s of schedules) {
+          if (s.day_of_week !== isoDow) continue;
+          if (s.valid_from && dateStr < s.valid_from) continue;
+          if (s.valid_until && dateStr > s.valid_until) continue;
+          const cappedStart = s.start_time >= '09:00:00' ? s.start_time : '09:00:00';
+          if (timeStr >= cappedStart && timeStr < s.end_time) return true;
+        }
+        return false;
+      };
+
       if (practitionerFilter && practitionersRes.data?.[0]) {
         // Einzelner Arzt
-        const { data: schedules } = await supabase
-          .from('practitioner_schedules')
-          .select('day_of_week, start_time, end_time, valid_from, valid_until')
-          .eq('practitioner_id', practitionerFilter)
-          .eq('is_bookable', true);
+        const [schedulesRes, bookingsRes] = await Promise.all([
+          supabase
+            .from('practitioner_schedules')
+            .select('day_of_week, start_time, end_time, valid_from, valid_until')
+            .eq('practitioner_id', practitionerFilter)
+            .eq('is_bookable', true),
+          supabase
+            .from('appointments')
+            .select('time_slot:time_slots!inner(date, start_time)')
+            .eq('practitioner_id', practitionerFilter)
+            .neq('status', 'cancelled')
+            .gte('time_slot.date', thisMondayStr)
+            .lte('time_slot.date', thisSundayStr),
+        ]);
 
-        const theoreticalSlots = calcTheoreticalSlots(schedules || []);
-        const bookings = thisWeekRes.count || 0;
+        const schedules = schedulesRes.data || [];
+        const theoreticalSlots = calcTheoreticalSlots(schedules);
+
+        let onlineBookings = 0;
+        for (const a of bookingsRes.data || []) {
+          const ts = Array.isArray(a.time_slot) ? a.time_slot[0] : a.time_slot;
+          if (ts && isInOnlineWindow(ts.date, ts.start_time, schedules)) onlineBookings++;
+        }
+
         const percentage = theoreticalSlots > 0
-          ? Math.min(100, Math.round((bookings / theoreticalSlots) * 100))
+          ? Math.min(100, Math.round((onlineBookings / theoreticalSlots) * 100))
           : 0;
         const p = practitionersRes.data[0];
         const name = `${p.title ? p.title + ' ' : ''}${p.first_name} ${p.last_name}`;
         practitionerUtilization.push({ name, percentage });
       } else if (practitionersRes.data) {
         // Globale Sicht: für jeden aktiven Behandler eigene Auslastung
-        // 1. Hole alle Schedules + alle Bookings dieser Woche in jeweils einem Query
         const practIds = practitionersRes.data.map(p => p.id);
         const [allSchedulesRes, allBookingsRes] = await Promise.all([
           supabase
@@ -908,18 +942,12 @@ export function useAnalytics(practitionerFilter?: string | null) {
             .eq('is_bookable', true),
           supabase
             .from('appointments')
-            .select('practitioner_id, time_slot:time_slots!inner(date)')
+            .select('practitioner_id, time_slot:time_slots!inner(date, start_time)')
             .neq('status', 'cancelled')
             .gte('time_slot.date', thisMondayStr)
             .lte('time_slot.date', thisSundayStr)
             .in('practitioner_id', practIds),
         ]);
-
-        const bookingsByPract = new Map<string, number>();
-        for (const a of allBookingsRes.data || []) {
-          const pid = (a as { practitioner_id: string | null }).practitioner_id;
-          if (pid) bookingsByPract.set(pid, (bookingsByPract.get(pid) || 0) + 1);
-        }
 
         const schedulesByPract = new Map<string, Array<{
           day_of_week: number;
@@ -935,9 +963,22 @@ export function useAnalytics(practitionerFilter?: string | null) {
           schedulesByPract.set(pid, list);
         }
 
+        // Pro Arzt: nur Bookings zählen die in einem online-buchbaren Schedule-Fenster liegen
+        const onlineBookingsByPract = new Map<string, number>();
+        for (const a of allBookingsRes.data || []) {
+          const pid = (a as { practitioner_id: string | null }).practitioner_id;
+          if (!pid) continue;
+          const ts = Array.isArray(a.time_slot) ? a.time_slot[0] : a.time_slot;
+          if (!ts) continue;
+          const sched = schedulesByPract.get(pid) || [];
+          if (isInOnlineWindow(ts.date, ts.start_time, sched)) {
+            onlineBookingsByPract.set(pid, (onlineBookingsByPract.get(pid) || 0) + 1);
+          }
+        }
+
         for (const pract of practitionersRes.data) {
           const theoretical = calcTheoreticalSlots(schedulesByPract.get(pract.id) || []);
-          const bookings = bookingsByPract.get(pract.id) || 0;
+          const bookings = onlineBookingsByPract.get(pract.id) || 0;
           const percentage = theoretical > 0
             ? Math.min(100, Math.round((bookings / theoretical) * 100))
             : 0;
