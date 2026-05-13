@@ -59,6 +59,14 @@ function formatTime(timeStr: string): string {
     return parseInt(h, 10) + ":" + m
 }
 
+// Online-Buchung erst ab 09:00 (davor Notfall-Sprechstunden).
+// Cap die angezeigte Start-Zeit für is_bookable=true Einträge bei 09:00.
+const ONLINE_BOOKABLE_FROM = "09:00:00"
+function displayStart(s: Schedule): string {
+    if (s.is_bookable && s.start_time < ONLINE_BOOKABLE_FROM) return ONLINE_BOOKABLE_FROM
+    return s.start_time
+}
+
 function practitionerName(p: Practitioner): string {
     return ((p.title || "Dr.") + " " + p.first_name + " " + p.last_name).trim()
 }
@@ -201,7 +209,7 @@ function Badge({
                     flexShrink: 0,
                 }}
             />
-            {entryLabel(schedule)} {formatTime(schedule.start_time)}–
+            {entryLabel(schedule)} {formatTime(displayStart(schedule))}–
             {formatTime(schedule.end_time)}
         </span>
     )
