@@ -35,7 +35,7 @@ export interface AppointmentWithDetails extends Appointment {
   bookingType?: 'doctor' | 'mfa';
 }
 
-type CalendarView = 'day' | 'week' | 'month';
+type CalendarView = 'day' | 'columns' | 'week' | 'month';
 
 // Hook: Appointments für Kalenderansicht
 export function useAppointments(date: Date, view: CalendarView) {
@@ -739,7 +739,7 @@ function getMonday(d: Date): Date {
   return date;
 }
 
-export function useAnalytics() {
+export function useAnalytics(practitionerFilter?: string | null) {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -764,49 +764,66 @@ export function useAnalytics() {
       lastSunday.setDate(thisMonday.getDate() - 1);
       const lastSundayStr = lastSunday.toISOString().split('T')[0];
 
+      // Optionaler Behandler-Filter (für Ärzte: nur eigene Daten)
+      const filterApt = (q: any) =>
+        practitionerFilter ? q.eq('practitioner_id', practitionerFilter) : q;
+
       // Parallel queries
       const [thisWeekRes, lastWeekRes, todayRes, allBookingsRes, practitionersRes, slotsThisWeekRes] = await Promise.all([
         // Buchungen diese Woche
-        supabase
+        filterApt(supabase
           .from('appointments')
           .select('id, time_slot:time_slots!inner(date)', { count: 'exact', head: true })
           .neq('status', 'cancelled')
           .gte('time_slot.date', thisMondayStr)
-          .lte('time_slot.date', thisSundayStr),
+          .lte('time_slot.date', thisSundayStr)),
 
         // Buchungen letzte Woche
-        supabase
+        filterApt(supabase
           .from('appointments')
           .select('id, time_slot:time_slots!inner(date)', { count: 'exact', head: true })
           .neq('status', 'cancelled')
           .gte('time_slot.date', lastMondayStr)
-          .lte('time_slot.date', lastSundayStr),
+          .lte('time_slot.date', lastSundayStr)),
 
         // Buchungen heute
-        supabase
+        filterApt(supabase
           .from('appointments')
           .select('id, time_slot:time_slots!inner(date)', { count: 'exact', head: true })
           .neq('status', 'cancelled')
-          .eq('time_slot.date', today),
+          .eq('time_slot.date', today)),
 
         // Alle Buchungen mit Uhrzeiten (für Verteilung)
-        supabase
+        filterApt(supabase
           .from('appointments')
           .select('id, time_slot:time_slots!inner(start_time)')
-          .neq('status', 'cancelled'),
+          .neq('status', 'cancelled')),
 
-        // Aktive Behandler
-        supabase
-          .from('practitioners')
-          .select('id, title, first_name, last_name')
-          .eq('is_active', true),
+        // Aktive Behandler (bei Arzt-Filter nur sich selbst)
+        practitionerFilter
+          ? supabase
+              .from('practitioners')
+              .select('id, title, first_name, last_name')
+              .eq('id', practitionerFilter)
+          : supabase
+              .from('practitioners')
+              .select('id, title, first_name, last_name')
+              .eq('is_active', true),
 
-        // Alle Slots dieser Woche (für Auslastung)
-        supabase
-          .from('time_slots')
-          .select('id, practitioner_id, is_available')
-          .gte('date', thisMondayStr)
-          .lte('date', thisSundayStr),
+        // Slots für Auslastung — gefiltert nach appointments wenn Arzt-Filter aktiv
+        practitionerFilter
+          ? supabase
+              .from('appointments')
+              .select('time_slot:time_slots!inner(id, date)')
+              .eq('practitioner_id', practitionerFilter)
+              .neq('status', 'cancelled')
+              .gte('time_slot.date', thisMondayStr)
+              .lte('time_slot.date', thisSundayStr)
+          : supabase
+              .from('time_slots')
+              .select('id, practitioner_id, is_available')
+              .gte('date', thisMondayStr)
+              .lte('date', thisSundayStr),
       ]);
 
       // Stündliche Verteilung berechnen
@@ -826,9 +843,11 @@ export function useAnalytics() {
 
       // Behandler-Auslastung berechnen
       const practitionerUtilization: { name: string; percentage: number }[] = [];
-      if (practitionersRes.data && slotsThisWeekRes.data) {
+      if (practitionersRes.data && slotsThisWeekRes.data && !practitionerFilter) {
+        // Globale Sicht: pro Behandler die Slot-Auslastung
+        const slotsData = slotsThisWeekRes.data as Array<{ practitioner_id: string | null; is_available: boolean }>;
         for (const pract of practitionersRes.data) {
-          const practSlots = slotsThisWeekRes.data.filter(s => s.practitioner_id === pract.id);
+          const practSlots = slotsData.filter(s => s.practitioner_id === pract.id);
           const totalSlots = practSlots.length;
           const bookedSlots = practSlots.filter(s => !s.is_available).length;
           const percentage = totalSlots > 0 ? Math.round((bookedSlots / totalSlots) * 100) : 0;
@@ -854,7 +873,8 @@ export function useAnalytics() {
 
   useEffect(() => {
     fetchAnalytics();
-  }, [fetchAnalytics]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchAnalytics, practitionerFilter]);
 
   return { data, loading, error, refetch: fetchAnalytics };
 }

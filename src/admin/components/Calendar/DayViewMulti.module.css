@@ -1,0 +1,166 @@
+.dayView {
+  display: flex;
+  height: 100%;
+  min-height: 2112px;
+  overflow: auto;
+}
+
+.timeColumn {
+  width: 64px;
+  flex-shrink: 0;
+  border-right: 1px solid #E5E7EB;
+  background: #FAFAFA;
+  position: sticky;
+  left: 0;
+  z-index: 20;
+}
+
+.timeColumnHeader {
+  height: 44px;
+  border-bottom: 1px solid #E5E7EB;
+  background: #FAFAFA;
+}
+
+.timeSlot {
+  height: 48px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-right: 0.75rem;
+  padding-top: 2px;
+}
+
+.timeSlot.isHour {
+  border-top: 1px solid #E5E7EB;
+}
+
+.time {
+  font-size: 0.6875rem;
+  color: #9CA3AF;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.timeSlot.isHour .time {
+  font-size: 0.8125rem;
+  color: #374151;
+  font-weight: 600;
+}
+
+.columns {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.column {
+  flex: 1 1 0;
+  min-width: 180px;
+  border-right: 1px solid #E5E7EB;
+  position: relative;
+}
+
+.column:last-child {
+  border-right: none;
+}
+
+.columnHeader {
+  height: 44px;
+  border-bottom: 2px solid #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #1F2937;
+  background: #F9FAFB;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 0 0.5rem;
+  text-align: center;
+}
+
+.columnHeader.mfa {
+  background: #F5F3FF;
+  color: #5B21B6;
+}
+
+.columnBody {
+  position: relative;
+  height: calc(100% - 44px);
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gridRow {
+  height: 48px;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.gridRow.hourBorder {
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.currentTime {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.currentTimeLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #DC2626;
+}
+
+.appointmentWrapper {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  border-left: 4px solid;
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  z-index: 5;
+}
+
+.appointmentWrapper:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 6;
+}
+
+.appointmentContent {
+  padding: 2px 8px;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.appointmentTime {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #374151;
+  font-variant-numeric: tabular-nums;
+}
+
+.appointmentPatient {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

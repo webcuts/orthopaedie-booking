@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { DayView } from './DayView';
+import { DayViewMulti } from './DayViewMulti';
 import { WeekView } from './WeekView';
 import { MonthView } from './MonthView';
 import { useAppointments, useMfaAppointments, type AppointmentWithDetails } from '../../hooks';
 import { supabase } from '../../../lib/supabaseClient';
 import styles from './CalendarView.module.css';
 
-type ViewType = 'day' | 'week' | 'month';
+type ViewType = 'day' | 'columns' | 'week' | 'month';
 type FilterType = 'all' | 'doctor' | 'mfa';
 
 interface Practitioner {
@@ -19,14 +20,16 @@ interface Practitioner {
 interface CalendarViewProps {
   onAppointmentClick: (appointment: AppointmentWithDetails) => void;
   onNewAppointment?: () => void;
+  lockedPractitionerId?: string | null;
 }
 
-export function CalendarView({ onAppointmentClick, onNewAppointment }: CalendarViewProps) {
+export function CalendarView({ onAppointmentClick, onNewAppointment, lockedPractitionerId }: CalendarViewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<ViewType>('day');
   const [practitioners, setPractitioners] = useState<Practitioner[]>([]);
-  const [filterPractitionerId, setFilterPractitionerId] = useState<string>('');
-  const [filterType, setFilterType] = useState<FilterType>('all');
+  const [filterPractitionerId, setFilterPractitionerId] = useState<string>(lockedPractitionerId ?? '');
+  const [filterType, setFilterType] = useState<FilterType>(lockedPractitionerId ? 'doctor' : 'all');
+  const isLocked = !!lockedPractitionerId;
 
   const { appointments: doctorAppointments, loading: doctorLoading, error: doctorError, refetch: refetchDoctor } = useAppointments(currentDate, view);
   const { appointments: mfaAppointments, loading: mfaLoading, error: mfaError, refetch: refetchMfa } = useMfaAppointments(currentDate, view);
@@ -82,7 +85,7 @@ export function CalendarView({ onAppointmentClick, onNewAppointment }: CalendarV
     const newDate = new Date(currentDate);
     const offset = direction === 'prev' ? -1 : 1;
 
-    if (view === 'day') {
+    if (view === 'day' || view === 'columns') {
       newDate.setDate(newDate.getDate() + offset);
     } else if (view === 'week') {
       newDate.setDate(newDate.getDate() + offset * 7);
@@ -94,7 +97,7 @@ export function CalendarView({ onAppointmentClick, onNewAppointment }: CalendarV
   };
 
   const formatDateHeader = () => {
-    if (view === 'day') {
+    if (view === 'day' || view === 'columns') {
       return currentDate.toLocaleDateString('de-DE', {
         weekday: 'long',
         day: 'numeric',
@@ -139,27 +142,31 @@ export function CalendarView({ onAppointmentClick, onNewAppointment }: CalendarV
         <h2 className={styles.dateHeader}>{formatDateHeader()}</h2>
 
         <div className={styles.actions}>
-          <select
-            className={styles.filterSelect}
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value as FilterType)}
-          >
-            <option value="all">Alle Termine</option>
-            <option value="doctor">Arzttermine</option>
-            <option value="mfa">MFA-Termine</option>
-          </select>
-          <select
-            className={styles.filterSelect}
-            value={filterPractitionerId}
-            onChange={(e) => setFilterPractitionerId(e.target.value)}
-          >
-            <option value="">Alle Behandler</option>
-            {practitioners.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.title ? `${p.title} ` : ''}{p.first_name} {p.last_name}
-              </option>
-            ))}
-          </select>
+          {!isLocked && (
+            <>
+              <select
+                className={styles.filterSelect}
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value as FilterType)}
+              >
+                <option value="all">Alle Termine</option>
+                <option value="doctor">Arzttermine</option>
+                <option value="mfa">MFA-Termine</option>
+              </select>
+              <select
+                className={styles.filterSelect}
+                value={filterPractitionerId}
+                onChange={(e) => setFilterPractitionerId(e.target.value)}
+              >
+                <option value="">Alle Behandler</option>
+                {practitioners.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.title ? `${p.title} ` : ''}{p.first_name} {p.last_name}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
           {onNewAppointment && (
             <button onClick={onNewAppointment} className={styles.newButton}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -176,6 +183,15 @@ export function CalendarView({ onAppointmentClick, onNewAppointment }: CalendarV
             >
               Tag
             </button>
+            {!isLocked && (
+              <button
+                className={`${styles.viewButton} ${view === 'columns' ? styles.active : ''}`}
+                onClick={() => setView('columns')}
+                title="Pro Behandler (Spaltenansicht)"
+              >
+                Spalten
+              </button>
+            )}
             <button
               className={`${styles.viewButton} ${view === 'week' ? styles.active : ''}`}
               onClick={() => setView('week')}
@@ -208,6 +224,15 @@ export function CalendarView({ onAppointmentClick, onNewAppointment }: CalendarV
               date={currentDate}
               appointments={filteredAppointments}
               onAppointmentClick={onAppointmentClick}
+            />
+          )}
+          {view === 'columns' && (
+            <DayViewMulti
+              date={currentDate}
+              appointments={filteredAppointments}
+              practitioners={practitioners}
+              onAppointmentClick={onAppointmentClick}
+              showMfaColumn={filterType === 'all' || filterType === 'mfa'}
             />
           )}
           {view === 'week' && (

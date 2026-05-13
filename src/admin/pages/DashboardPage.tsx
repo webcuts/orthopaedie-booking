@@ -2,9 +2,12 @@ import { useState, useCallback } from 'react';
 import { CalendarView, AppointmentModal, NewAppointmentModal, RescheduleModal } from '../components';
 import { AnalyticsWidget } from '../components/Dashboard/AnalyticsWidget';
 import { SystemStatus } from '../components/Dashboard/SystemStatus';
-import { type AppointmentWithDetails } from '../hooks';
+import { type AppointmentWithDetails, useAuth } from '../hooks';
 
 export function DashboardPage() {
+  const { isDoctor, practitionerId, isAdmin } = useAuth();
+  const lockedPractitionerId = isDoctor ? practitionerId : null;
+
   const [selectedAppointment, setSelectedAppointment] = useState<AppointmentWithDetails | null>(null);
   const [showNewAppointment, setShowNewAppointment] = useState(false);
   const [rescheduleAppointment, setRescheduleAppointment] = useState<AppointmentWithDetails | null>(null);
@@ -46,12 +49,13 @@ export function DashboardPage() {
 
   return (
     <>
-      <AnalyticsWidget />
+      <AnalyticsWidget practitionerId={lockedPractitionerId} />
 
       <CalendarView
         key={refreshKey}
         onAppointmentClick={handleAppointmentClick}
-        onNewAppointment={handleNewAppointment}
+        onNewAppointment={isAdmin || !isDoctor ? handleNewAppointment : undefined}
+        lockedPractitionerId={lockedPractitionerId}
       />
 
       {selectedAppointment && (

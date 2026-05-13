@@ -1,8 +1,12 @@
 import { useAnalytics } from '../../hooks';
 import styles from './AnalyticsWidget.module.css';
 
-export function AnalyticsWidget() {
-  const { data, loading, error } = useAnalytics();
+interface AnalyticsWidgetProps {
+  practitionerId?: string | null;
+}
+
+export function AnalyticsWidget({ practitionerId }: AnalyticsWidgetProps = {}) {
+  const { data, loading, error } = useAnalytics(practitionerId);
 
   if (loading) {
     return <div className={styles.loading}>Analytics werden geladen...</div>;
