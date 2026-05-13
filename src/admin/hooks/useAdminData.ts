@@ -769,7 +769,7 @@ export function useAnalytics(practitionerFilter?: string | null) {
         practitionerFilter ? q.eq('practitioner_id', practitionerFilter) : q;
 
       // Parallel queries
-      const [thisWeekRes, lastWeekRes, todayRes, allBookingsRes, practitionersRes, slotsThisWeekRes] = await Promise.all([
+      const [thisWeekRes, lastWeekRes, todayRes, allBookingsRes, practitionersRes] = await Promise.all([
         // Buchungen diese Woche
         filterApt(supabase
           .from('appointments')
@@ -809,21 +809,6 @@ export function useAnalytics(practitionerFilter?: string | null) {
               .from('practitioners')
               .select('id, title, first_name, last_name')
               .eq('is_active', true),
-
-        // Slots für Auslastung — gefiltert nach appointments wenn Arzt-Filter aktiv
-        practitionerFilter
-          ? supabase
-              .from('appointments')
-              .select('time_slot:time_slots!inner(id, date)')
-              .eq('practitioner_id', practitionerFilter)
-              .neq('status', 'cancelled')
-              .gte('time_slot.date', thisMondayStr)
-              .lte('time_slot.date', thisSundayStr)
-          : supabase
-              .from('time_slots')
-              .select('id, practitioner_id, is_available')
-              .gte('date', thisMondayStr)
-              .lte('date', thisSundayStr),
       ]);
 
       // Stündliche Verteilung berechnen
@@ -841,34 +826,45 @@ export function useAnalytics(practitionerFilter?: string | null) {
         .map(([hour, count]) => ({ hour, count }))
         .sort((a, b) => a.hour - b.hour);
 
-      // Behandler-Auslastung berechnen
+      // Behandler-Auslastung berechnen (schedule-basiert: theoretische Slots aus Schedules)
       const practitionerUtilization: { name: string; percentage: number }[] = [];
-      if (practitionerFilter && practitionersRes.data?.[0]) {
-        // Einzelner Arzt: Auslastung basierend auf seinen practitioner_schedules
-        const { data: schedules } = await supabase
-          .from('practitioner_schedules')
-          .select('day_of_week, start_time, end_time, valid_from, valid_until')
-          .eq('practitioner_id', practitionerFilter)
-          .eq('is_bookable', true);
 
-        let theoreticalSlots = 0;
+      // Helper: berechnet theoretische Slot-Anzahl für eine Liste von Schedules in dieser Woche
+      const calcTheoreticalSlots = (schedules: Array<{
+        day_of_week: number;
+        start_time: string;
+        end_time: string;
+        valid_from?: string | null;
+        valid_until?: string | null;
+      }>): number => {
+        let total = 0;
         const monday = new Date(thisMondayStr);
         for (let i = 0; i < 7; i++) {
           const day = new Date(monday);
           day.setDate(monday.getDate() + i);
           const dayStr = day.toISOString().split('T')[0];
           const isoDow = ((day.getDay() + 6) % 7) + 1; // 1=Mo..7=So
-
-          for (const s of schedules || []) {
+          for (const s of schedules) {
             if (s.day_of_week !== isoDow) continue;
             if (s.valid_from && dayStr < s.valid_from) continue;
             if (s.valid_until && dayStr > s.valid_until) continue;
             const [sh, sm] = s.start_time.split(':').map(Number);
             const [eh, em] = s.end_time.split(':').map(Number);
-            theoreticalSlots += Math.max(0, ((eh * 60 + em) - (sh * 60 + sm)) / 10);
+            total += Math.max(0, ((eh * 60 + em) - (sh * 60 + sm)) / 10);
           }
         }
+        return total;
+      };
 
+      if (practitionerFilter && practitionersRes.data?.[0]) {
+        // Einzelner Arzt
+        const { data: schedules } = await supabase
+          .from('practitioner_schedules')
+          .select('day_of_week, start_time, end_time, valid_from, valid_until')
+          .eq('practitioner_id', practitionerFilter)
+          .eq('is_bookable', true);
+
+        const theoreticalSlots = calcTheoreticalSlots(schedules || []);
         const bookings = thisWeekRes.count || 0;
         const percentage = theoreticalSlots > 0
           ? Math.min(100, Math.round((bookings / theoreticalSlots) * 100))
@@ -876,14 +872,51 @@ export function useAnalytics(practitionerFilter?: string | null) {
         const p = practitionersRes.data[0];
         const name = `${p.title ? p.title + ' ' : ''}${p.first_name} ${p.last_name}`;
         practitionerUtilization.push({ name, percentage });
-      } else if (practitionersRes.data && slotsThisWeekRes.data) {
-        // Globale Sicht: pro Behandler die Slot-Auslastung
-        const slotsData = slotsThisWeekRes.data as Array<{ practitioner_id: string | null; is_available: boolean }>;
+      } else if (practitionersRes.data) {
+        // Globale Sicht: für jeden aktiven Behandler eigene Auslastung
+        // 1. Hole alle Schedules + alle Bookings dieser Woche in jeweils einem Query
+        const practIds = practitionersRes.data.map(p => p.id);
+        const [allSchedulesRes, allBookingsRes] = await Promise.all([
+          supabase
+            .from('practitioner_schedules')
+            .select('practitioner_id, day_of_week, start_time, end_time, valid_from, valid_until')
+            .in('practitioner_id', practIds)
+            .eq('is_bookable', true),
+          supabase
+            .from('appointments')
+            .select('practitioner_id, time_slot:time_slots!inner(date)')
+            .neq('status', 'cancelled')
+            .gte('time_slot.date', thisMondayStr)
+            .lte('time_slot.date', thisSundayStr)
+            .in('practitioner_id', practIds),
+        ]);
+
+        const bookingsByPract = new Map<string, number>();
+        for (const a of allBookingsRes.data || []) {
+          const pid = (a as { practitioner_id: string | null }).practitioner_id;
+          if (pid) bookingsByPract.set(pid, (bookingsByPract.get(pid) || 0) + 1);
+        }
+
+        const schedulesByPract = new Map<string, Array<{
+          day_of_week: number;
+          start_time: string;
+          end_time: string;
+          valid_from?: string | null;
+          valid_until?: string | null;
+        }>>();
+        for (const s of allSchedulesRes.data || []) {
+          const pid = (s as { practitioner_id: string }).practitioner_id;
+          const list = schedulesByPract.get(pid) || [];
+          list.push(s);
+          schedulesByPract.set(pid, list);
+        }
+
         for (const pract of practitionersRes.data) {
-          const practSlots = slotsData.filter(s => s.practitioner_id === pract.id);
-          const totalSlots = practSlots.length;
-          const bookedSlots = practSlots.filter(s => !s.is_available).length;
-          const percentage = totalSlots > 0 ? Math.round((bookedSlots / totalSlots) * 100) : 0;
+          const theoretical = calcTheoreticalSlots(schedulesByPract.get(pract.id) || []);
+          const bookings = bookingsByPract.get(pract.id) || 0;
+          const percentage = theoretical > 0
+            ? Math.min(100, Math.round((bookings / theoretical) * 100))
+            : 0;
           const name = `${pract.title ? pract.title + ' ' : ''}${pract.first_name} ${pract.last_name}`;
           practitionerUtilization.push({ name, percentage });
         }
