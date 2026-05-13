@@ -59,7 +59,7 @@
   "contact.emailLabel": "Correo electrónico (opcional)",
   "contact.emailPlaceholder": "su.correo@ejemplo.com",
   "contact.phoneLabel": "Teléfono *",
-  "contact.phonePlaceholder": "0511 123456",
+  "contact.phonePlaceholder": "05 11 / 34 83 30",
   "contact.consent": "Acepto el tratamiento de mis datos personales para concertar la cita según el RGPD art. 6/9.",
   "contact.consentRequired": "Por favor acepte el tratamiento de datos.",
   "contact.contactHint": "Indique correo electrónico o teléfono (al menos uno).",

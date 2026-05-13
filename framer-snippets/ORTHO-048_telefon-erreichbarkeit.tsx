@@ -3,8 +3,8 @@
 // Platzierung: Kontaktseite und/oder Startseite
 
 // === KONFIGURATION ===
-const PHONE_NUMBER = "+495111234567" // Echte Praxisnummer hier eintragen
-const PHONE_DISPLAY = "0511 123 4567" // Angezeigte Nummer
+const PHONE_NUMBER = "+49511348330" // Echte Praxisnummer
+const PHONE_DISPLAY = "05 11 / 34 83 30" // Angezeigte Nummer
 
 const HOURS = [
     { days: "Mo, Di, Do, Fr", hours: "8:00 – 12:00 und 14:00 – 16:00" },

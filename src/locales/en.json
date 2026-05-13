@@ -59,7 +59,7 @@
   "contact.emailLabel": "Email (optional)",
   "contact.emailPlaceholder": "your.email@example.com",
   "contact.phoneLabel": "Phone *",
-  "contact.phonePlaceholder": "+49 511 123456",
+  "contact.phonePlaceholder": "+49 511 348330",
   "contact.consent": "I consent to the processing of my personal data for appointment scheduling in accordance with GDPR Art. 6/9.",
   "contact.consentRequired": "Please consent to data processing.",
   "contact.contactHint": "Please provide email or phone (at least one).",

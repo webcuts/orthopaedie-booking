@@ -59,7 +59,7 @@
   "contact.emailLabel": "E-Mail (optional)",
   "contact.emailPlaceholder": "ihre.email@beispiel.de",
   "contact.phoneLabel": "Telefon *",
-  "contact.phonePlaceholder": "0511 123456",
+  "contact.phonePlaceholder": "05 11 / 34 83 30",
   "contact.consent": "Ich stimme der Verarbeitung meiner personenbezogenen Daten zur Terminvereinbarung gemäß DSGVO Art. 6/9 zu.",
   "contact.consentRequired": "Bitte stimmen Sie der Datenverarbeitung zu.",
   "contact.contactHint": "Bitte geben Sie E-Mail oder Telefon an (mindestens eins).",

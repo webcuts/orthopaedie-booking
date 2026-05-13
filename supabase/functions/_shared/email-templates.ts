@@ -28,7 +28,7 @@ const PRACTICE_INFO = {
   name: 'Orthopädie Königstraße',
   address: 'Königstraße 51',
   city: '30175 Hannover',
-  phone: '0511 123456',
+  phone: '05 11 / 34 83 30',
   email: 'praxis@orthopaedie-koenigstrasse.de',
   website: 'https://orthopaedie-koenigstrasse.de',
 };
