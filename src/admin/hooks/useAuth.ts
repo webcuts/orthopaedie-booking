@@ -32,13 +32,13 @@ function loadRole(userId: string, setState: React.Dispatch<React.SetStateAction<
   setState(prev => ({ ...prev, roleLoading: true }));
   supabase
     .from('admin_profiles')
-    .select('role, is_active, practitioner_id, must_change_password, login_count')
+    .select('role, is_active, practitioner_id, must_change_password')
     .eq('id', userId)
     .single()
     .then(({ data }) => {
       const role: AdminRole = data?.is_active ? (data.role as AdminRole) : 'admin';
       const practitionerId = data?.practitioner_id || null;
-      const mustChange = !!data?.must_change_password || (data?.login_count ?? 0) >= 3;
+      const mustChange = !!data?.must_change_password;
       setState(prev => ({ ...prev, role, practitionerId, mustChangePassword: mustChange, roleLoading: false }));
     })
     .then(null, () => {
