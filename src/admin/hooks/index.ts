@@ -11,6 +11,7 @@ export {
   usePractitionerAbsences,
   useAdminCreateBooking,
   useAdminAvailableSlots,
+  useAdminNextFreeSlots,
   useAnonymizePatient,
   useSystemLogs,
   useAnalytics,

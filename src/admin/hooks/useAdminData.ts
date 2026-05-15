@@ -524,7 +524,8 @@ export function useAdminCreateBooking() {
   return { createBooking, loading, error, clearError };
 }
 
-// Hook: Verfügbare Slots für Admin (per Behandler)
+// Hook: Verfügbare Slots für Admin (per Behandler) — schedule-aware (nur Slots
+// die in einer is_bookable Sprechzeit liegen, mit 09:00-Cap).
 export function useAdminAvailableSlots(date: string | null, practitionerId: string | null) {
   const [slots, setSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
@@ -539,7 +540,7 @@ export function useAdminAvailableSlots(date: string | null, practitionerId: stri
       setLoading(true);
       try {
         const { data, error } = await supabase
-          .rpc('get_available_slots', {
+          .rpc('get_admin_available_slots', {
             p_date: date,
             p_practitioner_id: practitionerId,
           });
@@ -554,6 +555,48 @@ export function useAdminAvailableSlots(date: string | null, practitionerId: stri
     }
     fetch();
   }, [date, practitionerId]);
+
+  return { slots, loading };
+}
+
+// Hook: Nächste N freien Slots des Behandlers (für "Nächster freier Termin"-Schnellauswahl)
+export interface NextSlot extends TimeSlot {
+  date: string;
+}
+export function useAdminNextFreeSlots(practitionerId: string | null, count: number = 4) {
+  const [slots, setSlots] = useState<NextSlot[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!practitionerId) {
+      setSlots([]);
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+    supabase
+      .rpc('get_next_admin_slots', {
+        p_practitioner_id: practitionerId,
+        p_count: count,
+      })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error || !data) {
+          setSlots([]);
+        } else {
+          setSlots(data as NextSlot[]);
+        }
+      })
+      .then(null, () => {
+        if (!cancelled) setSlots([]);
+      })
+      .then(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [practitionerId, count]);
 
   return { slots, loading };
 }

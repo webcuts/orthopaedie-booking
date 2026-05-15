@@ -155,6 +155,82 @@
   gap: 0.5rem;
 }
 
+.quickSlots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.quickSlotCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0.75rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.quickSlotCard:hover {
+  border-color: #2674BB;
+  background: #EBF5FF;
+}
+
+.quickSlotCard.selected {
+  background: #2674BB;
+  color: white;
+  border-color: #2674BB;
+}
+
+.quickSlotCard.selected .quickSlotDate,
+.quickSlotCard.selected .quickSlotTime {
+  color: white;
+}
+
+.quickSlotDate {
+  font-size: 0.75rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.quickSlotTime {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1F2937;
+  font-variant-numeric: tabular-nums;
+}
+
+.quickSlotLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #059669;
+}
+
+.quickSlotCard.selected .quickSlotLabel {
+  color: #D1FAE5;
+}
+
+.quickToggle {
+  background: none;
+  border: none;
+  color: #2674BB;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  margin-top: 0.5rem;
+}
+
+.quickToggle:hover {
+  color: #1E5A8F;
+}
+
 .slotButton {
   padding: 0.5rem;
   border: 1px solid #E5E7EB;

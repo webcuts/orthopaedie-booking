@@ -3,6 +3,7 @@ import { supabase } from '../../../lib/supabaseClient';
 import {
   useAdminCreateBooking,
   useAdminAvailableSlots,
+  useAdminNextFreeSlots,
   useAdminCreateMfaBooking,
   useAdminMfaAvailableSlots,
 } from '../../hooks';
@@ -88,6 +89,12 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
     bookingType === 'doctor' ? (selectedDate || null) : null,
     bookingType === 'doctor' ? (practitionerId || null) : null
   );
+  // Schnellauswahl: nächste 4 freie Slots ab heute (nur für Arzttermine, sobald Behandler gewählt)
+  const { slots: nextFreeSlots, loading: nextFreeLoading } = useAdminNextFreeSlots(
+    bookingType === 'doctor' ? (practitionerId || null) : null,
+    4
+  );
+  const [showManualSlotPicker, setShowManualSlotPicker] = useState(false);
 
   // MFA hooks
   const { createBooking: createMfaBooking, loading: mfaLoading, error: mfaError, clearError: clearMfaError } = useAdminCreateMfaBooking();
@@ -129,7 +136,15 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
     setSelectedDate('');
     setTimeSlotId('');
     setErrors({});
+    setShowManualSlotPicker(false);
   }, [bookingType]);
+
+  // Beim Wechsel des Behandlers: zurück auf Schnellauswahl
+  useEffect(() => {
+    setShowManualSlotPicker(false);
+    setSelectedDate('');
+    setTimeSlotId('');
+  }, [practitionerId]);
 
   const handlePatientSelect = useCallback((p: PatientMatch | null) => {
     if (p) {
@@ -350,56 +365,121 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
                 </div>
               )}
 
-              <div className={styles.formGroup}>
-                <label className={styles.label}>
-                  Datum <span className={styles.required}>*</span>
-                </label>
-                <input
-                  type="date"
-                  className={`${styles.input} ${errors.selectedDate ? styles.inputError : ''}`}
-                  value={selectedDate}
-                  min={todayStr}
-                  onChange={(e) => {
-                    setSelectedDate(e.target.value);
-                    setErrors((prev) => ({ ...prev, selectedDate: '' }));
-                  }}
-                />
-                {errors.selectedDate && <p className={styles.errorText}>{errors.selectedDate}</p>}
-              </div>
-
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className={styles.label}>
-                  Uhrzeit <span className={styles.required}>*</span>
-                </label>
-                {needsPrerequisites ? (
-                  <div className={styles.noSlots}>
-                    {prerequisiteText}
-                  </div>
-                ) : slotsLoading ? (
-                  <div className={styles.slotsLoading}>Lade verfügbare Zeiten...</div>
-                ) : availableSlots.length === 0 ? (
-                  <div className={styles.noSlots}>
-                    {noSlotsText}
-                  </div>
-                ) : (
-                  <div className={styles.slotGrid}>
-                    {availableSlots.map((slot) => (
-                      <button
-                        key={slot.id}
-                        type="button"
-                        className={`${styles.slotButton} ${timeSlotId === slot.id ? styles.selected : ''}`}
-                        onClick={() => {
-                          setTimeSlotId(slot.id);
-                          setErrors((prev) => ({ ...prev, timeSlotId: '' }));
-                        }}
-                      >
-                        {slot.start_time.substring(0, 5)}
+              {/* Schnellauswahl: 4 nächste freie Termine (nur für Arzt-Buchungen) */}
+              {bookingType === 'doctor' && practitionerId && !showManualSlotPicker && (
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label className={styles.label}>
+                    Nächste freie Termine <span className={styles.required}>*</span>
+                  </label>
+                  {nextFreeLoading ? (
+                    <div className={styles.slotsLoading}>Suche freie Termine...</div>
+                  ) : nextFreeSlots.length === 0 ? (
+                    <div className={styles.noSlots}>
+                      Keine freien Slots in den nächsten 18 Wochen.
+                      <button type="button" className={styles.quickToggle} onClick={() => setShowManualSlotPicker(true)}>
+                        Datum manuell wählen
                       </button>
-                    ))}
+                    </div>
+                  ) : (
+                    <>
+                      <div className={styles.quickSlots}>
+                        {nextFreeSlots.map((slot, i) => {
+                          const d = new Date(slot.date + 'T00:00:00');
+                          const dateLabel = d.toLocaleDateString('de-DE', {
+                            weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric',
+                          });
+                          const selected = timeSlotId === slot.id;
+                          return (
+                            <button
+                              key={slot.id}
+                              type="button"
+                              className={`${styles.quickSlotCard} ${selected ? styles.selected : ''}`}
+                              onClick={() => {
+                                setSelectedDate(slot.date);
+                                setTimeSlotId(slot.id);
+                                setErrors((prev) => ({ ...prev, timeSlotId: '', selectedDate: '' }));
+                              }}
+                            >
+                              {i === 0 && <span className={styles.quickSlotLabel}>Nächster freier</span>}
+                              <span className={styles.quickSlotDate}>{dateLabel}</span>
+                              <span className={styles.quickSlotTime}>{slot.start_time.substring(0, 5)} Uhr</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <button type="button" className={styles.quickToggle} onClick={() => setShowManualSlotPicker(true)}>
+                        Anderen Tag wählen
+                      </button>
+                    </>
+                  )}
+                  {errors.timeSlotId && <p className={styles.errorText}>{errors.timeSlotId}</p>}
+                </div>
+              )}
+
+              {/* Manueller Datum + Slot-Picker: MFA-Buchung ODER explizit ausgewählt */}
+              {(bookingType === 'mfa' || showManualSlotPicker) && (
+                <>
+                  <div className={styles.formGroup}>
+                    <label className={styles.label}>
+                      Datum <span className={styles.required}>*</span>
+                    </label>
+                    <input
+                      type="date"
+                      className={`${styles.input} ${errors.selectedDate ? styles.inputError : ''}`}
+                      value={selectedDate}
+                      min={todayStr}
+                      onChange={(e) => {
+                        setSelectedDate(e.target.value);
+                        setErrors((prev) => ({ ...prev, selectedDate: '' }));
+                      }}
+                    />
+                    {errors.selectedDate && <p className={styles.errorText}>{errors.selectedDate}</p>}
                   </div>
-                )}
-                {errors.timeSlotId && <p className={styles.errorText}>{errors.timeSlotId}</p>}
-              </div>
+
+                  <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                    <label className={styles.label}>
+                      Uhrzeit <span className={styles.required}>*</span>
+                    </label>
+                    {needsPrerequisites ? (
+                      <div className={styles.noSlots}>
+                        {prerequisiteText}
+                      </div>
+                    ) : slotsLoading ? (
+                      <div className={styles.slotsLoading}>Lade verfügbare Zeiten...</div>
+                    ) : availableSlots.length === 0 ? (
+                      <div className={styles.noSlots}>
+                        {noSlotsText}
+                      </div>
+                    ) : (
+                      <div className={styles.slotGrid}>
+                        {availableSlots.map((slot) => (
+                          <button
+                            key={slot.id}
+                            type="button"
+                            className={`${styles.slotButton} ${timeSlotId === slot.id ? styles.selected : ''}`}
+                            onClick={() => {
+                              setTimeSlotId(slot.id);
+                              setErrors((prev) => ({ ...prev, timeSlotId: '' }));
+                            }}
+                          >
+                            {slot.start_time.substring(0, 5)}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {bookingType === 'doctor' && showManualSlotPicker && (
+                      <button type="button" className={styles.quickToggle} onClick={() => {
+                        setShowManualSlotPicker(false);
+                        setSelectedDate('');
+                        setTimeSlotId('');
+                      }}>
+                        ← Zurück zu Schnellauswahl
+                      </button>
+                    )}
+                    {errors.timeSlotId && <p className={styles.errorText}>{errors.timeSlotId}</p>}
+                  </div>
+                </>
+              )}
 
               <div className={styles.formGroup}>
                 <label className={styles.label}>
