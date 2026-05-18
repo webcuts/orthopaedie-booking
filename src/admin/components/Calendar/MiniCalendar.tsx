@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { formatLocalDate } from '../../../utils/dates';
 import styles from './MiniCalendar.module.css';
 
@@ -18,15 +18,18 @@ export function MiniCalendar({ selectedDate, onSelect }: MiniCalendarProps) {
     () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1)
   );
 
-  // Wenn selectedDate von außen in einen anderen Monat springt: Mini-Kalender mitziehen
+  // Bei externem Sprung von selectedDate (z.B. "Heute"-Button in der Toolbar):
+  // Mini-Kalender mitziehen. Reagiert NUR auf selectedDate-Änderungen, damit
+  // manuelle Navigation per « » nicht zurückgesetzt wird.
+  const prevSelectedKey = useRef(
+    `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`
+  );
   useEffect(() => {
-    const sameMonth =
-      viewMonth.getFullYear() === selectedDate.getFullYear() &&
-      viewMonth.getMonth() === selectedDate.getMonth();
-    if (!sameMonth) {
-      setViewMonth(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1));
-    }
-  }, [selectedDate, viewMonth]);
+    const key = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
+    if (key === prevSelectedKey.current) return;
+    prevSelectedKey.current = key;
+    setViewMonth(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1));
+  }, [selectedDate]);
 
   const todayStr = formatLocalDate(new Date());
   const selectedStr = formatLocalDate(selectedDate);
