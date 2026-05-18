@@ -149,9 +149,16 @@
   color: white;
 }
 
+.body {
+  flex: 1;
+  display: flex;
+  min-height: 0; /* damit flex-children scrollen können */
+}
+
 .viewContainer {
   flex: 1;
   overflow-y: auto;
+  min-width: 0;
 }
 
 .loading {

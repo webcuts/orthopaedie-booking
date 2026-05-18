@@ -3,6 +3,7 @@ import { DayView } from './DayView';
 import { DayViewMulti } from './DayViewMulti';
 import { WeekView } from './WeekView';
 import { MonthView } from './MonthView';
+import { MiniCalendar } from './MiniCalendar';
 import { useAppointments, useMfaAppointments, type AppointmentWithDetails } from '../../hooks';
 import { supabase } from '../../../lib/supabaseClient';
 import styles from './CalendarView.module.css';
@@ -226,37 +227,42 @@ export function CalendarView({ onAppointmentClick, onNewAppointment, lockedPract
       {loading ? (
         <div className={styles.loading}>Lade Termine...</div>
       ) : (
-        <div className={styles.viewContainer}>
-          {view === 'day' && (
-            <DayView
-              date={currentDate}
-              appointments={filteredAppointments}
-              onAppointmentClick={onAppointmentClick}
-            />
+        <div className={styles.body}>
+          {(view === 'day' || view === 'columns') && (
+            <MiniCalendar selectedDate={currentDate} onSelect={setCurrentDate} />
           )}
-          {view === 'columns' && (
-            <DayViewMulti
-              date={currentDate}
-              appointments={filteredAppointments}
-              practitioners={practitioners}
-              onAppointmentClick={onAppointmentClick}
-              showMfaColumn={filterType === 'all' || filterType === 'mfa'}
-            />
-          )}
-          {view === 'week' && (
-            <WeekView
-              date={currentDate}
-              appointments={filteredAppointments}
-              onAppointmentClick={onAppointmentClick}
-            />
-          )}
-          {view === 'month' && (
-            <MonthView
-              date={currentDate}
-              appointments={filteredAppointments}
-              onAppointmentClick={onAppointmentClick}
-            />
-          )}
+          <div className={styles.viewContainer}>
+            {view === 'day' && (
+              <DayView
+                date={currentDate}
+                appointments={filteredAppointments}
+                onAppointmentClick={onAppointmentClick}
+              />
+            )}
+            {view === 'columns' && (
+              <DayViewMulti
+                date={currentDate}
+                appointments={filteredAppointments}
+                practitioners={practitioners}
+                onAppointmentClick={onAppointmentClick}
+                showMfaColumn={filterType === 'all' || filterType === 'mfa'}
+              />
+            )}
+            {view === 'week' && (
+              <WeekView
+                date={currentDate}
+                appointments={filteredAppointments}
+                onAppointmentClick={onAppointmentClick}
+              />
+            )}
+            {view === 'month' && (
+              <MonthView
+                date={currentDate}
+                appointments={filteredAppointments}
+                onAppointmentClick={onAppointmentClick}
+              />
+            )}
+          </div>
         </div>
       )}
     </div>

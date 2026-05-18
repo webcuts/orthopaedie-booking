@@ -1,0 +1,154 @@
+.mini {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: white;
+  border-right: 1px solid #E5E7EB;
+  width: 240px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.monthLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.navBtn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.navBtn:hover {
+  background: #F3F4F6;
+}
+
+.navBtn svg {
+  width: 16px;
+  height: 16px;
+  color: #4B5563;
+}
+
+.weekdayRow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 2px;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 4px 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.empty {
+  aspect-ratio: 1;
+}
+
+.day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, transform 0.05s;
+  padding: 0;
+}
+
+.day:hover {
+  background: #EBF5FF;
+  color: #1E5A8F;
+}
+
+.day:active {
+  transform: scale(0.94);
+}
+
+.weekend {
+  color: #9CA3AF;
+}
+
+.today {
+  font-weight: 700;
+  color: #2674BB;
+  background: #EBF5FF;
+}
+
+.selected {
+  background: #2674BB;
+  color: white;
+}
+
+.selected:hover {
+  background: #1E5A8F;
+  color: white;
+}
+
+.selected.today {
+  background: #2674BB;
+  color: white;
+}
+
+.todayBtn {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.todayBtn:hover {
+  background: #F3F4F6;
+}
+
+@media (max-width: 1024px) {
+  .mini {
+    width: 200px;
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .mini {
+    display: none;
+  }
+}
