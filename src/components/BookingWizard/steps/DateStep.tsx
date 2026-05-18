@@ -123,13 +123,19 @@ export function DateStep({ selectedDate, practitionerId, insuranceTypeId, onSele
     if (date < today) return false;
 
     if (hasPractitionerSchedule) {
-      // Practitioner has custom schedule: check if this day has bookable windows
-      // day_of_week uses JS getDay() convention (0=Sunday), matching the DB
-      const jsDayOfWeek = date.getDay();
+      // Practitioner has custom schedule: check if this day has bookable windows.
+      // day_of_week: 1=Mo..6=Sa,7=So (ISODOW). JS getDay() liefert 0=So,1=Mo,..6=Sa
+      // → für So Sonderfall, sonst identisch.
+      const dow = date.getDay(); // 0=So,1=Mo,..,6=Sa
+      const isoDow = dow === 0 ? 7 : dow; // 1=Mo,..,6=Sa,7=So
+      const dateStr = formatLocalDate(date);
       const hasBookableWindow = practitionerSchedules.some(s => {
-        if (s.day_of_week !== jsDayOfWeek || !s.is_bookable) return false;
+        if (s.day_of_week !== isoDow || !s.is_bookable) return false;
         // ORTHO-029: Hide private_only windows for public insurance patients
         if (isPublicInsurance && s.insurance_filter === 'private_only') return false;
+        // Gültigkeitsfenster: Schedule muss an diesem Datum aktiv sein
+        if (s.valid_from && s.valid_from > dateStr) return false;
+        if (s.valid_until && s.valid_until < dateStr) return false;
         return true;
       });
       if (!hasBookableWindow) return false;

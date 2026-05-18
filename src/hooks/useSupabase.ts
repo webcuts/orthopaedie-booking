@@ -401,11 +401,13 @@ export function usePractitionerSchedules(practitionerId: string | null) {
       setError(null);
       try {
         const today = formatLocalDate(new Date());
+        // Lade alle nicht-abgelaufenen Schedules (auch zukünftig startende,
+        // z.B. Samstagsdienst mit valid_from in der Zukunft).
+        // Per-Datum-Validierung übernehmen die Consumer (DateStep/TimeSlotStep).
         const { data, error } = await supabase
           .from('practitioner_schedules')
           .select('*')
           .eq('practitioner_id', practitionerId)
-          .lte('valid_from', today)
           .or(`valid_until.is.null,valid_until.gte.${today}`)
           .order('day_of_week')
           .order('start_time');

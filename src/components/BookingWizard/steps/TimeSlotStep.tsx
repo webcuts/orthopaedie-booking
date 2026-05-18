@@ -60,12 +60,16 @@ export function TimeSlotStep({ selectedDate, selectedId, practitionerId, insuran
     // 1. Filter by practitioner schedule bookable windows (+ insurance_filter)
     if (practitionerSchedules.length > 0) {
       const selectedDateObj = new Date(selectedDate + 'T00:00:00');
-      const jsDayOfWeek = selectedDateObj.getDay();
+      const dow = selectedDateObj.getDay(); // 0=So,1=Mo,..,6=Sa
+      const isoDow = dow === 0 ? 7 : dow;   // DB-Konvention 1=Mo..7=So
       const bookableWindows = practitionerSchedules
         .filter(s => {
-          if (s.day_of_week !== jsDayOfWeek || !s.is_bookable) return false;
+          if (s.day_of_week !== isoDow || !s.is_bookable) return false;
           // ORTHO-029: Hide private_only windows for public insurance patients
           if (isPublicInsurance && s.insurance_filter === 'private_only') return false;
+          // Gültigkeitsfenster pro Datum (z.B. Sa nur 30.05/13.06/27.06)
+          if (s.valid_from && s.valid_from > selectedDate) return false;
+          if (s.valid_until && s.valid_until < selectedDate) return false;
           return true;
         })
         .map(s => ({ start: s.start_time.slice(0, 5), end: s.end_time.slice(0, 5) }));
