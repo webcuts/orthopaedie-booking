@@ -1,4 +1,5 @@
 import type { AppointmentWithDetails } from '../../hooks';
+import { formatLocalDate } from '../../../utils/dates';
 import styles from './MonthView.module.css';
 
 interface MonthViewProps {
@@ -46,7 +47,7 @@ export function MonthView({ date, appointments, onAppointmentClick }: MonthViewP
     return new Date(year, month, dayNumber);
   });
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = formatLocalDate(new Date());
 
   // Group appointments by date
   const appointmentsByDate: Record<string, AppointmentWithDetails[]> = {};
@@ -78,7 +79,7 @@ export function MonthView({ date, appointments, onAppointmentClick }: MonthViewP
             return <div key={i} className={styles.emptyCell} />;
           }
 
-          const dateStr = cellDate.toISOString().split('T')[0];
+          const dateStr = formatLocalDate(cellDate);
           const isToday = dateStr === today;
           const dayApts = appointmentsByDate[dateStr] || [];
 

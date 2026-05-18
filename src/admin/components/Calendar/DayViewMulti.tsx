@@ -1,4 +1,5 @@
 import type { AppointmentWithDetails } from '../../hooks';
+import { formatLocalDate } from '../../../utils/dates';
 import styles from './DayViewMulti.module.css';
 
 interface Practitioner {
@@ -75,7 +76,7 @@ export function DayViewMulti({
   onAppointmentClick,
   showMfaColumn = true,
 }: DayViewMultiProps) {
-  const dateStr = date.toISOString().split('T')[0];
+  const dateStr = formatLocalDate(date);
   const dayAppts = appointments.filter(
     (apt) => apt.time_slot?.date === dateStr && apt.status !== 'cancelled'
   );

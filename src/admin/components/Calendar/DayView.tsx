@@ -1,4 +1,5 @@
 import type { AppointmentWithDetails } from '../../hooks';
+import { formatLocalDate } from '../../../utils/dates';
 import styles from './DayView.module.css';
 
 interface DayViewProps {
@@ -125,7 +126,7 @@ function computeColumns(appointments: AppointmentWithDetails[]): Map<string, Lay
 }
 
 export function DayView({ date, appointments, onAppointmentClick }: DayViewProps) {
-  const dateStr = date.toISOString().split('T')[0];
+  const dateStr = formatLocalDate(date);
 
   // Filter appointments for this day (exclude cancelled)
   const dayAppointments = appointments.filter(

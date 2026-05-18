@@ -1,4 +1,5 @@
 import type { AppointmentWithDetails } from '../../hooks';
+import { formatLocalDate } from '../../../utils/dates';
 import styles from './WeekView.module.css';
 
 interface WeekViewProps {
@@ -106,10 +107,10 @@ export function WeekView({ date, appointments, onAppointmentClick }: WeekViewPro
     return d;
   });
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = formatLocalDate(new Date());
 
   const appointmentsByDay = weekDays.map((d) => {
-    const dateStr = d.toISOString().split('T')[0];
+    const dateStr = formatLocalDate(d);
     return appointments.filter(
       (apt) => apt.time_slot?.date === dateStr && apt.status !== 'cancelled'
     );
@@ -143,7 +144,7 @@ export function WeekView({ date, appointments, onAppointmentClick }: WeekViewPro
       <div className={styles.header}>
         <div className={styles.timeHeader} />
         {weekDays.map((d, i) => {
-          const dateStr = d.toISOString().split('T')[0];
+          const dateStr = formatLocalDate(d);
           const isToday = dateStr === today;
           const count = appointmentsByDay[i].length;
           return (
@@ -176,7 +177,7 @@ export function WeekView({ date, appointments, onAppointmentClick }: WeekViewPro
 
         {/* Day columns */}
         {weekDays.map((d, dayIndex) => {
-          const dateStr = d.toISOString().split('T')[0];
+          const dateStr = formatLocalDate(d);
           const isToday = dateStr === today;
           const dayApts = appointmentsByDay[dayIndex];
           const layout = computeColumns(dayApts);
