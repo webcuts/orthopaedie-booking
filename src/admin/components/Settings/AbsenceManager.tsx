@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { usePractitionerAbsences } from '../../hooks';
 import styles from './AbsenceManager.module.css';
+import { formatLocalDate } from '../../../utils/dates';
 
 const REASON_LABELS: Record<string, string> = {
   sick: 'Krankheit',
@@ -163,7 +164,7 @@ export function AbsenceManager() {
                 id="startDate"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
+                min={formatLocalDate(new Date())}
                 required
               />
             </div>
@@ -175,7 +176,7 @@ export function AbsenceManager() {
                 id="endDate"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                min={startDate || new Date().toISOString().split('T')[0]}
+                min={startDate || formatLocalDate(new Date())}
                 required
               />
             </div>

@@ -2,6 +2,7 @@ import { useState, useMemo, FormEvent } from 'react';
 import { usePractitionerSchedulesAdmin } from '../../hooks';
 import type { PractitionerScheduleEntry } from '../../hooks';
 import styles from './PractitionerScheduleManager.module.css';
+import { formatLocalDate } from '../../../utils/dates';
 
 const JS_DAY_NAMES = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 // Display order: Mon–Sun
@@ -45,7 +46,7 @@ export function PractitionerScheduleManager() {
   const [isBookable, setIsBookable] = useState(true);
   const [insuranceFilter, setInsuranceFilter] = useState<'all' | 'private_only'>('all');
   const [label, setLabel] = useState('');
-  const [validFrom, setValidFrom] = useState(new Date().toISOString().split('T')[0]);
+  const [validFrom, setValidFrom] = useState(formatLocalDate(new Date()));
   const [validUntil, setValidUntil] = useState('');
 
   const filteredSchedules = useMemo(() => {
@@ -70,7 +71,7 @@ export function PractitionerScheduleManager() {
     setIsBookable(true);
     setInsuranceFilter('all');
     setLabel('');
-    setValidFrom(new Date().toISOString().split('T')[0]);
+    setValidFrom(formatLocalDate(new Date()));
     setValidUntil('');
     setFormError(null);
   };

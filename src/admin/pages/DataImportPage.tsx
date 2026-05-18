@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import styles from './DataImportPage.module.css';
+import { formatLocalDate } from '../../utils/dates';
 
 interface CsvRow {
   [key: string]: string;
@@ -175,7 +176,7 @@ export function DataImportPage() {
         const autoMapping = autoMapColumns(columns);
         setMapping(autoMapping);
 
-        const today = new Date().toISOString().split('T')[0];
+        const today = formatLocalDate(new Date());
         const practitioners = new Set<string>();
         const problems: string[] = [];
         let futureRows = 0;
@@ -247,7 +248,7 @@ export function DataImportPage() {
         .from('patients')
         .select('id, name, phone');
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = formatLocalDate(new Date());
 
       for (const row of preview.rows) {
         try {

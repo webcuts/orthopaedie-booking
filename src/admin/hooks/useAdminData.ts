@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabaseClient';
+import { formatLocalDate } from '../../utils/dates';
 import type { Appointment, TimeSlot, TreatmentType, MfaTreatmentType } from '../../types/database';
 
 // Extended appointment type with joined data
@@ -52,7 +53,7 @@ export function useAppointments(date: Date, view: CalendarView) {
       let endDate: string;
 
       if (view === 'day') {
-        startDate = date.toISOString().split('T')[0];
+        startDate = formatLocalDate(date);
         endDate = startDate;
       } else if (view === 'week') {
         const dayOfWeek = date.getDay();
@@ -60,13 +61,13 @@ export function useAppointments(date: Date, view: CalendarView) {
         monday.setDate(date.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
         const sunday = new Date(monday);
         sunday.setDate(monday.getDate() + 6);
-        startDate = monday.toISOString().split('T')[0];
-        endDate = sunday.toISOString().split('T')[0];
+        startDate = formatLocalDate(monday);
+        endDate = formatLocalDate(sunday);
       } else {
         const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
         const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-        startDate = firstDay.toISOString().split('T')[0];
-        endDate = lastDay.toISOString().split('T')[0];
+        startDate = formatLocalDate(firstDay);
+        endDate = formatLocalDate(lastDay);
       }
 
       const { data, error: fetchError } = await supabase
@@ -619,7 +620,7 @@ export function usePractitionerAbsences() {
           *,
           practitioner:practitioners(id, title, first_name, last_name)
         `)
-        .gte('end_date', new Date().toISOString().split('T')[0])
+        .gte('end_date', formatLocalDate(new Date()))
         .order('start_date');
 
       if (absError) throw absError;
@@ -793,19 +794,19 @@ export function useAnalytics(practitionerFilter?: string | null) {
 
     try {
       const now = new Date();
-      const today = now.toISOString().split('T')[0];
+      const today = formatLocalDate(now);
       const thisMonday = getMonday(now);
-      const thisMondayStr = thisMonday.toISOString().split('T')[0];
+      const thisMondayStr = formatLocalDate(thisMonday);
       const thisSunday = new Date(thisMonday);
       thisSunday.setDate(thisMonday.getDate() + 6);
-      const thisSundayStr = thisSunday.toISOString().split('T')[0];
+      const thisSundayStr = formatLocalDate(thisSunday);
 
       const lastMonday = new Date(thisMonday);
       lastMonday.setDate(thisMonday.getDate() - 7);
-      const lastMondayStr = lastMonday.toISOString().split('T')[0];
+      const lastMondayStr = formatLocalDate(lastMonday);
       const lastSunday = new Date(thisMonday);
       lastSunday.setDate(thisMonday.getDate() - 1);
-      const lastSundayStr = lastSunday.toISOString().split('T')[0];
+      const lastSundayStr = formatLocalDate(lastSunday);
 
       // Optionaler Behandler-Filter (für Ärzte: nur eigene Daten)
       const filterApt = (q: any) =>
@@ -887,7 +888,7 @@ export function useAnalytics(practitionerFilter?: string | null) {
         for (let i = 0; i < 7; i++) {
           const day = new Date(monday);
           day.setDate(monday.getDate() + i);
-          const dayStr = day.toISOString().split('T')[0];
+          const dayStr = formatLocalDate(day);
           const isoDow = ((day.getDay() + 6) % 7) + 1; // 1=Mo..7=So
 
           // Sammle Intervalle [startMin, endMin] des Tages.
@@ -1071,7 +1072,7 @@ export function useMfaAppointments(date: Date, view: CalendarView) {
       let endDate: string;
 
       if (view === 'day') {
-        startDate = date.toISOString().split('T')[0];
+        startDate = formatLocalDate(date);
         endDate = startDate;
       } else if (view === 'week') {
         const dayOfWeek = date.getDay();
@@ -1079,13 +1080,13 @@ export function useMfaAppointments(date: Date, view: CalendarView) {
         monday.setDate(date.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
         const sunday = new Date(monday);
         sunday.setDate(monday.getDate() + 6);
-        startDate = monday.toISOString().split('T')[0];
-        endDate = sunday.toISOString().split('T')[0];
+        startDate = formatLocalDate(monday);
+        endDate = formatLocalDate(sunday);
       } else {
         const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
         const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-        startDate = firstDay.toISOString().split('T')[0];
-        endDate = lastDay.toISOString().split('T')[0];
+        startDate = formatLocalDate(firstDay);
+        endDate = formatLocalDate(lastDay);
       }
 
       // Step 1: Get ALL raw mfa_appointments (no joins)

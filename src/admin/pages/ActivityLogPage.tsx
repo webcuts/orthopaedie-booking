@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import styles from './ActivityLogPage.module.css';
+import { formatLocalDate } from '../../utils/dates';
 
 interface LogEntry {
   id: string;
@@ -132,7 +133,7 @@ export function ActivityLogPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `aktivitaeten_${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `aktivitaeten_${formatLocalDate(new Date())}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
