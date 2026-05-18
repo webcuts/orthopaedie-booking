@@ -153,12 +153,15 @@
   flex: 1;
   display: flex;
   min-height: 0; /* damit flex-children scrollen können */
+  height: 100%;
 }
 
 .viewContainer {
   flex: 1;
   overflow-y: auto;
   min-width: 0;
+  min-height: 0;
+  height: 100%;
 }
 
 .loading {
