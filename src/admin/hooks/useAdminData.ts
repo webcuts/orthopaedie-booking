@@ -1419,6 +1419,43 @@ export function useAdminMfaAvailableSlots(date: string | null) {
   return { slots, loading };
 }
 
+// Hook: Nächste N freien MFA-Slots (für "Nächster freier Termin"-Schnellauswahl im MFA-Modal)
+export interface NextMfaSlot {
+  id: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+}
+export function useAdminMfaNextFreeSlots(count: number = 4, enabled: boolean = true) {
+  const [slots, setSlots] = useState<NextMfaSlot[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) {
+      setSlots([]);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    supabase
+      .rpc('get_next_admin_mfa_slots', { p_count: count })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error || !data) setSlots([]);
+        else setSlots(data as NextMfaSlot[]);
+      })
+      .then(null, () => {
+        if (!cancelled) setSlots([]);
+      })
+      .then(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [count, enabled]);
+
+  return { slots, loading };
+}
+
 // Hook: MFA-Slots generieren
 export function useGenerateMfaSlots() {
   const [loading, setLoading] = useState(false);

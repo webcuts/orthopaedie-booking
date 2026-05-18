@@ -21,6 +21,7 @@ export {
   useMfaTreatmentTypesAdmin,
   useAdminCreateMfaBooking,
   useAdminMfaAvailableSlots,
+  useAdminMfaNextFreeSlots,
   useGenerateMfaSlots,
   // Reschedule (ORTHO-031)
   useRescheduleAppointment,

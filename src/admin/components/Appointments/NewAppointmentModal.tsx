@@ -6,6 +6,7 @@ import {
   useAdminNextFreeSlots,
   useAdminCreateMfaBooking,
   useAdminMfaAvailableSlots,
+  useAdminMfaNextFreeSlots,
 } from '../../hooks';
 import { FollowUpDialog } from './FollowUpDialog';
 import { PatientSearch, isDoctolibPlaceholder, type PatientMatch } from './PatientSearch';
@@ -99,6 +100,11 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
   const { createBooking: createMfaBooking, loading: mfaLoading, error: mfaError, clearError: clearMfaError } = useAdminCreateMfaBooking();
   const { slots: mfaSlots, loading: mfaSlotsLoading } = useAdminMfaAvailableSlots(
     bookingType === 'mfa' ? (selectedDate || null) : null
+  );
+  // Schnellauswahl: nächste 4 freie MFA-Slots
+  const { slots: mfaNextFreeSlots, loading: mfaNextFreeLoading } = useAdminMfaNextFreeSlots(
+    4,
+    bookingType === 'mfa'
   );
 
   const loading = bookingType === 'mfa' ? mfaLoading : doctorLoading;
@@ -362,19 +368,19 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
                 </div>
               )}
 
-              {/* Schnellauswahl: 4 nächste freie Termine (nur für Arzt-Buchungen) */}
-              {bookingType === 'doctor' && practitionerId && (
+              {/* Schnellauswahl: 4 nächste freie Termine — für Arzt + MFA */}
+              {((bookingType === 'doctor' && practitionerId) || bookingType === 'mfa') && (
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                   <label className={styles.label}>Nächste freie Termine</label>
-                  {nextFreeLoading ? (
+                  {(bookingType === 'mfa' ? mfaNextFreeLoading : nextFreeLoading) ? (
                     <div className={styles.slotsLoading}>Suche freie Termine...</div>
-                  ) : nextFreeSlots.length === 0 ? (
+                  ) : (bookingType === 'mfa' ? mfaNextFreeSlots : nextFreeSlots).length === 0 ? (
                     <div className={styles.noSlots}>
                       Keine freien Slots in den nächsten 18 Wochen.
                     </div>
                   ) : (
                     <div className={styles.quickSlots}>
-                      {nextFreeSlots.map((slot, i) => {
+                      {(bookingType === 'mfa' ? mfaNextFreeSlots : nextFreeSlots).map((slot, i) => {
                         const d = new Date(slot.date + 'T00:00:00');
                         const dateLabel = d.toLocaleDateString('de-DE', {
                           weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric',
@@ -405,7 +411,7 @@ export function NewAppointmentModal({ onClose, onCreated }: NewAppointmentModalP
               {/* Manueller Datum + Slot-Picker: immer sichtbar als Alternative */}
               <div className={styles.formGroup}>
                 <label className={styles.label}>
-                  {bookingType === 'doctor' ? 'Oder Datum wählen' : 'Datum'} <span className={styles.required}>*</span>
+                  {(bookingType === 'doctor' && !practitionerId) ? 'Datum' : 'Oder Datum wählen'} <span className={styles.required}>*</span>
                 </label>
                 <input
                   type="date"
