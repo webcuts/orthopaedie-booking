@@ -42,3 +42,9 @@ supabase/.temp/
 scripts/doctolib-mai-aug/
 scripts/termine.csv
 scripts/*.csv
+
+# Zugangsdaten / Passwort-Exports — niemals einchecken
+scripts/reset-passwords.py
+scripts/*.pdf
+*-zugangsdaten*.pdf
+*-passwoerter*.pdf
