@@ -1,7 +1,7 @@
 // Validation constants
 const NAME_MIN = 2;
 const NAME_MAX = 50;
-const NAME_PATTERN = /^[a-zA-ZäöüÄÖÜßéèêëàâçñ '\-]+$/;
+const NAME_PATTERN = /^[\p{Letter}\p{Mark} '\-]+$/u;
 
 const EMAIL_MAX = 100;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -13,7 +13,12 @@ const PHONE_PATTERN = /^[0-9 +\-()]+$/;
 const NOTES_MAX = 500;
 
 export function sanitizeInput(value: string): string {
-  return value.replace(/<[^>]*>/g, '');
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
 }
 
 // Validation functions return translation keys instead of German strings.

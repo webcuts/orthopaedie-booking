@@ -3,6 +3,17 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
+/**
+ * Partially masks an email address for logging.
+ * "patient@example.com" -> "pa***@example.com"
+ */
+export function maskEmail(email: string): string {
+  const [local, domain] = email.split('@')
+  if (!domain) return '***'
+  const visible = local.slice(0, Math.min(2, local.length))
+  return `${visible}***@${domain}`
+}
+
 export async function logEvent(
   eventType: string,
   message: string,

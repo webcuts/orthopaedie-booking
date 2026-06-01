@@ -71,6 +71,8 @@
 
   "success.title": "Termin erfolgreich gebucht!",
   "success.subtitle": "Wir haben Ihnen eine Bestätigung an <strong>{email}</strong> gesendet.",
+  "success.subtitleBefore": "Wir haben Ihnen eine Bestätigung an ",
+  "success.subtitleAfter": " gesendet.",
   "success.detailsTitle": "Ihre Termindetails",
   "success.labelDateTime": "Datum & Uhrzeit",
   "success.labelTreatment": "Terminart",
@@ -80,7 +82,10 @@
   "success.addressTitle": "Praxisadresse",
   "success.subtitleNoEmail": "Ihr Termin wurde bestätigt. Bitte notieren Sie sich die Details.",
   "success.reminder": "<strong>Erinnerung:</strong> Sie erhalten 24 Stunden und 6 Stunden vor dem Termin eine E-Mail-Erinnerung.",
+  "success.reminderLabel": "Erinnerung:",
+  "success.reminderText": "Sie erhalten 24 Stunden und 6 Stunden vor dem Termin eine E-Mail-Erinnerung.",
   "success.reminderNoEmail": "<strong>Hinweis:</strong> Da keine E-Mail angegeben wurde, erhalten Sie keine Erinnerung per E-Mail.",
+  "success.reminderNoEmailText": "Da keine E-Mail angegeben wurde, erhalten Sie keine Erinnerung per E-Mail.",
   "success.bookAnother": "Weiteren Termin buchen",
 
   "common.back": "Zurück",

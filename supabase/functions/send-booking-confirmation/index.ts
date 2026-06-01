@@ -6,7 +6,7 @@ import { generateBookingConfirmationEmail, getConfirmationSubject, type Appointm
 import { sendEmail } from '../_shared/resend.ts'
 import { sendSms, maskPhone } from '../_shared/twilio.ts'
 import { getConfirmationSms } from '../_shared/sms-templates.ts'
-import { logEvent } from '../_shared/log-helper.ts'
+import { logEvent, maskEmail } from '../_shared/log-helper.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -175,7 +175,7 @@ Deno.serve(async (req) => {
 
     if (!result.success) {
       console.error(`[send-booking-confirmation] Failed to send email: ${result.error}`)
-      await logEvent('error', `Bestätigungsmail fehlgeschlagen: ${result.error}`, { appointmentId, email: emailData.patientEmail })
+      await logEvent('error', `Bestätigungsmail fehlgeschlagen: ${result.error}`, { appointmentId, email: maskEmail(emailData.patientEmail) })
       return new Response(
         JSON.stringify({ success: false, error: result.error }),
         {
@@ -185,8 +185,8 @@ Deno.serve(async (req) => {
       )
     }
 
-    console.log(`[send-booking-confirmation] Email sent to ${emailData.patientEmail}`)
-    await logEvent('booking', `Bestätigungsmail gesendet an ${emailData.patientEmail}`, { appointmentId })
+    console.log(`[send-booking-confirmation] Email sent to ${maskEmail(emailData.patientEmail)}`)
+    await logEvent('booking', `Bestätigungsmail gesendet an ${maskEmail(emailData.patientEmail)}`, { appointmentId })
 
     return new Response(
       JSON.stringify({

@@ -74,10 +74,9 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
         }
       </h1>
       {state.contactData.email.trim() ? (
-        <p
-          className={styles.subtitle}
-          dangerouslySetInnerHTML={{ __html: t('success.subtitle', { email: state.contactData.email }) }}
-        />
+        <p className={styles.subtitle}>
+          {t('success.subtitleBefore')}<strong>{state.contactData.email}</strong>{t('success.subtitleAfter')}
+        </p>
       ) : (
         <p className={styles.subtitle}>{t('success.subtitleNoEmail')}</p>
       )}
@@ -150,10 +149,13 @@ export function SuccessStep({ state, onReset }: SuccessStepProps) {
           <circle cx="12" cy="12" r="10" />
           <polyline points="12 6 12 12 16 14" />
         </svg>
-        <div dangerouslySetInnerHTML={{ __html: state.contactData.email.trim()
-          ? t('success.reminder')
-          : t('success.reminderNoEmail')
-        }} />
+        <div>
+          <strong>{t('success.reminderLabel')}</strong>{' '}
+          {state.contactData.email.trim()
+            ? t('success.reminderText')
+            : t('success.reminderNoEmailText')
+          }
+        </div>
       </div>
 
       <div className={styles.actions}>

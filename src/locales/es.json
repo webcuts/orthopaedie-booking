@@ -71,6 +71,8 @@
 
   "success.title": "¡Cita reservada con éxito!",
   "success.subtitle": "Le hemos enviado una confirmación a <strong>{email}</strong>.",
+  "success.subtitleBefore": "Le hemos enviado una confirmación a ",
+  "success.subtitleAfter": ".",
   "success.detailsTitle": "Detalles de su cita",
   "success.labelDateTime": "Fecha y hora",
   "success.labelTreatment": "Tipo de cita",
@@ -80,7 +82,10 @@
   "success.addressTitle": "Dirección de la consulta",
   "success.subtitleNoEmail": "Su cita ha sido confirmada. Por favor anote los detalles.",
   "success.reminder": "<strong>Recordatorio:</strong> Recibirá un recordatorio por correo 24 horas y 6 horas antes de la cita.",
+  "success.reminderLabel": "Recordatorio:",
+  "success.reminderText": "Recibirá un recordatorio por correo 24 horas y 6 horas antes de la cita.",
   "success.reminderNoEmail": "<strong>Aviso:</strong> Como no se indicó correo electrónico, no recibirá recordatorio por correo.",
+  "success.reminderNoEmailText": "Como no se indicó correo electrónico, no recibirá recordatorio por correo.",
   "success.bookAnother": "Reservar otra cita",
 
   "common.back": "Atrás",

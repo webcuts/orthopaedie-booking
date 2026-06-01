@@ -71,6 +71,8 @@
 
   "success.title": "تم حجز الموعد بنجاح!",
   "success.subtitle": "أرسلنا تأكيداً إلى <strong>{email}</strong>.",
+  "success.subtitleBefore": "أرسلنا تأكيداً إلى ",
+  "success.subtitleAfter": ".",
   "success.detailsTitle": "تفاصيل موعدك",
   "success.labelDateTime": "التاريخ والوقت",
   "success.labelTreatment": "نوع العلاج",
@@ -80,7 +82,10 @@
   "success.addressTitle": "عنوان العيادة",
   "success.subtitleNoEmail": "تم تأكيد موعدك. يرجى تدوين التفاصيل.",
   "success.reminder": "<strong>تذكير:</strong> ستتلقى تذكيراً بالبريد الإلكتروني قبل 24 ساعة و6 ساعات من موعدك.",
+  "success.reminderLabel": "تذكير:",
+  "success.reminderText": "ستتلقى تذكيراً بالبريد الإلكتروني قبل 24 ساعة و6 ساعات من موعدك.",
   "success.reminderNoEmail": "<strong>ملاحظة:</strong> لم يتم تقديم بريد إلكتروني، لذلك لن تتلقى تذكيرات بالبريد.",
+  "success.reminderNoEmailText": "لم يتم تقديم بريد إلكتروني، لذلك لن تتلقى تذكيرات بالبريد.",
   "success.bookAnother": "حجز موعد آخر",
 
   "common.back": "رجوع",

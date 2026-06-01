@@ -71,6 +71,8 @@
 
   "success.title": "Randevunuz Başarıyla Oluşturuldu!",
   "success.subtitle": "<strong>{email}</strong> adresine bir onay gönderdik.",
+  "success.subtitleBefore": "",
+  "success.subtitleAfter": " adresine bir onay gönderdik.",
   "success.detailsTitle": "Randevu Detaylarınız",
   "success.labelDateTime": "Tarih ve Saat",
   "success.labelTreatment": "Tedavi Türü",
@@ -80,7 +82,10 @@
   "success.addressTitle": "Muayenehane Adresi",
   "success.subtitleNoEmail": "Randevunuz onaylandı. Lütfen detayları not edin.",
   "success.reminder": "<strong>Hatırlatma:</strong> Randevunuzdan 24 saat ve 6 saat önce e-posta ile hatırlatma alacaksınız.",
+  "success.reminderLabel": "Hatırlatma:",
+  "success.reminderText": "Randevunuzdan 24 saat ve 6 saat önce e-posta ile hatırlatma alacaksınız.",
   "success.reminderNoEmail": "<strong>Not:</strong> E-posta adresi belirtilmediğinden e-posta hatırlatması almayacaksınız.",
+  "success.reminderNoEmailText": "E-posta adresi belirtilmediğinden e-posta hatırlatması almayacaksınız.",
   "success.bookAnother": "Yeni Randevu Al",
 
   "common.back": "Geri",

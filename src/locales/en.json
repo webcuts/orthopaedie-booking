@@ -71,6 +71,8 @@
 
   "success.title": "Appointment Successfully Booked!",
   "success.subtitle": "We have sent a confirmation to <strong>{email}</strong>.",
+  "success.subtitleBefore": "We have sent a confirmation to ",
+  "success.subtitleAfter": ".",
   "success.detailsTitle": "Your Appointment Details",
   "success.labelDateTime": "Date & Time",
   "success.labelTreatment": "Treatment",
@@ -80,7 +82,10 @@
   "success.addressTitle": "Practice Address",
   "success.subtitleNoEmail": "Your appointment is confirmed. Please note the details.",
   "success.reminder": "<strong>Reminder:</strong> You will receive an email reminder 24 hours and 6 hours before your appointment.",
+  "success.reminderLabel": "Reminder:",
+  "success.reminderText": "You will receive an email reminder 24 hours and 6 hours before your appointment.",
   "success.reminderNoEmail": "<strong>Note:</strong> Since no email was provided, you will not receive email reminders.",
+  "success.reminderNoEmailText": "Since no email was provided, you will not receive email reminders.",
   "success.bookAnother": "Book Another Appointment",
 
   "common.back": "Back",

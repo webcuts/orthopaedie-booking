@@ -6,7 +6,7 @@ import { generateCancellationEmail, getCancellationSubject, type AppointmentData
 import { sendEmail } from '../_shared/resend.ts'
 import { sendSms, maskPhone } from '../_shared/twilio.ts'
 import { getCancellationSms } from '../_shared/sms-templates.ts'
-import { logEvent } from '../_shared/log-helper.ts'
+import { logEvent, maskEmail } from '../_shared/log-helper.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -123,15 +123,15 @@ Deno.serve(async (req) => {
       })
 
       if (result.success) {
-        console.log(`[send-cancellation-notification] Email sent to ${emailData.patientEmail}`)
-        await logEvent('cancellation', `Absage-E-Mail gesendet an ${emailData.patientEmail}`, { appointmentId })
+        console.log(`[send-cancellation-notification] Email sent to ${maskEmail(emailData.patientEmail)}`)
+        await logEvent('cancellation', `Absage-E-Mail gesendet an ${maskEmail(emailData.patientEmail)}`, { appointmentId })
         return new Response(
           JSON.stringify({ success: true, channel: 'email', messageId: result.messageId }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
         )
       } else {
         console.error(`[send-cancellation-notification] Email failed: ${result.error}`)
-        await logEvent('error', `Absage-E-Mail fehlgeschlagen: ${result.error}`, { appointmentId })
+        await logEvent('error', `Absage-E-Mail fehlgeschlagen: ${result.error}`, { appointmentId, email: maskEmail(emailData.patientEmail) })
         return new Response(
           JSON.stringify({ success: false, error: result.error }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }

@@ -71,6 +71,8 @@
 
   "success.title": "Запись успешно создана!",
   "success.subtitle": "Мы отправили подтверждение на <strong>{email}</strong>.",
+  "success.subtitleBefore": "Мы отправили подтверждение на ",
+  "success.subtitleAfter": ".",
   "success.detailsTitle": "Данные вашего приёма",
   "success.labelDateTime": "Дата и время",
   "success.labelTreatment": "Вид приёма",
@@ -80,7 +82,10 @@
   "success.addressTitle": "Адрес клиники",
   "success.subtitleNoEmail": "Ваш приём подтверждён. Пожалуйста, запишите данные.",
   "success.reminder": "<strong>Напоминание:</strong> Вы получите напоминание по эл. почте за 24 часа и за 6 часов до приёма.",
+  "success.reminderLabel": "Напоминание:",
+  "success.reminderText": "Вы получите напоминание по эл. почте за 24 часа и за 6 часов до приёма.",
   "success.reminderNoEmail": "<strong>Примечание:</strong> Так как эл. почта не указана, вы не получите напоминания по почте.",
+  "success.reminderNoEmailText": "Так как эл. почта не указана, вы не получите напоминания по почте.",
   "success.bookAnother": "Записаться ещё раз",
 
   "common.back": "Назад",

@@ -98,8 +98,8 @@ export function StaffPage() {
       setFormError('Bitte alle Felder ausfüllen');
       return;
     }
-    if (newPassword.length < 6) {
-      setFormError('Passwort muss mindestens 6 Zeichen lang sein');
+    if (newPassword.length < 12) {
+      setFormError('Passwort muss mindestens 12 Zeichen lang sein');
       return;
     }
     setSaving(true);

@@ -6,7 +6,7 @@ import { generateRescheduleEmail, getRescheduleSubject, type AppointmentData, ty
 import { sendEmail } from '../_shared/resend.ts'
 import { sendSms, maskPhone } from '../_shared/twilio.ts'
 import { getRescheduleSms } from '../_shared/sms-templates.ts'
-import { logEvent } from '../_shared/log-helper.ts'
+import { logEvent, maskEmail } from '../_shared/log-helper.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -161,15 +161,15 @@ Deno.serve(async (req) => {
 
     if (!result.success) {
       console.error(`[send-reschedule-notification] Failed to send email: ${result.error}`)
-      await logEvent('error', `Verlegungsmail fehlgeschlagen: ${result.error}`, { appointmentId, email: emailData.patientEmail })
+      await logEvent('error', `Verlegungsmail fehlgeschlagen: ${result.error}`, { appointmentId, email: maskEmail(emailData.patientEmail) })
       return new Response(
         JSON.stringify({ success: false, error: result.error }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
       )
     }
 
-    console.log(`[send-reschedule-notification] Email sent to ${emailData.patientEmail}`)
-    await logEvent('reschedule', `Verlegungsmail gesendet an ${emailData.patientEmail}`, { appointmentId, oldDate, oldTime })
+    console.log(`[send-reschedule-notification] Email sent to ${maskEmail(emailData.patientEmail)}`)
+    await logEvent('reschedule', `Verlegungsmail gesendet an ${maskEmail(emailData.patientEmail)}`, { appointmentId, oldDate, oldTime })
 
     return new Response(
       JSON.stringify({
