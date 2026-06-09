@@ -15,6 +15,28 @@ const REASON_COLORS: Record<string, string> = {
   other: '#F3F4F6',
 };
 
+type TimePreset = 'full' | 'morning' | 'afternoon' | 'custom';
+
+const TIME_PRESET_LABELS: Record<TimePreset, string> = {
+  full:      'Ganztägig',
+  morning:   'Vormittag (bis 12:00 Uhr)',
+  afternoon: 'Nachmittag (ab 14:00 Uhr)',
+  custom:    'Eigener Zeitraum',
+};
+
+const TIME_PRESET_RANGES: Record<Exclude<TimePreset, 'full' | 'custom'>, { start: string; end: string }> = {
+  morning:   { start: '00:00', end: '12:00' },
+  afternoon: { start: '14:00', end: '23:59' },
+};
+
+function rangeLabel(start: string, end: string): string {
+  const s = start.slice(0, 5);
+  const e = end.slice(0, 5);
+  if (s === '00:00' && e === '12:00') return 'Vormittag (bis 12:00)';
+  if (s === '14:00' && e === '23:59') return 'Nachmittag (ab 14:00)';
+  return `${s}–${e}`;
+}
+
 export function AbsenceManager() {
   const {
     absences,
@@ -33,6 +55,9 @@ export function AbsenceManager() {
   const [practitionerId, setPractitionerId] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [timePreset, setTimePreset] = useState<TimePreset>('full');
+  const [customStart, setCustomStart] = useState('09:00');
+  const [customEnd, setCustomEnd] = useState('12:00');
   const [reason, setReason] = useState<'sick' | 'vacation' | 'other'>('vacation');
   const [note, setNote] = useState('');
   const [showOnWebsite, setShowOnWebsite] = useState(true);
@@ -42,6 +67,9 @@ export function AbsenceManager() {
     setPractitionerId('');
     setStartDate('');
     setEndDate('');
+    setTimePreset('full');
+    setCustomStart('09:00');
+    setCustomEnd('12:00');
     setReason('vacation');
     setNote('');
     setShowOnWebsite(true);
@@ -63,11 +91,26 @@ export function AbsenceManager() {
       return;
     }
 
+    let start_time: string | null = null;
+    let end_time: string | null = null;
+    if (timePreset === 'morning' || timePreset === 'afternoon') {
+      ({ start: start_time, end: end_time } = TIME_PRESET_RANGES[timePreset]);
+    } else if (timePreset === 'custom') {
+      if (customStart >= customEnd) {
+        setFormError('Endzeit muss nach Startzeit liegen');
+        return;
+      }
+      start_time = customStart;
+      end_time = customEnd;
+    }
+
     setSaving(true);
     const result = await createAbsence({
       practitioner_id: practitionerId,
       start_date: startDate,
       end_date: endDate,
+      start_time,
+      end_time,
       reason,
       note: note || undefined,
       show_on_website: showOnWebsite,
@@ -182,6 +225,47 @@ export function AbsenceManager() {
             </div>
           </div>
 
+          <div className={styles.formRow}>
+            <div className={styles.field}>
+              <label htmlFor="timePreset">Zeitraum *</label>
+              <select
+                id="timePreset"
+                value={timePreset}
+                onChange={(e) => setTimePreset(e.target.value as TimePreset)}
+              >
+                {(Object.keys(TIME_PRESET_LABELS) as TimePreset[]).map((p) => (
+                  <option key={p} value={p}>{TIME_PRESET_LABELS[p]}</option>
+                ))}
+              </select>
+            </div>
+            {timePreset === 'custom' && (
+              <div className={styles.field}>
+                <label>Von – Bis</label>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    type="time"
+                    value={customStart}
+                    onChange={(e) => setCustomStart(e.target.value)}
+                    style={{ flex: 1 }}
+                  />
+                  <input
+                    type="time"
+                    value={customEnd}
+                    onChange={(e) => setCustomEnd(e.target.value)}
+                    style={{ flex: 1 }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {timePreset !== 'full' && startDate && endDate && startDate !== endDate && (
+            <div className={styles.warning}>
+              Der Zeitraum gilt <strong>an jedem Tag</strong> innerhalb des Datumsbereichs
+              (z.&nbsp;B. „Vormittag" = jeden Tag 00:00–12:00 geblockt, Rest des Tages buchbar).
+            </div>
+          )}
+
           <div className={styles.field}>
             <label htmlFor="note">Notiz (optional)</label>
             <input
@@ -270,6 +354,13 @@ export function AbsenceManager() {
                 </div>
                 <div className={styles.absenceDates}>
                   {formatDate(absence.start_date)} – {formatDate(absence.end_date)}
+                  {absence.start_time && absence.end_time && (
+                    <span style={{ marginLeft: '0.5rem' }}>
+                      <span className={styles.reasonBadge} style={{ background: '#FEF3C7' }}>
+                        {rangeLabel(absence.start_time, absence.end_time)}
+                      </span>
+                    </span>
+                  )}
                 </div>
                 {absence.note && (
                   <div className={styles.absenceNote}>{absence.note}</div>

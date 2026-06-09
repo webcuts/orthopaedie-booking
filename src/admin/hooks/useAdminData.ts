@@ -401,6 +401,8 @@ export interface PractitionerAbsence {
   practitioner_id: string;
   start_date: string;
   end_date: string;
+  start_time: string | null;
+  end_time: string | null;
   reason: 'sick' | 'vacation' | 'other';
   note: string | null;
   show_on_website: boolean;
@@ -653,6 +655,8 @@ export function usePractitionerAbsences() {
     practitioner_id: string;
     start_date: string;
     end_date: string;
+    start_time?: string | null;
+    end_time?: string | null;
     reason: 'sick' | 'vacation' | 'other';
     note?: string;
     show_on_website?: boolean;
