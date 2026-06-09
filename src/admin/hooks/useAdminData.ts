@@ -1400,11 +1400,24 @@ export function useAdminMfaAvailableSlots(date: string | null) {
           countMap.set(c.mfa_time_slot_id, (countMap.get(c.mfa_time_slot_id) || 0) + 1);
         });
 
+        // Praxis-Schließungen für dieses Datum laden (z.B. halber Tag geblockt)
+        const { data: blocks } = await supabase
+          .from('practice_blocked_periods')
+          .select('start_time, end_time')
+          .eq('date', date);
+
+        const isBlocked = (startTime: string): boolean => {
+          const t = startTime.slice(0, 8);
+          return (blocks || []).some(b =>
+            t >= b.start_time.slice(0, 8) && t < b.end_time.slice(0, 8)
+          );
+        };
+
         const result = (mfaSlots || []).map(s => ({
           id: s.id,
           start_time: s.start_time,
           end_time: s.end_time,
-          available: (countMap.get(s.id) || 0) < s.max_parallel,
+          available: !isBlocked(s.start_time) && (countMap.get(s.id) || 0) < s.max_parallel,
         }));
 
         setSlots(result);

@@ -1,4 +1,4 @@
-import { AbsenceManager } from '../components';
+import { AbsenceManager, PracticeClosureManager } from '../components';
 import styles from './SettingsPage.module.css';
 
 export function AbsencesPage() {
@@ -8,6 +8,7 @@ export function AbsencesPage() {
 
       <div className={styles.sections}>
         <AbsenceManager />
+        <PracticeClosureManager />
       </div>
     </div>
   );

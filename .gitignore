@@ -48,3 +48,5 @@ scripts/reset-passwords.py
 scripts/*.pdf
 *-zugangsdaten*.pdf
 *-passwoerter*.pdf
+scripts/send-address-correction.py
+address-correction-log-*.json
