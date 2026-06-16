@@ -50,3 +50,5 @@ scripts/*.pdf
 *-passwoerter*.pdf
 scripts/send-address-correction.py
 address-correction-log-*.json
+scripts/resend-flores-cancellation.py
+flores-cancel-resend-*.json
