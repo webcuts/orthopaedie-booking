@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { usePractitionerAbsences } from '../../hooks';
+import { usePractitionerAbsences, type PractitionerAbsence } from '../../hooks';
 import styles from './AbsenceManager.module.css';
 import { formatLocalDate } from '../../../utils/dates';
 
@@ -45,7 +45,11 @@ export function AbsenceManager() {
     error,
     createAbsence,
     deleteAbsence,
+    countAppointmentsForAbsence,
+    cancelAppointmentsForAbsence,
   } = usePractitionerAbsences();
+
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
 
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -122,14 +126,68 @@ export function AbsenceManager() {
     if (result.success) {
       resetForm();
       setShowForm(false);
+      // Nach Anlegen: zählen wie viele Termine im Zeitraum existieren und ggf.
+      // direkt zum Absagen einladen. Spart den manuellen Klick auf den Button.
+      const tempAbsence: PractitionerAbsence = {
+        id: '',
+        practitioner_id: practitionerId,
+        start_date: startDate,
+        end_date: endDate,
+        start_time,
+        end_time,
+        reason,
+        note: null,
+        show_on_website: showOnWebsite,
+        public_message: null,
+        created_at: '',
+      };
+      const count = await countAppointmentsForAbsence(tempAbsence);
+      if (count > 0) {
+        const ok = window.confirm(
+          `Es existieren ${count} Termin${count > 1 ? 'e' : ''} in diesem Zeitraum.\n\n` +
+          `Sollen diese Termine direkt storniert und die Patienten per E-Mail benachrichtigt werden?`
+        );
+        if (ok) {
+          const cancelRes = await cancelAppointmentsForAbsence(tempAbsence);
+          if (cancelRes.success) {
+            window.alert(`${cancelRes.cancelled} Termine storniert. Absage-Mails wurden verschickt.`);
+          } else {
+            window.alert(`Fehler beim Stornieren: ${cancelRes.error}`);
+          }
+        }
+      }
     } else {
       setFormError(result.error || 'Fehler beim Speichern');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Abwesenheit wirklich löschen?')) return;
+    if (!window.confirm('Abwesenheit wirklich löschen?')) return;
     await deleteAbsence(id);
+  };
+
+  const handleCancelAppointments = async (absence: PractitionerAbsence) => {
+    setCancellingId(absence.id);
+    try {
+      const count = await countAppointmentsForAbsence(absence);
+      if (count === 0) {
+        window.alert('Keine offenen Termine in diesem Zeitraum.');
+        return;
+      }
+      const ok = window.confirm(
+        `${count} Termin${count > 1 ? 'e' : ''} im Abwesenheits-Zeitraum werden storniert ` +
+        `und die Patienten per E-Mail benachrichtigt.\n\nFortfahren?`
+      );
+      if (!ok) return;
+      const res = await cancelAppointmentsForAbsence(absence);
+      if (res.success) {
+        window.alert(`${res.cancelled} Termine storniert. Absage-Mails wurden verschickt.`);
+      } else {
+        window.alert(`Fehler: ${res.error}`);
+      }
+    } finally {
+      setCancellingId(null);
+    }
   };
 
   const formatDate = (dateStr: string) => {
@@ -371,13 +429,34 @@ export function AbsenceManager() {
                   </div>
                 )}
               </div>
-              <button
-                className={styles.deleteButton}
-                onClick={() => handleDelete(absence.id)}
-                title="Abwesenheit löschen"
-              >
-                ×
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={() => handleCancelAppointments(absence)}
+                  disabled={cancellingId === absence.id}
+                  title="Alle Termine in diesem Zeitraum stornieren und Patienten benachrichtigen"
+                  style={{
+                    padding: '0.375rem 0.75rem',
+                    background: cancellingId === absence.id ? '#9CA3AF' : '#DC2626',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: 500,
+                    cursor: cancellingId === absence.id ? 'wait' : 'pointer',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {cancellingId === absence.id ? 'Wird gesendet…' : '📧 Termine absagen'}
+                </button>
+                <button
+                  className={styles.deleteButton}
+                  onClick={() => handleDelete(absence.id)}
+                  title="Abwesenheit löschen"
+                >
+                  ×
+                </button>
+              </div>
             </div>
           ))
         )}

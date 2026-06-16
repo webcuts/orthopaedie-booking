@@ -682,6 +682,70 @@ export function usePractitionerAbsences() {
     return { success: true };
   }, [fetchAbsences]);
 
+  // Hilfsfunktion: gibt alle nicht-stornierten Termine zurück, die in den
+  // Datums-Bereich der Abwesenheit fallen UND (falls Zeit-Range gesetzt) in
+  // das Zeitfenster der Abwesenheit. Wird vor dem Absagen ausgeführt, um
+  // dem User die Anzahl anzeigen zu können.
+  const findAffectedAppointments = useCallback(async (absence: PractitionerAbsence) => {
+    const { data, error: fetchErr } = await supabase
+      .from('appointments')
+      .select('id, time_slot:time_slots!inner(id, date, start_time)')
+      .eq('practitioner_id', absence.practitioner_id)
+      .neq('status', 'cancelled')
+      .gte('time_slot.date', absence.start_date)
+      .lte('time_slot.date', absence.end_date);
+
+    if (fetchErr || !data) return [];
+
+    type AffectedRow = { id: string; time_slot: { id: string; date: string; start_time: string } };
+    const rows = data as unknown as AffectedRow[];
+
+    return rows.filter((a) => {
+      if (!absence.start_time || !absence.end_time) return true;
+      const t = a.time_slot.start_time;
+      return t >= absence.start_time && t < absence.end_time;
+    });
+  }, []);
+
+  const countAppointmentsForAbsence = useCallback(async (absence: PractitionerAbsence) => {
+    const affected = await findAffectedAppointments(absence);
+    return affected.length;
+  }, [findAffectedAppointments]);
+
+  // Storniert alle betroffenen Termine + sendet Absage-Mails.
+  // Wiederverwendet das bestehende Pattern (Status='cancelled' + Slot freigeben +
+  // send-cancellation-notification Edge Function pro Termin).
+  const cancelAppointmentsForAbsence = useCallback(async (absence: PractitionerAbsence) => {
+    const affected = await findAffectedAppointments(absence);
+    if (affected.length === 0) {
+      return { success: true, cancelled: 0 };
+    }
+
+    const appointmentIds = affected.map((a) => a.id);
+    const slotIds = Array.from(new Set(affected.map((a) => a.time_slot.id)));
+
+    const { error: updErr } = await supabase
+      .from('appointments')
+      .update({ status: 'cancelled' })
+      .in('id', appointmentIds);
+
+    if (updErr) return { success: false, error: updErr.message, cancelled: 0 };
+
+    // Slots freigeben (best-effort; Frontend-Filter respektiert NOT EXISTS appointments
+    // pro Behandler, daher ist is_available=true hier sicher)
+    await supabase.from('time_slots').update({ is_available: true }).in('id', slotIds);
+
+    // Absage-Mails parallel verschicken (fire-and-forget, Fehler loggen)
+    await Promise.allSettled(
+      appointmentIds.map((appointmentId) =>
+        supabase.functions.invoke('send-cancellation-notification', { body: { appointmentId } })
+      )
+    );
+
+    await fetchAbsences();
+    return { success: true, cancelled: affected.length };
+  }, [findAffectedAppointments, fetchAbsences]);
+
   return {
     absences,
     practitioners,
@@ -689,6 +753,8 @@ export function usePractitionerAbsences() {
     error,
     createAbsence,
     deleteAbsence,
+    countAppointmentsForAbsence,
+    cancelAppointmentsForAbsence,
     refetch: fetchAbsences,
   };
 }
