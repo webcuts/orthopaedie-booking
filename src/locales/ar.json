@@ -20,6 +20,7 @@
   "doctorSelect.unavailableTitle": "غير متاح",
   "doctorSelect.unavailableMessage": "{name} غير متاح من {start} إلى {end} ({reason}).",
   "doctorSelect.unavailableHint": "اختر طبيباً آخر أو حاول مجدداً من {returnDate}.",
+  "doctorSelect.absenceHint": "مريض: {start}–{end}",
   "doctorSelect.understood": "فهمت",
   "doctorSelect.reasonSick": "إجازة مرضية",
   "doctorSelect.reasonVacation": "إجازة",

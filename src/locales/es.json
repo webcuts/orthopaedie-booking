@@ -20,6 +20,7 @@
   "doctorSelect.unavailableTitle": "No disponible",
   "doctorSelect.unavailableMessage": "{name} no está disponible del {start} al {end} ({reason}).",
   "doctorSelect.unavailableHint": "Elija otro médico o inténtelo a partir del {returnDate}.",
+  "doctorSelect.absenceHint": "Enfermo: {start}–{end}",
   "doctorSelect.understood": "Entendido",
   "doctorSelect.reasonSick": "Enfermedad",
   "doctorSelect.reasonVacation": "Vacaciones",

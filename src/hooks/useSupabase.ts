@@ -334,10 +334,10 @@ export function useAllPractitioners() {
         (absences || []).forEach(a => absMap.set(a.practitioner_id, a));
         setAbsentMap(absMap);
 
-        // Sortierung: Verfügbare vor Abwesenden
-        const available = (practitioners || []).filter(p => !absMap.has(p.id));
-        const absent = (practitioners || []).filter(p => absMap.has(p.id));
-        setData([...available, ...absent]);
+        // Reihenfolge bleibt nach last_name (kein Verschieben "krank nach hinten" mehr).
+        // Krankheit ist nur noch ein Hinweis-Badge, keine Sperre — die einzelnen
+        // Krankheitstage werden im Datums-Picker ausgegraut.
+        setData(practitioners || []);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Fehler beim Laden der Behandler');
       } finally {

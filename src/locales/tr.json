@@ -20,6 +20,7 @@
   "doctorSelect.unavailableTitle": "Müsait Değil",
   "doctorSelect.unavailableMessage": "{name}, {start} - {end} tarihleri arasında müsait değildir ({reason}).",
   "doctorSelect.unavailableHint": "Başka bir doktor seçin veya {returnDate} tarihinden itibaren deneyin.",
+  "doctorSelect.absenceHint": "Hasta: {start}–{end}",
   "doctorSelect.understood": "Anlaşıldı",
   "doctorSelect.reasonSick": "Hastalık",
   "doctorSelect.reasonVacation": "Tatil",
