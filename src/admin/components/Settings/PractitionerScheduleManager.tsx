@@ -40,7 +40,9 @@ export function PractitionerScheduleManager() {
   const [formError, setFormError] = useState<string | null>(null);
 
   // Form state
+  const [mode, setMode] = useState<'recurring' | 'single'>('recurring');
   const [dayOfWeek, setDayOfWeek] = useState(1);
+  const [singleDate, setSingleDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [isBookable, setIsBookable] = useState(true);
@@ -54,18 +56,39 @@ export function PractitionerScheduleManager() {
     return schedules.filter(s => s.practitioner_id === selectedPractitionerId);
   }, [schedules, selectedPractitionerId]);
 
+  // Einmalige Schichten = Schedule-Einträge mit valid_from === valid_until
+  // Sie tauchen nicht in der Wochenübersicht auf (würde das Bild verwirren),
+  // sondern in einer eigenen Sektion "Geplante Schichten".
+  const isSingleShift = (s: PractitionerScheduleEntry) =>
+    !!s.valid_from && !!s.valid_until && s.valid_from === s.valid_until;
+
+  const recurringSchedules = useMemo(
+    () => filteredSchedules.filter((s) => !isSingleShift(s)),
+    [filteredSchedules]
+  );
+
+  const singleShifts = useMemo(() => {
+    const today = formatLocalDate(new Date());
+    return filteredSchedules
+      .filter(isSingleShift)
+      .filter((s) => (s.valid_until || '') >= today) // nur künftige (inkl. heute)
+      .sort((a, b) => (a.valid_from || '').localeCompare(b.valid_from || ''));
+  }, [filteredSchedules]);
+
   const schedulesByDay = useMemo(() => {
     const map = new Map<number, PractitionerScheduleEntry[]>();
-    for (const s of filteredSchedules) {
+    for (const s of recurringSchedules) {
       const existing = map.get(s.day_of_week) || [];
       existing.push(s);
       map.set(s.day_of_week, existing);
     }
     return map;
-  }, [filteredSchedules]);
+  }, [recurringSchedules]);
 
   const resetForm = () => {
+    setMode('recurring');
     setDayOfWeek(1);
+    setSingleDate('');
     setStartTime('');
     setEndTime('');
     setIsBookable(true);
@@ -95,17 +118,33 @@ export function PractitionerScheduleManager() {
       return;
     }
 
+    // Mode 'single' = einmalige Schicht an einem konkreten Datum.
+    // day_of_week wird aus dem Datum berechnet, valid_from=valid_until=Datum.
+    let effectiveDayOfWeek = dayOfWeek;
+    let effectiveValidFrom = validFrom;
+    let effectiveValidUntil: string | null = validUntil || null;
+
+    if (mode === 'single') {
+      if (!singleDate) {
+        setFormError('Bitte ein Datum auswählen');
+        return;
+      }
+      effectiveDayOfWeek = new Date(singleDate + 'T00:00:00').getDay();
+      effectiveValidFrom = singleDate;
+      effectiveValidUntil = singleDate;
+    }
+
     setSaving(true);
     const result = await createSchedule({
       practitioner_id: selectedPractitionerId,
-      day_of_week: dayOfWeek,
+      day_of_week: effectiveDayOfWeek,
       start_time: startTime,
       end_time: endTime,
       is_bookable: isBookable,
       insurance_filter: insuranceFilter,
       label: label || undefined,
-      valid_from: validFrom,
-      valid_until: validUntil || null,
+      valid_from: effectiveValidFrom,
+      valid_until: effectiveValidUntil,
     });
 
     setSaving(false);
@@ -168,19 +207,79 @@ export function PractitionerScheduleManager() {
         <form onSubmit={handleSubmit} className={styles.form}>
           {formError && <div className={styles.formError}>{formError}</div>}
 
-          <div className={styles.formRow3}>
+          {/* Mode-Toggle: wiederkehrend vs. einmalige Schicht */}
+          <div className={styles.formRow} style={{ marginBottom: '0.75rem' }}>
             <div className={styles.field}>
-              <label htmlFor="schedule-day">Wochentag *</label>
-              <select
-                id="schedule-day"
-                value={dayOfWeek}
-                onChange={(e) => setDayOfWeek(Number(e.target.value))}
-              >
-                {DISPLAY_ORDER.map((d) => (
-                  <option key={d} value={d}>{JS_DAY_NAMES[d]}</option>
-                ))}
-              </select>
+              <label>Art *</label>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <label
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.4rem',
+                    padding: '0.5rem 0.75rem',
+                    border: `1px solid ${mode === 'recurring' ? '#2674BB' : '#D1D5DB'}`,
+                    background: mode === 'recurring' ? '#EBF5FF' : 'white',
+                    borderRadius: '6px', cursor: 'pointer', flex: 1,
+                  }}
+                >
+                  <input
+                    type="radio" name="schedule-mode"
+                    checked={mode === 'recurring'}
+                    onChange={() => setMode('recurring')}
+                  />
+                  Wiederkehrend (jeden Wochentag)
+                </label>
+                <label
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.4rem',
+                    padding: '0.5rem 0.75rem',
+                    border: `1px solid ${mode === 'single' ? '#2674BB' : '#D1D5DB'}`,
+                    background: mode === 'single' ? '#EBF5FF' : 'white',
+                    borderRadius: '6px', cursor: 'pointer', flex: 1,
+                  }}
+                >
+                  <input
+                    type="radio" name="schedule-mode"
+                    checked={mode === 'single'}
+                    onChange={() => setMode('single')}
+                  />
+                  Einmalig (Schichtplan-Datum)
+                </label>
+              </div>
             </div>
+          </div>
+
+          <div className={styles.formRow3}>
+            {mode === 'recurring' ? (
+              <div className={styles.field}>
+                <label htmlFor="schedule-day">Wochentag *</label>
+                <select
+                  id="schedule-day"
+                  value={dayOfWeek}
+                  onChange={(e) => setDayOfWeek(Number(e.target.value))}
+                >
+                  {DISPLAY_ORDER.map((d) => (
+                    <option key={d} value={d}>{JS_DAY_NAMES[d]}</option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div className={styles.field}>
+                <label htmlFor="schedule-single-date">Datum *</label>
+                <input
+                  type="date"
+                  id="schedule-single-date"
+                  value={singleDate}
+                  min={formatLocalDate(new Date())}
+                  onChange={(e) => setSingleDate(e.target.value)}
+                  required
+                />
+                {singleDate && (
+                  <small style={{ color: '#6B7280', marginTop: '4px' }}>
+                    {JS_DAY_NAMES[new Date(singleDate + 'T00:00:00').getDay()]}
+                  </small>
+                )}
+              </div>
+            )}
 
             <div className={styles.field}>
               <label htmlFor="schedule-start">Von *</label>
@@ -243,30 +342,34 @@ export function PractitionerScheduleManager() {
               />
             </div>
 
-            <div className={styles.field}>
-              <label htmlFor="schedule-valid-from">Gültig ab</label>
-              <input
-                type="date"
-                id="schedule-valid-from"
-                value={validFrom}
-                onChange={(e) => setValidFrom(e.target.value)}
-              />
-            </div>
+            {mode === 'recurring' && (
+              <div className={styles.field}>
+                <label htmlFor="schedule-valid-from">Gültig ab</label>
+                <input
+                  type="date"
+                  id="schedule-valid-from"
+                  value={validFrom}
+                  onChange={(e) => setValidFrom(e.target.value)}
+                />
+              </div>
+            )}
           </div>
 
-          <div className={styles.formRow}>
-            <div className={styles.field}>
-              <label htmlFor="schedule-valid-until">Gültig bis (leer = unbegrenzt)</label>
-              <input
-                type="date"
-                id="schedule-valid-until"
-                value={validUntil}
-                onChange={(e) => setValidUntil(e.target.value)}
-                min={validFrom}
-              />
+          {mode === 'recurring' && (
+            <div className={styles.formRow}>
+              <div className={styles.field}>
+                <label htmlFor="schedule-valid-until">Gültig bis (leer = unbegrenzt)</label>
+                <input
+                  type="date"
+                  id="schedule-valid-until"
+                  value={validUntil}
+                  onChange={(e) => setValidUntil(e.target.value)}
+                  min={validFrom}
+                />
+              </div>
+              <div />
             </div>
-            <div />
-          </div>
+          )}
 
           <div className={styles.formActions}>
             <button
@@ -297,6 +400,7 @@ export function PractitionerScheduleManager() {
             Keine individuellen Sprechzeiten hinterlegt. Es gelten die Standard-Praxisöffnungszeiten.
           </div>
         ) : (
+          <>
           <div className={styles.weekOverview}>
             {DISPLAY_ORDER.map((dayNum) => {
               const daySchedules = schedulesByDay.get(dayNum) || [];
@@ -336,6 +440,52 @@ export function PractitionerScheduleManager() {
               );
             })}
           </div>
+
+          {/* Geplante Einzel-Schichten (Schichtplan-Datum) */}
+          {singleShifts.length > 0 && (
+            <div style={{ marginTop: '1.5rem' }}>
+              <h4 style={{
+                fontSize: '0.875rem', fontWeight: 600, color: '#374151',
+                margin: '0 0 0.75rem 0',
+              }}>
+                Geplante Einzel-Schichten
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {singleShifts.map((entry) => {
+                  const d = new Date((entry.valid_from || '') + 'T00:00:00');
+                  const dateLabel = d.toLocaleDateString('de-DE', {
+                    weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
+                  });
+                  return (
+                    <div
+                      key={entry.id}
+                      className={`${styles.scheduleCard} ${getCardClass(entry)}`}
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                    >
+                      <div className={styles.cardContent} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem 0.75rem', alignItems: 'center' }}>
+                        <span style={{ fontWeight: 600 }}>{dateLabel}</span>
+                        <span className={styles.cardTime}>
+                          {entry.start_time.slice(0, 5)} – {entry.end_time.slice(0, 5)}
+                        </span>
+                        {entry.label && (
+                          <span className={styles.cardLabel}>{entry.label}</span>
+                        )}
+                        <span className={styles.cardBadge}>{getCardBadge(entry)}</span>
+                      </div>
+                      <button
+                        className={styles.deleteButton}
+                        onClick={() => handleDelete(entry.id)}
+                        title="Einzel-Schicht löschen"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          </>
         )
       )}
     </div>
