@@ -1721,6 +1721,25 @@ export function usePractitionerSchedulesAdmin() {
     return { success: true };
   }, [fetchSchedules]);
 
+  const updateSchedule = useCallback(async (id: string, data: {
+    day_of_week?: number;
+    start_time?: string;
+    end_time?: string;
+    is_bookable?: boolean;
+    insurance_filter?: 'all' | 'private_only';
+    label?: string | null;
+    valid_from?: string;
+    valid_until?: string | null;
+  }) => {
+    const { error } = await supabase
+      .from('practitioner_schedules')
+      .update(data)
+      .eq('id', id);
+    if (error) return { success: false, error: error.message };
+    await fetchSchedules();
+    return { success: true };
+  }, [fetchSchedules]);
+
   const deleteSchedule = useCallback(async (id: string) => {
     const { error } = await supabase
       .from('practitioner_schedules')
@@ -1737,6 +1756,7 @@ export function usePractitionerSchedulesAdmin() {
     loading,
     error,
     createSchedule,
+    updateSchedule,
     deleteSchedule,
     refetch: fetchSchedules,
   };

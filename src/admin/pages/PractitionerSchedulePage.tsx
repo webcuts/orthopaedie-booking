@@ -1,5 +1,5 @@
 import { PractitionerScheduleManager } from '../components';
-import styles from './SettingsPage.module.css';
+import styles from './PractitionerSchedulePage.module.css';
 
 export function PractitionerSchedulePage() {
   return (

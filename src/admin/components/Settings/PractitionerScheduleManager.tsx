@@ -45,7 +45,7 @@ const isSingleShift = (s: PractitionerScheduleEntry) =>
   !!s.valid_from && !!s.valid_until && s.valid_from === s.valid_until;
 
 export function PractitionerScheduleManager() {
-  const { schedules, practitioners, loading, error, createSchedule, deleteSchedule } =
+  const { schedules, practitioners, loading, error, createSchedule, updateSchedule, deleteSchedule } =
     usePractitionerSchedulesAdmin();
 
   const [showForm, setShowForm] = useState(false);
@@ -54,6 +54,7 @@ export function PractitionerScheduleManager() {
   const [weekStart, setWeekStart] = useState<Date>(() => getMonday(new Date()));
 
   // Form state
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [mode, setMode] = useState<'recurring' | 'single'>('recurring');
   const [formPractitionerId, setFormPractitionerId] = useState('');
   const [dayOfWeek, setDayOfWeek] = useState(1);
@@ -103,6 +104,7 @@ export function PractitionerScheduleManager() {
   const todayStr = formatLocalDate(new Date());
 
   const resetForm = () => {
+    setEditingId(null);
     setMode('recurring');
     setFormPractitionerId('');
     setDayOfWeek(1);
@@ -123,6 +125,7 @@ export function PractitionerScheduleManager() {
   };
 
   const openSingleShiftFormFor = (practitionerId: string, date: Date) => {
+    setEditingId(null);
     setMode('single');
     setFormPractitionerId(practitionerId);
     setSingleDate(formatLocalDate(date));
@@ -132,6 +135,24 @@ export function PractitionerScheduleManager() {
     setIsBookable(true);
     setInsuranceFilter('all');
     setLabel('');
+    setFormError(null);
+    setShowForm(true);
+  };
+
+  const openEditForm = (s: PractitionerScheduleEntry) => {
+    setEditingId(s.id);
+    const isSingle = isSingleShift(s);
+    setMode(isSingle ? 'single' : 'recurring');
+    setFormPractitionerId(s.practitioner_id);
+    setDayOfWeek(s.day_of_week);
+    setSingleDate(isSingle ? (s.valid_from || '') : '');
+    setStartTime(s.start_time.slice(0, 5));
+    setEndTime(s.end_time.slice(0, 5));
+    setIsBookable(s.is_bookable);
+    setInsuranceFilter((s.insurance_filter as 'all' | 'private_only') || 'all');
+    setLabel(s.label || '');
+    setValidFrom(s.valid_from || formatLocalDate(new Date()));
+    setValidUntil(s.valid_until || '');
     setFormError(null);
     setShowForm(true);
   };
@@ -168,17 +189,19 @@ export function PractitionerScheduleManager() {
     }
 
     setSaving(true);
-    const result = await createSchedule({
-      practitioner_id: formPractitionerId,
+    const payload = {
       day_of_week: effectiveDayOfWeek,
       start_time: startTime,
       end_time: endTime,
       is_bookable: isBookable,
       insurance_filter: insuranceFilter,
-      label: label || undefined,
+      label: label || null,
       valid_from: effectiveValidFrom,
       valid_until: effectiveValidUntil,
-    });
+    };
+    const result = editingId
+      ? await updateSchedule(editingId, payload)
+      : await createSchedule({ practitioner_id: formPractitionerId, ...payload, label: label || undefined });
 
     setSaving(false);
 
@@ -235,6 +258,16 @@ export function PractitionerScheduleManager() {
         <form onSubmit={handleSubmit} className={styles.form}>
           {formError && <div className={styles.formError}>{formError}</div>}
 
+          {editingId && (
+            <div style={{
+              marginBottom: '0.75rem', padding: '0.5rem 0.75rem',
+              background: '#EBF5FF', border: '1px solid #BFDBFE',
+              borderRadius: '6px', fontSize: '0.8125rem', color: '#1E5A8F',
+            }}>
+              Sprechzeit bearbeiten — Änderungen werden auf den bestehenden Eintrag angewendet.
+            </div>
+          )}
+
           {/* Behandler + Mode */}
           <div className={styles.formRow}>
             <div className={styles.field}>
@@ -244,6 +277,7 @@ export function PractitionerScheduleManager() {
                 value={formPractitionerId}
                 onChange={(e) => setFormPractitionerId(e.target.value)}
                 required
+                disabled={!!editingId}
               >
                 <option value="">Bitte wählen...</option>
                 {practitioners.map((p) => (
@@ -385,7 +419,9 @@ export function PractitionerScheduleManager() {
               onClick={() => { resetForm(); setShowForm(false); }}
             >Abbrechen</button>
             <button type="submit" className={styles.submitButton} disabled={saving}>
-              {saving ? 'Speichere...' : 'Sprechzeit anlegen'}
+              {saving
+                ? 'Speichere...'
+                : editingId ? 'Änderungen speichern' : 'Sprechzeit anlegen'}
             </button>
           </div>
         </form>
@@ -436,15 +472,17 @@ export function PractitionerScheduleManager() {
                         {entry.recurring.map((s) => (
                           <div
                             key={s.id}
-                            title={`Wiederkehrend (${JS_DAY_NAMES[s.day_of_week]})${s.label ? ' · ' + s.label : ''}`}
+                            title={`Wiederkehrend (${JS_DAY_NAMES[s.day_of_week]})${s.label ? ' · ' + s.label : ''} — klicken zum Bearbeiten`}
                             className={`${styles.shiftChip} ${getCardClass(s)} ${styles.shiftRecurring}`}
+                            onClick={() => openEditForm(s)}
+                            role="button"
                           >
                             <span className={styles.shiftTime}>
                               {s.start_time.slice(0, 5)}–{s.end_time.slice(0, 5)}
                             </span>
                             <button
                               className={styles.shiftDelete}
-                              onClick={() => handleDelete(s.id)}
+                              onClick={(e) => { e.stopPropagation(); handleDelete(s.id); }}
                               title="Löschen"
                             >×</button>
                           </div>
@@ -452,15 +490,17 @@ export function PractitionerScheduleManager() {
                         {entry.single.map((s) => (
                           <div
                             key={s.id}
-                            title={`Einzel-Schicht${s.label ? ' · ' + s.label : ''}`}
+                            title={`Einzel-Schicht${s.label ? ' · ' + s.label : ''} — klicken zum Bearbeiten`}
                             className={`${styles.shiftChip} ${getCardClass(s)}`}
+                            onClick={() => openEditForm(s)}
+                            role="button"
                           >
                             <span className={styles.shiftTime}>
                               {s.start_time.slice(0, 5)}–{s.end_time.slice(0, 5)}
                             </span>
                             <button
                               className={styles.shiftDelete}
-                              onClick={() => handleDelete(s.id)}
+                              onClick={(e) => { e.stopPropagation(); handleDelete(s.id); }}
                               title="Löschen"
                             >×</button>
                           </div>
