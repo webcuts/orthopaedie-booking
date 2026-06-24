@@ -6,3 +6,4 @@ export { PrescriptionsPage } from './PrescriptionsPage';
 export { StaffPage } from './StaffPage';
 export { ActivityLogPage } from './ActivityLogPage';
 export { DienstplanPage } from './DienstplanPage';
+export { PractitionerSchedulePage } from './PractitionerSchedulePage';

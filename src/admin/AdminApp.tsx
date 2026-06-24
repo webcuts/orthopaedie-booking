@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks';
 import { AdminLayout } from './components';
-import { LoginPage, DashboardPage, SettingsPage, DataImportPage, PrescriptionsPage, StaffPage, ActivityLogPage, DienstplanPage } from './pages';
+import { LoginPage, DashboardPage, SettingsPage, DataImportPage, PrescriptionsPage, StaffPage, ActivityLogPage, DienstplanPage, PractitionerSchedulePage } from './pages';
 import { AbsencesPage } from './pages/AbsencesPage';
 import './AdminApp.css';
 
@@ -135,6 +135,14 @@ export function AdminApp() {
           element={
             <ProtectedRoute>
               <DienstplanPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dienstplan-aerzte"
+          element={
+            <ProtectedRoute>
+              <PractitionerSchedulePage />
             </ProtectedRoute>
           }
         />
