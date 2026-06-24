@@ -5,8 +5,29 @@ import styles from './PractitionerScheduleManager.module.css';
 import { formatLocalDate } from '../../../utils/dates';
 
 const JS_DAY_NAMES = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+const JS_DAY_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 // Display order: Mon–Sun
 const DISPLAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
+
+function getMonday(d: Date): Date {
+  const day = d.getDay(); // 0=So..6=Sa
+  const diff = day === 0 ? -6 : 1 - day;
+  const m = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diff);
+  return m;
+}
+
+function addDays(d: Date, n: number): Date {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+}
+
+function getISOWeek(d: Date): number {
+  const target = new Date(d.valueOf());
+  const dayNr = (d.getDay() + 6) % 7;
+  target.setDate(target.getDate() - dayNr + 3);
+  const firstThursday = new Date(target.getFullYear(), 0, 4);
+  const diff = target.getTime() - firstThursday.getTime();
+  return 1 + Math.round(diff / (7 * 24 * 60 * 60 * 1000));
+}
 
 const formatPractitioner = (p: { title: string | null; first_name: string; last_name: string }) => {
   return `${p.title || ''} ${p.first_name} ${p.last_name}`.trim();
@@ -16,12 +37,6 @@ function getCardClass(entry: PractitionerScheduleEntry): string {
   if (!entry.is_bookable) return styles.cardNotBookable;
   if (entry.insurance_filter === 'private_only') return styles.cardPrivate;
   return styles.cardBookable;
-}
-
-function getCardBadge(entry: PractitionerScheduleEntry): string | null {
-  if (!entry.is_bookable) return 'Nicht buchbar';
-  if (entry.insurance_filter === 'private_only') return 'Nur privat';
-  return 'Buchbar';
 }
 
 export function PractitionerScheduleManager() {
@@ -38,6 +53,7 @@ export function PractitionerScheduleManager() {
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [weekStart, setWeekStart] = useState<Date>(() => getMonday(new Date()));
 
   // Form state
   const [mode, setMode] = useState<'recurring' | 'single'>('recurring');
@@ -62,28 +78,50 @@ export function PractitionerScheduleManager() {
   const isSingleShift = (s: PractitionerScheduleEntry) =>
     !!s.valid_from && !!s.valid_until && s.valid_from === s.valid_until;
 
-  const recurringSchedules = useMemo(
-    () => filteredSchedules.filter((s) => !isSingleShift(s)),
-    [filteredSchedules]
+  // Wochen-Grid: pro Datum die anwendbaren Schedules berechnen
+  // (recurring matching day_of_week + valid range, plus single-date overrides)
+  const weekDates = useMemo(
+    () => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)),
+    [weekStart]
   );
 
-  const singleShifts = useMemo(() => {
-    const today = formatLocalDate(new Date());
-    return filteredSchedules
-      .filter(isSingleShift)
-      .filter((s) => (s.valid_until || '') >= today) // nur künftige (inkl. heute)
-      .sort((a, b) => (a.valid_from || '').localeCompare(b.valid_from || ''));
-  }, [filteredSchedules]);
-
-  const schedulesByDay = useMemo(() => {
-    const map = new Map<number, PractitionerScheduleEntry[]>();
-    for (const s of recurringSchedules) {
-      const existing = map.get(s.day_of_week) || [];
-      existing.push(s);
-      map.set(s.day_of_week, existing);
+  const schedulesByDate = useMemo(() => {
+    const map = new Map<string, { recurring: PractitionerScheduleEntry[]; single: PractitionerScheduleEntry[] }>();
+    for (const date of weekDates) {
+      const dateStr = formatLocalDate(date);
+      const dow = date.getDay();
+      const recurring: PractitionerScheduleEntry[] = [];
+      const single: PractitionerScheduleEntry[] = [];
+      for (const s of filteredSchedules) {
+        if (s.day_of_week !== dow) continue;
+        const validFromOk = !s.valid_from || s.valid_from <= dateStr;
+        const validUntilOk = !s.valid_until || s.valid_until >= dateStr;
+        if (!validFromOk || !validUntilOk) continue;
+        if (isSingleShift(s)) single.push(s);
+        else recurring.push(s);
+      }
+      const sortFn = (a: PractitionerScheduleEntry, b: PractitionerScheduleEntry) =>
+        a.start_time.localeCompare(b.start_time);
+      recurring.sort(sortFn);
+      single.sort(sortFn);
+      map.set(dateStr, { recurring, single });
     }
     return map;
-  }, [recurringSchedules]);
+  }, [filteredSchedules, weekDates]);
+
+  const openSingleShiftFormFor = (date: Date) => {
+    setMode('single');
+    setSingleDate(formatLocalDate(date));
+    setStartTime('');
+    setEndTime('');
+    setIsBookable(true);
+    setInsuranceFilter('all');
+    setLabel('');
+    setFormError(null);
+    setShowForm(true);
+  };
+
+  const todayStr = formatLocalDate(new Date());
 
   const resetForm = () => {
     setMode('recurring');
@@ -393,101 +431,141 @@ export function PractitionerScheduleManager() {
         </form>
       )}
 
-      {/* Wochenübersicht */}
+      {/* Schichtplan: Wochen-Grid mit klickbaren Tag-Zellen */}
       {selectedPractitionerId && (
-        filteredSchedules.length === 0 ? (
-          <div className={styles.empty}>
-            Keine individuellen Sprechzeiten hinterlegt. Es gelten die Standard-Praxisöffnungszeiten.
+        <>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '0.75rem',
+            margin: '1.5rem 0 0.75rem 0', paddingTop: '1rem',
+            borderTop: '1px solid #E5E7EB',
+          }}>
+            <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151', margin: 0, flex: 1 }}>
+              Schichtplan — KW {getISOWeek(weekStart)} / {weekStart.getFullYear()}
+            </h4>
+            <button
+              type="button"
+              onClick={() => setWeekStart(addDays(weekStart, -7))}
+              style={{
+                padding: '0.375rem 0.75rem', background: 'white',
+                border: '1px solid #D1D5DB', borderRadius: '6px',
+                cursor: 'pointer', fontSize: '0.875rem',
+              }}
+            >← Woche</button>
+            <button
+              type="button"
+              onClick={() => setWeekStart(getMonday(new Date()))}
+              style={{
+                padding: '0.375rem 0.75rem', background: 'white',
+                border: '1px solid #D1D5DB', borderRadius: '6px',
+                cursor: 'pointer', fontSize: '0.875rem',
+              }}
+            >Heute</button>
+            <button
+              type="button"
+              onClick={() => setWeekStart(addDays(weekStart, 7))}
+              style={{
+                padding: '0.375rem 0.75rem', background: 'white',
+                border: '1px solid #D1D5DB', borderRadius: '6px',
+                cursor: 'pointer', fontSize: '0.875rem',
+              }}
+            >Woche →</button>
           </div>
-        ) : (
-          <>
-          <div className={styles.weekOverview}>
-            {DISPLAY_ORDER.map((dayNum) => {
-              const daySchedules = schedulesByDay.get(dayNum) || [];
+
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '0.5rem',
+          }}>
+            {weekDates.map((date) => {
+              const dateStr = formatLocalDate(date);
+              const entry = schedulesByDate.get(dateStr) || { recurring: [], single: [] };
+              const isToday = dateStr === todayStr;
+              const dow = date.getDay();
               return (
-                <div key={dayNum} className={styles.daySection}>
-                  <div className={styles.dayHeader}>{JS_DAY_NAMES[dayNum]}</div>
-                  {daySchedules.length === 0 ? (
-                    <div className={styles.dayEmpty}>Kein Eintrag</div>
-                  ) : (
-                    <div className={styles.daySlots}>
-                      {daySchedules.map((entry) => (
-                        <div
-                          key={entry.id}
-                          className={`${styles.scheduleCard} ${getCardClass(entry)}`}
-                        >
-                          <div className={styles.cardContent}>
-                            <span className={styles.cardTime}>
-                              {entry.start_time.slice(0, 5)} – {entry.end_time.slice(0, 5)}
-                            </span>
-                            {entry.label && (
-                              <span className={styles.cardLabel}>{entry.label}</span>
-                            )}
-                            <span className={styles.cardBadge}>{getCardBadge(entry)}</span>
-                          </div>
-                          <button
-                            className={styles.deleteButton}
-                            onClick={() => handleDelete(entry.id)}
-                            title="Eintrag löschen"
-                          >
-                            ×
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                <div
+                  key={dateStr}
+                  style={{
+                    display: 'flex', flexDirection: 'column',
+                    minHeight: 140, padding: '0.5rem',
+                    border: `1px solid ${isToday ? '#2674BB' : '#E5E7EB'}`,
+                    borderRadius: '8px', background: isToday ? '#F0F7FF' : '#FAFAFA',
+                  }}
+                >
+                  <div style={{
+                    fontSize: '0.75rem', fontWeight: 600, color: isToday ? '#1E5A8F' : '#6B7280',
+                    textTransform: 'uppercase', letterSpacing: '0.03em', marginBottom: '0.4rem',
+                  }}>
+                    {JS_DAY_SHORT[dow]} {date.getDate()}.{date.getMonth() + 1}.
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+                    {entry.recurring.map((s) => (
+                      <div
+                        key={s.id}
+                        title={`Wiederkehrend (${JS_DAY_NAMES[s.day_of_week]})`}
+                        className={`${styles.scheduleCard} ${getCardClass(s)}`}
+                        style={{
+                          padding: '4px 6px', borderStyle: 'dashed', fontSize: '0.75rem',
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4,
+                        }}
+                      >
+                        <span style={{ flex: 1, lineHeight: 1.3 }}>
+                          {s.start_time.slice(0, 5)}–{s.end_time.slice(0, 5)}
+                          {s.label && <span style={{ display: 'block', fontSize: '0.65rem', opacity: 0.8 }}>{s.label}</span>}
+                        </span>
+                        <button
+                          className={styles.deleteButton}
+                          onClick={() => handleDelete(s.id)}
+                          title="Wiederkehrende Schicht löschen"
+                          style={{ fontSize: '1rem', padding: '0 4px' }}
+                        >×</button>
+                      </div>
+                    ))}
+                    {entry.single.map((s) => (
+                      <div
+                        key={s.id}
+                        title="Einzel-Schicht (nur dieser Tag)"
+                        className={`${styles.scheduleCard} ${getCardClass(s)}`}
+                        style={{
+                          padding: '4px 6px', fontSize: '0.75rem',
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4,
+                        }}
+                      >
+                        <span style={{ flex: 1, lineHeight: 1.3 }}>
+                          {s.start_time.slice(0, 5)}–{s.end_time.slice(0, 5)}
+                          {s.label && <span style={{ display: 'block', fontSize: '0.65rem', opacity: 0.8 }}>{s.label}</span>}
+                        </span>
+                        <button
+                          className={styles.deleteButton}
+                          onClick={() => handleDelete(s.id)}
+                          title="Einzel-Schicht löschen"
+                          style={{ fontSize: '1rem', padding: '0 4px' }}
+                        >×</button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => openSingleShiftFormFor(date)}
+                    style={{
+                      marginTop: '0.4rem', padding: '0.3rem 0.4rem',
+                      background: 'transparent', border: '1px dashed #9CA3AF',
+                      borderRadius: '4px', cursor: 'pointer',
+                      fontSize: '0.7rem', color: '#6B7280',
+                    }}
+                  >+ Schicht</button>
                 </div>
               );
             })}
           </div>
 
-          {/* Geplante Einzel-Schichten (Schichtplan-Datum) */}
-          {singleShifts.length > 0 && (
-            <div style={{ marginTop: '1.5rem' }}>
-              <h4 style={{
-                fontSize: '0.875rem', fontWeight: 600, color: '#374151',
-                margin: '0 0 0.75rem 0',
-              }}>
-                Geplante Einzel-Schichten
-              </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {singleShifts.map((entry) => {
-                  const d = new Date((entry.valid_from || '') + 'T00:00:00');
-                  const dateLabel = d.toLocaleDateString('de-DE', {
-                    weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
-                  });
-                  return (
-                    <div
-                      key={entry.id}
-                      className={`${styles.scheduleCard} ${getCardClass(entry)}`}
-                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                    >
-                      <div className={styles.cardContent} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem 0.75rem', alignItems: 'center' }}>
-                        <span style={{ fontWeight: 600 }}>{dateLabel}</span>
-                        <span className={styles.cardTime}>
-                          {entry.start_time.slice(0, 5)} – {entry.end_time.slice(0, 5)}
-                        </span>
-                        {entry.label && (
-                          <span className={styles.cardLabel}>{entry.label}</span>
-                        )}
-                        <span className={styles.cardBadge}>{getCardBadge(entry)}</span>
-                      </div>
-                      <button
-                        className={styles.deleteButton}
-                        onClick={() => handleDelete(entry.id)}
-                        title="Einzel-Schicht löschen"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+          {filteredSchedules.length === 0 && (
+            <div className={styles.empty} style={{ marginTop: '0.75rem' }}>
+              Keine individuellen Sprechzeiten hinterlegt. Es gelten die Standard-Praxisöffnungszeiten.
             </div>
           )}
-          </>
-        )
+        </>
       )}
+
     </div>
   );
 }
