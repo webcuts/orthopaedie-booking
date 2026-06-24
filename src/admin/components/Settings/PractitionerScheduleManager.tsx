@@ -61,10 +61,10 @@ export function PractitionerScheduleManager() {
   const [singleDate, setSingleDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [isBookable, setIsBookable] = useState(true);
   const [insuranceFilter, setInsuranceFilter] = useState<'all' | 'private_only'>('all');
-  const [label, setLabel] = useState('');
-  const [validFrom, setValidFrom] = useState(formatLocalDate(new Date()));
+  // valid_from wird beim Anlegen automatisch auf heute gesetzt, beim
+  // Bearbeiten bleibt der bestehende Wert erhalten (in editingValidFrom).
+  const [editingValidFrom, setEditingValidFrom] = useState<string | null>(null);
   const [validUntil, setValidUntil] = useState('');
 
   const weekDates = useMemo(
@@ -111,10 +111,8 @@ export function PractitionerScheduleManager() {
     setSingleDate('');
     setStartTime('');
     setEndTime('');
-    setIsBookable(true);
     setInsuranceFilter('all');
-    setLabel('');
-    setValidFrom(formatLocalDate(new Date()));
+    setEditingValidFrom(null);
     setValidUntil('');
     setFormError(null);
   };
@@ -132,9 +130,9 @@ export function PractitionerScheduleManager() {
     setDayOfWeek(date.getDay());
     setStartTime('');
     setEndTime('');
-    setIsBookable(true);
     setInsuranceFilter('all');
-    setLabel('');
+    setEditingValidFrom(null);
+    setValidUntil('');
     setFormError(null);
     setShowForm(true);
   };
@@ -148,10 +146,8 @@ export function PractitionerScheduleManager() {
     setSingleDate(isSingle ? (s.valid_from || '') : '');
     setStartTime(s.start_time.slice(0, 5));
     setEndTime(s.end_time.slice(0, 5));
-    setIsBookable(s.is_bookable);
     setInsuranceFilter((s.insurance_filter as 'all' | 'private_only') || 'all');
-    setLabel(s.label || '');
-    setValidFrom(s.valid_from || formatLocalDate(new Date()));
+    setEditingValidFrom(s.valid_from || null);
     setValidUntil(s.valid_until || '');
     setFormError(null);
     setShowForm(true);
@@ -175,7 +171,8 @@ export function PractitionerScheduleManager() {
     }
 
     let effectiveDayOfWeek = dayOfWeek;
-    let effectiveValidFrom = validFrom;
+    // Beim Anlegen: gültig ab = heute. Beim Bearbeiten: bestehender Wert bleibt.
+    let effectiveValidFrom = editingValidFrom || formatLocalDate(new Date());
     let effectiveValidUntil: string | null = validUntil || null;
 
     if (mode === 'single') {
@@ -193,15 +190,15 @@ export function PractitionerScheduleManager() {
       day_of_week: effectiveDayOfWeek,
       start_time: startTime,
       end_time: endTime,
-      is_bookable: isBookable,
+      is_bookable: true,
       insurance_filter: insuranceFilter,
-      label: label || null,
+      label: null,
       valid_from: effectiveValidFrom,
       valid_until: effectiveValidUntil,
     };
     const result = editingId
       ? await updateSchedule(editingId, payload)
-      : await createSchedule({ practitioner_id: formPractitionerId, ...payload, label: label || undefined });
+      : await createSchedule({ practitioner_id: formPractitionerId, ...payload, label: undefined });
 
     setSaving(false);
 
@@ -358,60 +355,27 @@ export function PractitionerScheduleManager() {
           </div>
 
           <div className={styles.formRow}>
-            <div className={styles.checkboxField}>
-              <input
-                type="checkbox" id="schedule-bookable"
-                checked={isBookable}
-                onChange={(e) => setIsBookable(e.target.checked)}
-              />
-              <label htmlFor="schedule-bookable">Online buchbar</label>
-            </div>
-            {isBookable && (
-              <div className={styles.field}>
-                <label htmlFor="schedule-insurance">Versicherungsfilter</label>
-                <select
-                  id="schedule-insurance" value={insuranceFilter}
-                  onChange={(e) => setInsuranceFilter(e.target.value as 'all' | 'private_only')}
-                >
-                  <option value="all">Alle Patienten</option>
-                  <option value="private_only">Nur Privatpatienten</option>
-                </select>
-              </div>
-            )}
-          </div>
-
-          <div className={styles.formRow}>
             <div className={styles.field}>
-              <label htmlFor="schedule-label">Bezeichnung (optional)</label>
-              <input
-                type="text" id="schedule-label" value={label}
-                onChange={(e) => setLabel(e.target.value)}
-                placeholder="z.B. Sprechstunde, OP-Tag, ..."
-              />
+              <label htmlFor="schedule-insurance">Versicherung</label>
+              <select
+                id="schedule-insurance" value={insuranceFilter}
+                onChange={(e) => setInsuranceFilter(e.target.value as 'all' | 'private_only')}
+              >
+                <option value="all">Alle Patienten</option>
+                <option value="private_only">Nur Privatpatienten</option>
+              </select>
             </div>
             {mode === 'recurring' && (
-              <div className={styles.field}>
-                <label htmlFor="schedule-valid-from">Gültig ab</label>
-                <input
-                  type="date" id="schedule-valid-from" value={validFrom}
-                  onChange={(e) => setValidFrom(e.target.value)}
-                />
-              </div>
-            )}
-          </div>
-
-          {mode === 'recurring' && (
-            <div className={styles.formRow}>
               <div className={styles.field}>
                 <label htmlFor="schedule-valid-until">Gültig bis (leer = unbegrenzt)</label>
                 <input
                   type="date" id="schedule-valid-until" value={validUntil}
-                  onChange={(e) => setValidUntil(e.target.value)} min={validFrom}
+                  onChange={(e) => setValidUntil(e.target.value)}
+                  min={formatLocalDate(new Date())}
                 />
               </div>
-              <div />
-            </div>
-          )}
+            )}
+          </div>
 
           <div className={styles.formActions}>
             <button
