@@ -96,9 +96,26 @@
 }
 
 .day.disabled {
-  color: var(--color-text-muted);
+  color: #9CA3AF;
   cursor: not-allowed;
-  opacity: 0.4;
+  background: #F3F4F6;
+  text-decoration: line-through;
+  text-decoration-color: #D1D5DB;
+  text-decoration-thickness: 1px;
+}
+
+.day.disabled:hover {
+  background: #F3F4F6;
+}
+
+@media (max-width: 500px) {
+  .day.disabled {
+    /* auf dem Handy noch deutlicher, damit ausgebuchte Tage nicht mit
+       verfügbaren verwechselt werden */
+    background: #F3F4F6;
+    color: #9CA3AF;
+    opacity: 1;
+  }
 }
 
 .day.today:not(.selected) {
