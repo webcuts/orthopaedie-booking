@@ -589,118 +589,79 @@ export function useNextFreeSlot(practitionerId?: string | null, insuranceTypeId?
         const now = new Date();
         const today = formatLocalDate(now);
         const maxDate = new Date(now);
-        // 120 Tage voraus — deckt auch stark gebuchte Ärzte ab (Ercan bis September voll).
         maxDate.setDate(maxDate.getDate() + 120);
         const maxDateStr = formatLocalDate(maxDate);
 
-        // Cutoff für heute: jetzt + 30 min
+        // Cutoff: heute + 30 min
         const cutoff = new Date(now.getTime() + 30 * 60 * 1000);
-        const cutoffTime = cutoff.toTimeString().slice(0, 5);
+        const cutoffTime = cutoff.toTimeString().slice(0, 8);
 
-        // Practitioner-Schedule laden (falls vorhanden). Auch zukünftig startende
-        // Schedules mitnehmen (z.B. Yulias Sa-Termine mit valid_from > heute) —
-        // pro Slot wird das Gültigkeitsfenster im Filter geprüft.
-        let schedules: PractitionerSchedule[] = [];
-        if (practitionerId) {
-          const { data: sData } = await supabase
-            .from('practitioner_schedules')
-            .select('*')
-            .eq('practitioner_id', practitionerId)
-            .or(`valid_until.is.null,valid_until.gte.${today}`);
-          schedules = sData || [];
-        }
+        // Nutzt die Patient-RPCs, die alle Filter (Schedule-Fenster, Absences,
+        // Blocks, Buchungen) bereits konsistent anwenden. Kein manueller Filter mehr,
+        // damit stark ausgebuchte Behandler (z.B. Ercan über Monate voll) einen
+        // korrekten "nächster freier Termin" liefern und Schedule-Grenzen respektiert
+        // werden.
+        const { data: dateRows } = await supabase.rpc('get_available_dates', {
+          p_start_date: today,
+          p_end_date: maxDateStr,
+          p_practitioner_id: practitionerId ?? undefined,
+        });
 
-        // Insurance-Typ prüfen für private_only Filter
-        let isPublicInsurance = false;
-        if (insuranceTypeId && schedules.length > 0) {
-          const { data: insData } = await supabase
-            .from('insurance_types')
-            .select('name')
-            .eq('id', insuranceTypeId)
-            .single();
-          isPublicInsurance = insData?.name?.includes('Gesetzlich') || false;
-        }
-
-        // Erst die Slot-IDs holen, in denen dieser Behandler schon einen Termin hat.
-        // So können wir die time_slots-Query gezielt auf UNGEBUCHTE Slots einschränken —
-        // sonst würden bei stark ausgebuchten Ärzten die ersten 200 Ergebnisse alle
-        // belegt sein und wir würden keinen freien Slot finden.
-        let excludeIds: string[] = [];
-        if (practitionerId) {
-          const { data: bookedRows } = await supabase
-            .from('appointments')
-            .select('time_slot_id, time_slot:time_slots!inner(date)')
-            .eq('practitioner_id', practitionerId)
-            .neq('status', 'cancelled')
-            .gte('time_slot.date', today)
-            .lte('time_slot.date', maxDateStr);
-          excludeIds = (bookedRows || []).map((r) => r.time_slot_id);
-        }
-
-        let slotsQuery = supabase
-          .from('time_slots')
-          .select('id, date, start_time')
-          .eq('is_available', true)
-          .gte('date', today)
-          .lte('date', maxDateStr)
-          .order('date', { ascending: true })
-          .order('start_time', { ascending: true })
-          .limit(500);
-
-        if (excludeIds.length > 0) {
-          // PostgREST unterstützt not.in nur mit begrenzter Länge in der URL;
-          // wir splitten in Batches und filtern client-seitig.
-          // Für die meisten Fälle passt not.in gut.
-          const idList = excludeIds.slice(0, 1500).join(',');
-          slotsQuery = slotsQuery.not('id', 'in', `(${idList})`);
-        }
-
-        const { data: slots, error } = await slotsQuery;
-
-        if (error || !slots?.length) {
+        const dates: string[] = (dateRows || []).map((r: { date: string }) => r.date);
+        if (!dates.length) {
           setDate(null);
           setStartTime(null);
           return;
         }
 
-        const bookedSlotIds = new Set<string>(excludeIds);
-
-        // Finde den ersten Slot, der nicht in der Vergangenheit liegt,
-        // innerhalb der buchbaren Schedule-Fenster liegt
-        // und nicht bereits für diesen Behandler gebucht ist
-        for (const slot of slots) {
-          if (slot.date === today && slot.start_time.slice(0, 5) <= cutoffTime) {
-            continue;
+        // Insurance-Filter: bei gesetzlich versicherten Patienten müssen private_only
+        // Schedules gefiltert werden. Da die RPC das nicht kennt, filtern wir clientseitig.
+        let publicInsuranceExcludeMatch: ((d: string, t: string) => boolean) | null = null;
+        if (practitionerId && insuranceTypeId) {
+          const { data: insData } = await supabase
+            .from('insurance_types')
+            .select('name')
+            .eq('id', insuranceTypeId)
+            .single();
+          const isPublic = insData?.name?.includes('Gesetzlich') || false;
+          if (isPublic) {
+            const { data: sData } = await supabase
+              .from('practitioner_schedules')
+              .select('day_of_week, start_time, end_time, valid_from, valid_until, insurance_filter, is_bookable')
+              .eq('practitioner_id', practitionerId)
+              .or(`valid_until.is.null,valid_until.gte.${today}`);
+            const privateWindows = (sData || []).filter(
+              (s) => s.is_bookable && s.insurance_filter === 'private_only'
+            );
+            if (privateWindows.length > 0) {
+              publicInsuranceExcludeMatch = (dateStr: string, time: string) => {
+                const dow = new Date(dateStr + 'T00:00:00').getDay();
+                return privateWindows.some((w) => {
+                  if (w.day_of_week !== dow) return false;
+                  if (w.valid_from && w.valid_from > dateStr) return false;
+                  if (w.valid_until && w.valid_until < dateStr) return false;
+                  const t = time.slice(0, 5);
+                  return t >= w.start_time.slice(0, 5) && t < w.end_time.slice(0, 5);
+                });
+              };
+            }
           }
+        }
 
-          if (bookedSlotIds.has(slot.id)) continue;
-
-          // Practitioner-Schedule Filter
-          if (schedules.length > 0) {
-            const slotDate = new Date(slot.date + 'T00:00:00');
-            const jsDayOfWeek = slotDate.getDay();
-            const time = slot.start_time.slice(0, 5);
-            const slotDateStr = slot.date;
-
-            const bookableWindows = schedules
-              .filter(s => {
-                if (s.day_of_week !== jsDayOfWeek || !s.is_bookable) return false;
-                if (isPublicInsurance && s.insurance_filter === 'private_only') return false;
-                // Gültigkeitsfenster pro Slot-Datum prüfen (z.B. Yulia hat schedules
-                // mit valid_from > heute, die trotzdem für ihre Zieldaten passen).
-                if (s.valid_from && s.valid_from > slotDateStr) return false;
-                if (s.valid_until && s.valid_until < slotDateStr) return false;
-                return true;
-              })
-              .map(s => ({ start: s.start_time.slice(0, 5), end: s.end_time.slice(0, 5) }));
-
-            if (bookableWindows.length === 0) continue;
-            if (!bookableWindows.some(w => time >= w.start && time < w.end)) continue;
+        // Für jeden Tag den ersten Slot ab cutoff finden
+        for (const dateStr of dates) {
+          const { data: slotRows } = await supabase.rpc('get_available_slots', {
+            p_date: dateStr,
+            p_practitioner_id: practitionerId ?? undefined,
+          });
+          const slots = (slotRows || []) as Array<{ start_time: string }>;
+          for (const s of slots) {
+            if (dateStr === today && s.start_time <= cutoffTime) continue;
+            if (publicInsuranceExcludeMatch && publicInsuranceExcludeMatch(dateStr, s.start_time)) continue;
+            setDate(dateStr);
+            setStartTime(s.start_time);
+            return;
           }
-
-          setDate(slot.date);
-          setStartTime(slot.start_time);
-          return;
         }
 
         setDate(null);
