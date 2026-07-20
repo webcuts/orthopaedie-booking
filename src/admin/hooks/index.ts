@@ -28,4 +28,4 @@ export {
   // Practitioner Schedules (ORTHO-028)
   usePractitionerSchedulesAdmin,
 } from './useAdminData';
-export type { AppointmentWithDetails, PractitionerAbsence, PractitionerScheduleEntry, Practitioner, SystemLog, AnalyticsData } from './useAdminData';
+export type { AppointmentWithDetails, PractitionerAbsence, PractitionerScheduleEntry, Practitioner, SystemLog, AnalyticsData, Holiday } from './useAdminData';

@@ -45,8 +45,15 @@ const isSingleShift = (s: PractitionerScheduleEntry) =>
   !!s.valid_from && !!s.valid_until && s.valid_from === s.valid_until;
 
 export function PractitionerScheduleManager() {
-  const { schedules, practitioners, loading, error, createSchedule, updateSchedule, deleteSchedule } =
+  const { schedules, practitioners, holidays, loading, error, createSchedule, updateSchedule, deleteSchedule } =
     usePractitionerSchedulesAdmin();
+
+  // Feiertage als Map date-string → name für schnelle Lookups
+  const holidayMap = useMemo(() => {
+    const m = new Map<string, string>();
+    (holidays || []).forEach((h) => m.set(h.date, h.name));
+    return m;
+  }, [holidays]);
 
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -403,15 +410,20 @@ export function PractitionerScheduleManager() {
               {weekDates.map((date) => {
                 const dateStr = formatLocalDate(date);
                 const isToday = dateStr === todayStr;
+                const holidayName = holidayMap.get(dateStr);
                 return (
                   <div
                     key={dateStr}
-                    className={`${styles.headerDay} ${isToday ? styles.headerDayToday : ''}`}
+                    className={`${styles.headerDay} ${isToday ? styles.headerDayToday : ''} ${holidayName ? styles.headerDayHoliday : ''}`}
+                    title={holidayName || undefined}
                   >
                     <div className={styles.headerDayLabel}>{JS_DAY_SHORT[date.getDay()]}</div>
                     <div className={styles.headerDayDate}>
                       {date.getDate()}.{date.getMonth() + 1}.
                     </div>
+                    {holidayName && (
+                      <div className={styles.headerHolidayLabel}>{holidayName}</div>
+                    )}
                   </div>
                 );
               })}
@@ -427,10 +439,12 @@ export function PractitionerScheduleManager() {
                   const dateStr = formatLocalDate(date);
                   const entry = grid.get(`${p.id}|${dateStr}`) || { recurring: [], single: [] };
                   const isToday = dateStr === todayStr;
+                  const holidayName = holidayMap.get(dateStr);
                   return (
                     <div
                       key={dateStr}
-                      className={`${styles.dayCell} ${isToday ? styles.dayCellToday : ''}`}
+                      className={`${styles.dayCell} ${isToday ? styles.dayCellToday : ''} ${holidayName ? styles.dayCellHoliday : ''}`}
+                      title={holidayName || undefined}
                     >
                       <div className={styles.dayCellShifts}>
                         {entry.recurring.map((s) => (

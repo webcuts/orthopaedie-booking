@@ -1662,9 +1662,15 @@ export interface PractitionerScheduleEntry {
   created_at: string;
 }
 
+export interface Holiday {
+  date: string;
+  name: string;
+}
+
 export function usePractitionerSchedulesAdmin() {
   const [schedules, setSchedules] = useState<PractitionerScheduleEntry[]>([]);
   const [practitioners, setPractitioners] = useState<Practitioner[]>([]);
+  const [holidays, setHolidays] = useState<Holiday[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -1688,6 +1694,20 @@ export function usePractitionerSchedulesAdmin() {
     }
   }, []);
 
+  const fetchHolidays = useCallback(async () => {
+    // Feiertage im relevanten Zeitraum (heute bis +1 Jahr) laden
+    const today = formatLocalDate(new Date());
+    const in1Year = new Date();
+    in1Year.setDate(in1Year.getDate() + 365);
+    const { data } = await supabase
+      .from('holidays')
+      .select('date, name')
+      .gte('date', today)
+      .lte('date', formatLocalDate(in1Year))
+      .order('date');
+    setHolidays((data as Holiday[]) || []);
+  }, []);
+
   const fetchPractitioners = useCallback(async () => {
     const { data, error } = await supabase
       .from('practitioners')
@@ -1700,7 +1720,8 @@ export function usePractitionerSchedulesAdmin() {
   useEffect(() => {
     fetchSchedules();
     fetchPractitioners();
-  }, [fetchSchedules, fetchPractitioners]);
+    fetchHolidays();
+  }, [fetchSchedules, fetchPractitioners, fetchHolidays]);
 
   const createSchedule = useCallback(async (data: {
     practitioner_id: string;
@@ -1753,6 +1774,7 @@ export function usePractitionerSchedulesAdmin() {
   return {
     schedules,
     practitioners,
+    holidays,
     loading,
     error,
     createSchedule,

@@ -233,6 +233,26 @@
   border-top-right-radius: 6px;
 }
 
+.headerDayHoliday {
+  background: #FEF3C7;
+  border-bottom-color: #D97706;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.headerHolidayLabel {
+  font-size: 0.6rem;
+  color: #92400E;
+  font-weight: 600;
+  margin-top: 2px;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  padding: 0 2px;
+}
+
 .headerDayLabel {
   font-weight: 700;
   color: #374151;
@@ -283,6 +303,17 @@
 .dayCellToday {
   border-color: #2674BB;
   background: #F8FBFF;
+}
+
+.dayCellHoliday {
+  background: repeating-linear-gradient(
+    45deg,
+    #FEF3C7,
+    #FEF3C7 6px,
+    #FDE68A 6px,
+    #FDE68A 12px
+  );
+  border-color: #F59E0B;
 }
 
 .dayCellShifts {
