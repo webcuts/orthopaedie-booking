@@ -75,10 +75,9 @@ export default function AbwesenheitsBanner() {
 
     useEffect(() => {
         const today = new Date().toISOString().split("T")[0]
-        const in7Days = new Date(Date.now() + 7 * 86400000)
-            .toISOString()
-            .split("T")[0]
 
+        // Banner erst ab dem Tag der Abwesenheit anzeigen (start_date <= today),
+        // nicht schon Tage vorher. end_date >= today filtert vergangene raus.
         const url =
             SUPABASE_URL +
             "/rest/v1/practitioner_absences" +
@@ -87,7 +86,7 @@ export default function AbwesenheitsBanner() {
             "&end_date=gte." +
             today +
             "&start_date=lte." +
-            in7Days +
+            today +
             "&order=start_date"
 
         fetch(url, {
