@@ -1,4 +1,4 @@
-import { useAllPractitioners } from '../../../hooks/useSupabase';
+import { useAllPractitioners, type PractitionerAbsenceInfo } from '../../../hooks/useSupabase';
 import { getPractitionerFullName } from '../../../types/database';
 import { useTranslation } from '../../../i18n';
 import styles from '../BookingWizard.module.css';
@@ -21,6 +21,18 @@ export function DoctorSelectStep({ onSelectDoctor, onSelectMfa }: DoctorSelectSt
     return date.toLocaleDateString(localeMap[language] || 'de-DE', {
       day: 'numeric', month: 'short',
     });
+  };
+
+  // Zeigt den tatsächlichen Abwesenheitsgrund an: eine vom Admin gesetzte
+  // öffentliche Nachricht hat Vorrang, sonst das lokalisierte reason-Label.
+  const getAbsenceReasonLabel = (absence: PractitionerAbsenceInfo): string => {
+    const message = absence.public_message?.trim();
+    if (message) return message;
+    switch (absence.reason) {
+      case 'sick': return t('doctorSelect.reasonSick');
+      case 'vacation': return t('doctorSelect.reasonVacation');
+      default: return t('doctorSelect.reasonOther');
+    }
   };
 
   if (loading) {
@@ -83,6 +95,7 @@ export function DoctorSelectStep({ onSelectDoctor, onSelectMfa }: DoctorSelectSt
                 {absence && (
                   <div className={styles.doctorCardAbsenceHint}>
                     {t('doctorSelect.absenceHint', {
+                      reason: getAbsenceReasonLabel(absence),
                       start: formatDateShort(absence.start_date),
                       end: formatDateShort(absence.end_date),
                     })}

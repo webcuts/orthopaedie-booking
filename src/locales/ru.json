@@ -20,7 +20,7 @@
   "doctorSelect.unavailableTitle": "Недоступен",
   "doctorSelect.unavailableMessage": "{name} недоступен с {start} по {end} ({reason}).",
   "doctorSelect.unavailableHint": "Выберите другого врача или попробуйте с {returnDate}.",
-  "doctorSelect.absenceHint": "Болен: {start}–{end}",
+  "doctorSelect.absenceHint": "{reason}: {start}–{end}",
   "doctorSelect.understood": "Понятно",
   "doctorSelect.reasonSick": "Больничный",
   "doctorSelect.reasonVacation": "Отпуск",
